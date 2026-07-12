@@ -1,0 +1,89 @@
+.page {
+  width: 100%;
+  overflow-x: hidden;
+  position: relative;
+  background: #f3efe6;
+  color: #1a2536;
+}
+
+.page :where(a) {
+  color: #9a7526;
+  text-decoration: none;
+}
+.page :where(a):hover {
+  color: #b8912f;
+}
+.page ::selection {
+  background: #12294a;
+  color: #f3efe6;
+}
+
+.nl {
+  color: #4a5568;
+  transition: color 0.3s;
+  font-size: 13.5px;
+  letter-spacing: 0.02em;
+}
+.nl:hover {
+  color: #9a7526;
+}
+
+.cta {
+  position: relative;
+  overflow: hidden;
+  transition: color 0.3s;
+}
+.cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #12294a;
+  transform: translateY(101%);
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  z-index: -1;
+}
+.cta:hover::after {
+  transform: translateY(0);
+}
+.cta:hover {
+  color: #f3efe6 !important;
+}
+
+.lnk {
+  position: relative;
+}
+.lnk::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+.lnk:hover::after {
+  transform: scaleX(1);
+}
+
+.prod {
+  transition: padding-left 0.35s ease, background 0.35s;
+}
+.prod:hover {
+  padding-left: 20px;
+  background: rgba(18, 41, 74, 0.03);
+}
+
+.marquee {
+  animation: bpMarquee 40s linear infinite;
+}
+.marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes bpMarquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}

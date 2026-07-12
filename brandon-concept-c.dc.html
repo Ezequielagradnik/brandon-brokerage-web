@@ -19,8 +19,8 @@
   a{color:#d8c7a0; text-decoration:none;}
   a:hover{color:#efe4c8;}
   ::selection{background:#d8c7a0; color:#0c0c0f;}
-  .nl{color:#a49d8e; transition:color .3s; font-size:13.5px; letter-spacing:0.02em;}
-  .nl:hover{color:#efe4c8;}
+  .nl{color:#4a473e; transition:color .3s; font-size:13.5px; letter-spacing:0.02em;}
+  .nl:hover{color:#9a7526;}
   .cta{position:relative; overflow:hidden; transition:color .3s;}
   .cta::after{content:''; position:absolute; inset:0; background:#efe4c8; transform:translateY(101%); transition:transform .35s cubic-bezier(.2,.7,.2,1); z-index:-1;}
   .cta:hover::after{transform:translateY(0);}
@@ -34,14 +34,16 @@
 <div style="width:100%; overflow-x:hidden; position:relative;">
 
   <!-- HEADER -->
-  <div style="position:fixed; top:0; left:0; right:0; z-index:60; padding:22px clamp(20px,5vw,60px); display:flex; align-items:center; justify-content:space-between;">
-    <a href="#top" style="background:#ece7db; padding:8px 14px; border-radius:4px; display:inline-flex;"><img src="assets/brandon-logo.png" alt="Brandon Brokerage Group" style="height:24px;"></a>
-    <div style="display:flex; align-items:center; gap:clamp(18px,2.4vw,36px); flex-wrap:wrap; justify-content:flex-end;">
-      <a href="#why" class="nl">Firm</a>
-      <a href="#foreign" class="nl">Foreign National</a>
-      <a href="#products" class="nl">Products</a>
-      <a href="#contact" class="nl">Contact</a>
-      <a href="#contact" class="cta" style="padding:11px 22px; border:1px solid #d8c7a0; color:#efe4c8; font-size:13px; letter-spacing:0.08em; text-transform:uppercase;" style-hover="{color:'#0c0c0f'}">Partner With Us</a>
+  <div style="position:fixed; top:18px; left:0; right:0; z-index:60; padding:0 clamp(20px,5vw,60px); display:flex; justify-content:center;">
+    <div style="width:100%; max-width:1300px; background:rgba(236,231,219,0.94); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-radius:999px; padding:12px 26px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 20px 50px rgba(0,0,0,0.4);">
+      <a href="#top" style="display:inline-flex;"><img src="assets/brandon-logo.png" alt="Brandon Brokerage Group" style="height:26px;"></a>
+      <div style="display:flex; align-items:center; gap:clamp(18px,2.4vw,36px); flex-wrap:wrap; justify-content:flex-end;">
+        <a href="#why" class="nl">Firm</a>
+        <a href="#foreign" class="nl">Foreign National</a>
+        <a href="#products" class="nl">Products</a>
+        <a href="#contact" class="nl">Contact</a>
+        <a href="#contact" class="cta" style="padding:11px 22px; border:1px solid #0c0c0f; border-radius:999px; color:#0c0c0f; font-size:13px; letter-spacing:0.08em; text-transform:uppercase;">Partner With Us</a>
+      </div>
     </div>
   </div>
 
@@ -161,7 +163,7 @@
 
   <!-- FOOTER -->
   <div style="padding:44px clamp(20px,5vw,60px); background:#050505; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; border-top:1px solid rgba(255,255,255,0.06);">
-    <div style="background:#ece7db; padding:9px 15px; border-radius:4px; display:inline-flex;"><img src="assets/brandon-logo.png" alt="Brandon Brokerage Group" style="height:24px;"></div>
+    <div style="background:rgba(236,231,219,0.94); border-radius:999px; padding:8px 18px; display:inline-flex;"><img src="assets/brandon-logo.png" alt="Brandon Brokerage Group" style="height:22px;"></div>
     <div style="font-size:12px; color:#6a6459;">© 1970s–2026 Brandon Brokerage Group · For licensed agents &amp; advisors only</div>
   </div>
 
