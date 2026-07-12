@@ -3,7 +3,15 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
+import MobileMenu from "@/components/MobileMenu";
 import styles from "./page.module.css";
+
+const NAV_LINKS = [
+  { href: "#why", label: "Firm" },
+  { href: "#foreign", label: "Foreign National" },
+  { href: "#products", label: "Products" },
+  { href: "#contact", label: "Contact" },
+];
 
 const CARRIERS = ["Lincoln", "John Hancock", "AIG", "Nationwide", "Principal", "MassMutual", "Mutual of Omaha", "Protective", "Prudential", "Pacific Life", "Transamerica", "Symetra", "Global Atlantic", "Allianz"];
 
@@ -123,8 +131,16 @@ export default function ConceptB() {
           <a href="#foreign" className={styles.nl}>Foreign National</a>
           <a href="#products" className={styles.nl}>Products</a>
           <a href="#contact" className={styles.nl}>Contact</a>
-          <a href="#contact" className={styles.cta} style={{ padding: "11px 22px", border: "1px solid #12294a", color: "#12294a", fontSize: 13, letterSpacing: "0.08em", textTransform: "uppercase" }}>Partner With Us</a>
+          <a href="#contact" className={`${styles.cta} ${styles.ctaGold}`} style={{ padding: "11px 22px", border: "1px solid #12294a", color: "#12294a", fontSize: 13, letterSpacing: "0.08em", textTransform: "uppercase" }}>Partner With Us</a>
         </div>
+        <MobileMenu
+          links={NAV_LINKS}
+          ctaLabel="Partner With Us"
+          ctaHref="#contact"
+          panelBg="#f3efe6"
+          textColor="#12294a"
+          accentColor="#12294a"
+        />
       </div>
 
       {/* HERO with shader silk */}

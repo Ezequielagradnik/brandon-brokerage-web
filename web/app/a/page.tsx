@@ -3,7 +3,15 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
+import MobileMenu from "@/components/MobileMenu";
 import styles from "./page.module.css";
+
+const NAV_LINKS = [
+  { href: "#why", label: "Firm" },
+  { href: "#foreign", label: "Foreign National" },
+  { href: "#products", label: "Products" },
+  { href: "#contact", label: "Contact" },
+];
 
 const CARRIERS = ["Lincoln", "John Hancock", "AIG", "Nationwide", "Principal", "MassMutual", "Mutual of Omaha", "Protective", "Prudential", "Pacific Life", "Transamerica", "Symetra", "Global Atlantic", "Allianz"];
 
@@ -134,6 +142,14 @@ export default function ConceptA() {
             <a href="#contact" className={styles.nl}>Contact</a>
             <a href="#contact" className={styles.cta} style={{ padding: "11px 22px", border: "1px solid #0a1626", borderRadius: 999, color: "#0a1626", fontSize: 13, letterSpacing: "0.08em", textTransform: "uppercase" }}>Partner With Us</a>
           </div>
+          <MobileMenu
+            links={NAV_LINKS}
+            ctaLabel="Partner With Us"
+            ctaHref="#contact"
+            panelBg="#f5f0e6"
+            textColor="#0a1626"
+            accentColor="#0a1626"
+          />
         </div>
       </div>
 
