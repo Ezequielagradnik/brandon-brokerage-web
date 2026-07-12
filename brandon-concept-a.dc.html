@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0; background:#0a1626; color:#eef2f8; font-family:'Archivo',sans-serif; -webkit-font-smoothing:antialiased;}
+  a{color:#c9a24b; text-decoration:none;}
+  a:hover{color:#e2c072;}
+  ::selection{background:#c9a24b; color:#0a1626;}
+  .nl{color:#b7c1d1; transition:color .3s; font-size:13.5px; letter-spacing:0.02em;}
+  .nl:hover{color:#e2c072;}
+  .rule{height:1px; background:linear-gradient(90deg,rgba(201,162,75,0.55),rgba(201,162,75,0));}
+  .cta{position:relative; overflow:hidden; transition:color .3s;}
+  .cta::after{content:''; position:absolute; inset:0; background:#e2c072; transform:translateY(101%); transition:transform .35s cubic-bezier(.2,.7,.2,1); z-index:-1;}
+  .cta:hover::after{transform:translateY(0);}
+  .lnk{position:relative;}
+  .lnk::after{content:''; position:absolute; left:0; bottom:-3px; width:100%; height:1px; background:currentColor; transform:scaleX(0); transform-origin:left; transition:transform .35s ease;}
+  .lnk:hover::after{transform:scaleX(1);}
+  @keyframes bpMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+</style>
+</helmet>
+
+<div style="width:100%; overflow-x:hidden; position:relative;">
+
+  <!-- HEADER -->
+  <div style="position:fixed; top:0; left:0; right:0; z-index:60; padding:22px clamp(20px,5vw,60px); display:flex; align-items:center; justify-content:space-between; mix-blend-mode:difference;">
+    <a href="#top" style="background:#f5f0e6; padding:8px 14px; border-radius:4px; display:inline-flex; mix-blend-mode:normal;"><img src="assets/brandon-logo.png" alt="Brandon Brokerage Group" style="height:24px;"></a>
+    <div style="display:none;"></div>
+    <div style="display:flex; align-items:center; gap:clamp(18px,2.4vw,36px); flex-wrap:wrap; justify-content:flex-end;">
+      <a href="#why" class="nl">Firm</a>
+      <a href="#foreign" class="nl">Foreign National</a>
+      <a href="#products" class="nl">Products</a>
+      <a href="#contact" class="nl">Contact</a>
+      <a href="#contact" class="cta" style="padding:11px 22px; border:1px solid #c9a24b; color:#e2c072; font-size:13px; letter-spacing:0.08em; text-transform:uppercase;" style-hover="{color:'#0a1626'}">Partner With Us</a>
+    </div>
+  </div>
+
+  <!-- HERO with three.js globe -->
+  <div id="top" style="position:relative; min-height:100vh; display:flex; align-items:center; padding:120px clamp(20px,5vw,60px) 80px; background:radial-gradient(130% 100% at 78% 30%, #10233f 0%, #0a1626 58%);">
+    <canvas ref="{{ globeCanvas }}" style="position:absolute; inset:0; width:100%; height:100%; display:block; z-index:0;"></canvas>
+    <div style="position:absolute; inset:0; z-index:1; background:linear-gradient(90deg,#0a1626 6%,rgba(10,22,38,0.82) 34%,rgba(10,22,38,0.2) 60%,rgba(10,22,38,0) 78%);"></div>
+    <div style="position:absolute; inset:0; z-index:1; background:linear-gradient(180deg,rgba(10,22,38,0.5),transparent 22%,transparent 78%,rgba(10,22,38,0.6));"></div>
+    <div style="position:relative; z-index:2; max-width:1300px; margin:0 auto; width:100%;">
+      <div style="max-width:760px;">
+        <div ref="{{ heroKicker }}" style="display:flex; align-items:center; gap:16px; margin-bottom:34px;">
+          <span style="width:44px; height:1px; background:#c9a24b;"></span>
+          <span style="font-size:12px; letter-spacing:0.32em; text-transform:uppercase; color:#c9a24b;">Coral Gables · Since the 1970s</span>
+        </div>
+        <h1 ref="{{ heroTitle }}" style="font-family:'Bodoni Moda',serif; font-weight:500; font-size:clamp(46px,7vw,92px); line-height:1.0; margin:0 0 30px; color:#fff; letter-spacing:-0.01em;">A brokerage without<br>borders.</h1>
+        <p ref="{{ heroSub }}" style="font-size:clamp(17px,1.5vw,20px); line-height:1.6; color:#c3ccda; font-weight:300; max-width:520px; margin:0 0 42px;">For over fifty years, Brandon Brokerage Group has partnered with producers and advisors — pairing advanced sales support and full case management with access to 30+ top-rated carriers, and a rare command of the foreign national market.</p>
+        <div ref="{{ heroCta }}" style="display:flex; gap:26px; align-items:center; flex-wrap:wrap;">
+          <a href="#contact" class="cta" style="padding:16px 34px; border:1px solid #c9a24b; color:#e2c072; font-size:14px; letter-spacing:0.06em; text-transform:uppercase;" style-hover="{color:'#0a1626'}">Partner with us</a>
+          <a href="#products" class="lnk" style="font-size:14px; letter-spacing:0.04em; color:#eef2f8;">Explore products</a>
+        </div>
+      </div>
+    </div>
+    <div style="position:absolute; bottom:34px; left:50%; transform:translateX(-50%); z-index:2; display:flex; flex-direction:column; align-items:center; gap:10px;"><span style="font-size:10.5px; letter-spacing:0.3em; text-transform:uppercase; color:#7f8da3;">Scroll</span><span style="width:1px; height:38px; background:linear-gradient(#c9a24b,transparent);"></span></div>
+  </div>
+
+  <!-- STATS STRIP -->
+  <div class="reveal" style="border-top:1px solid rgba(201,162,75,0.18); border-bottom:1px solid rgba(201,162,75,0.18); background:#0a1626;">
+    <div style="max-width:1300px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));">
+      <div style="padding:44px clamp(20px,4vw,48px); border-right:1px solid rgba(255,255,255,0.06);"><div style="font-family:'Bodoni Moda',serif; font-size:clamp(40px,5vw,60px); font-weight:500; color:#fff; line-height:0.9;">50<span style="color:#c9a24b;">+</span></div><div style="font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#8896aa; margin-top:14px;">Years of expertise</div></div>
+      <div style="padding:44px clamp(20px,4vw,48px); border-right:1px solid rgba(255,255,255,0.06);"><div style="font-family:'Bodoni Moda',serif; font-size:clamp(40px,5vw,60px); font-weight:500; color:#fff; line-height:0.9;">30<span style="color:#c9a24b;">+</span></div><div style="font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#8896aa; margin-top:14px;">Top-rated carriers</div></div>
+      <div style="padding:44px clamp(20px,4vw,48px); border-right:1px solid rgba(255,255,255,0.06);"><div style="font-family:'Bodoni Moda',serif; font-size:clamp(40px,5vw,60px); font-weight:500; color:#fff; line-height:0.9;">5</div><div style="font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#8896aa; margin-top:14px;">Product lines</div></div>
+      <div style="padding:44px clamp(20px,4vw,48px);"><div style="font-family:'Bodoni Moda',serif; font-size:clamp(40px,5vw,60px); font-weight:500; color:#c9a24b; line-height:0.9; font-style:italic;">FN</div><div style="font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#8896aa; margin-top:14px;">Market leader</div></div>
+    </div>
+  </div>
+
+  <!-- MISSION -->
+  <div style="padding:clamp(80px,12vw,160px) clamp(20px,5vw,60px); background:#0a1626;">
+    <div style="max-width:1000px; margin:0 auto;">
+      <div class="reveal" style="font-size:12px; letter-spacing:0.3em; text-transform:uppercase; color:#c9a24b; margin-bottom:40px;">Our mission</div>
+      <p class="reveal" style="font-family:'Bodoni Moda',serif; font-weight:400; font-size:clamp(26px,3.6vw,44px); line-height:1.34; margin:0; color:#eef2f8;">To provide agents with superior service, personalized sales support and tailored business solutions that <span style="font-style:italic; color:#e2c072;">build and develop long-term relationships</span>.</p>
+    </div>
+  </div>
+
+  <!-- WHY -->
+  <div id="why" style="padding:clamp(60px,8vw,110px) clamp(20px,5vw,60px); background:#0a1626;">
+    <div style="max-width:1300px; margin:0 auto;">
+      <div class="reveal" style="display:flex; justify-content:space-between; align-items:flex-end; gap:24px; flex-wrap:wrap; margin-bottom:64px;">
+        <h2 style="font-family:'Bodoni Moda',serif; font-weight:500; font-size:clamp(30px,4.4vw,56px); margin:0; color:#fff; line-height:1.05; max-width:640px;">Everything an agent needs, from one desk.</h2>
+        <span style="font-size:14px; color:#8896aa; max-width:280px; font-weight:300;">Four disciplines, one team behind every case you write.</span>
+      </div>
+      <div>
+        <div class="reveal" style="display:grid; grid-template-columns:80px 1fr; gap:clamp(16px,3vw,48px); padding:40px 0; border-top:1px solid rgba(255,255,255,0.1); align-items:baseline;"><div style="font-family:'Bodoni Moda',serif; font-size:30px; color:#c9a24b; font-style:italic;">01</div><div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:24px; align-items:baseline;"><h3 style="font-family:'Bodoni Moda',serif; font-weight:500; font-size:clamp(22px,2.4vw,30px); margin:0; color:#fff;">Advanced sales support</h3><p style="font-size:15px; line-height:1.66; color:#9aa6b8; font-weight:300; margin:0;">Case planning and design, marketing concepts, carrier insight and point-of-sale support — for domestic and foreign national cases alike.</p></div></div>
+        <div class="reveal" style="display:grid; grid-template-columns:80px 1fr; gap:clamp(16px,3vw,48px); padding:40px 0; border-top:1px solid rgba(255,255,255,0.1); align-items:baseline;"><div style="font-family:'Bodoni Moda',serif; font-size:30px; color:#c9a24b; font-style:italic;">02</div><div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:24px; align-items:baseline;"><h3 style="font-family:'Bodoni Moda',serif; font-weight:500; font-size:clamp(22px,2.4vw,30px); margin:0; color:#fff;">Full case management</h3><p style="font-size:15px; line-height:1.66; color:#9aa6b8; font-weight:300; margin:0;">A dedicated new-business team packages, submits and follows every case through underwriting, records and delivery.</p></div></div>
+        <div class="reveal" style="display:grid; grid-template-columns:80px 1fr; gap:clamp(16px,3vw,48px); padding:40px 0; border-top:1px solid rgba(255,255,255,0.1); align-items:baseline;"><div style="font-family:'Bodoni Moda',serif; font-size:30px; color:#c9a24b; font-style:italic;">03</div><div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:24px; align-items:baseline;"><h3 style="font-family:'Bodoni Moda',serif; font-weight:500; font-size:clamp(22px,2.4vw,30px); margin:0; color:#fff;">Quality carriers &amp; products</h3><p style="font-size:15px; line-height:1.66; color:#9aa6b8; font-weight:300; margin:0;">Full access to over thirty top-rated carriers, as a leading Tellus / Crump firm — with individualized support.</p></div></div>
+        <div class="reveal" style="display:grid; grid-template-columns:80px 1fr; gap:clamp(16px,3vw,48px); padding:40px 0; border-top:1px solid rgba(255,255,255,0.1); border-bottom:1px solid rgba(255,255,255,0.1); align-items:baseline;"><div style="font-family:'Bodoni Moda',serif; font-size:30px; color:#c9a24b; font-style:italic;">04</div><div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:24px; align-items:baseline;"><h3 style="font-family:'Bodoni Moda',serif; font-weight:500; font-size:clamp(22px,2.4vw,30px); margin:0; color:#fff;">Half a century of trust</h3><p style="font-size:15px; line-height:1.66; color:#9aa6b8; font-weight:300; margin:0;">Fifty years of brokerage expertise, and a recognized leader in the foreign national market.</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOREIGN NATIONAL -->
+  <div id="foreign" style="position:relative; padding:clamp(90px,13vw,180px) clamp(20px,5vw,60px); background:linear-gradient(180deg,#0a1626,#0c1c33);">
+    <div style="max-width:1100px; margin:0 auto;">
+      <div class="reveal" style="font-size:12px; letter-spacing:0.3em; text-transform:uppercase; color:#c9a24b; margin-bottom:34px;">Signature specialty</div>
+      <h2 class="reveal" style="font-family:'Bodoni Moda',serif; font-weight:500; font-size:clamp(34px,6vw,76px); line-height:1.04; margin:0 0 40px; color:#fff; max-width:900px;">We place the cases <span style="font-style:italic; color:#e2c072;">others turn away</span>.</h2>
+      <div class="reveal" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:clamp(30px,5vw,80px); align-items:start;">
+        <p style="font-size:clamp(16px,1.5vw,19px); line-height:1.7; color:#b7c1d1; font-weight:300; margin:0;">With over 50 years of experience, we are an industry leader in the foreign national market. We help agents devise customized sales strategies and wealth-management solutions for their foreign national clients.</p>
+        <p style="font-size:clamp(16px,1.5vw,19px); line-height:1.7; color:#b7c1d1; font-weight:300; margin:0;">Our open-architecture approach offers a variety of products and services to best suit your clients' needs — while adhering to all carrier, state and federal guidelines. <a href="#contact" class="lnk" style="color:#e2c072;">Speak with a specialist</a>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCTS -->
+  <div id="products" style="padding:clamp(60px,8vw,110px) clamp(20px,5vw,60px); background:#0c1c33;">
+    <div style="max-width:1300px; margin:0 auto;">
+      <div class="reveal" style="display:flex; justify-content:space-between; align-items:flex-end; gap:20px; flex-wrap:wrap; margin-bottom:16px;">
+        <h2 style="font-family:'Bodoni Moda',serif; font-weight:500; font-size:clamp(30px,4.4vw,56px); margin:0; color:#fff;">Products</h2>
+        <span style="font-size:13px; letter-spacing:0.16em; text-transform:uppercase; color:#c9a24b;">Backed by 30+ carriers</span>
+      </div>
+      <div class="reveal" style="border-top:1px solid rgba(255,255,255,0.12);">
+        <a href="#contact" class="prod" style="display:grid; grid-template-columns:60px 1fr auto; gap:clamp(14px,3vw,40px); align-items:center; padding:34px 4px; border-bottom:1px solid rgba(255,255,255,0.1); transition:padding-left .35s ease, background .35s;" style-hover="{paddingLeft:'20px', background:'rgba(255,255,255,0.02)'}"><span style="font-family:'Bodoni Moda',serif; font-style:italic; color:#c9a24b; font-size:18px;">01</span><span style="font-family:'Bodoni Moda',serif; font-size:clamp(24px,3vw,38px); color:#fff;">Term Life</span><span style="font-size:14px; color:#8896aa; text-align:right;">Income &amp; mortgage protection</span></a>
+        <a href="#contact" class="prod" style="display:grid; grid-template-columns:60px 1fr auto; gap:clamp(14px,3vw,40px); align-items:center; padding:34px 4px; border-bottom:1px solid rgba(255,255,255,0.1); transition:padding-left .35s ease, background .35s;" style-hover="{paddingLeft:'20px', background:'rgba(255,255,255,0.02)'}"><span style="font-family:'Bodoni Moda',serif; font-style:italic; color:#c9a24b; font-size:18px;">02</span><span style="font-family:'Bodoni Moda',serif; font-size:clamp(24px,3vw,38px); color:#fff;">Permanent Life</span><span style="font-size:14px; color:#8896aa; text-align:right;">Whole, universal &amp; IUL</span></a>
+        <a href="#contact" class="prod" style="display:grid; grid-template-columns:60px 1fr auto; gap:clamp(14px,3vw,40px); align-items:center; padding:34px 4px; border-bottom:1px solid rgba(255,255,255,0.1); transition:padding-left .35s ease, background .35s;" style-hover="{paddingLeft:'20px', background:'rgba(255,255,255,0.02)'}"><span style="font-family:'Bodoni Moda',serif; font-style:italic; color:#c9a24b; font-size:18px;">03</span><span style="font-family:'Bodoni Moda',serif; font-size:clamp(24px,3vw,38px); color:#fff;">Annuities</span><span style="font-size:14px; color:#8896aa; text-align:right;">Fixed &amp; indexed income</span></a>
+        <a href="#contact" class="prod" style="display:grid; grid-template-columns:60px 1fr auto; gap:clamp(14px,3vw,40px); align-items:center; padding:34px 4px; border-bottom:1px solid rgba(255,255,255,0.1); transition:padding-left .35s ease, background .35s;" style-hover="{paddingLeft:'20px', background:'rgba(255,255,255,0.02)'}"><span style="font-family:'Bodoni Moda',serif; font-style:italic; color:#c9a24b; font-size:18px;">04</span><span style="font-family:'Bodoni Moda',serif; font-size:clamp(24px,3vw,38px); color:#fff;">Long-Term Care</span><span style="font-size:14px; color:#8896aa; text-align:right;">Traditional &amp; hybrid</span></a>
+        <a href="#contact" class="prod" style="display:grid; grid-template-columns:60px 1fr auto; gap:clamp(14px,3vw,40px); align-items:center; padding:34px 4px; border-bottom:1px solid rgba(255,255,255,0.1); transition:padding-left .35s ease, background .35s;" style-hover="{paddingLeft:'20px', background:'rgba(255,255,255,0.02)'}"><span style="font-family:'Bodoni Moda',serif; font-style:italic; color:#c9a24b; font-size:18px;">05</span><span style="font-family:'Bodoni Moda',serif; font-size:clamp(24px,3vw,38px); color:#fff;">Disability Income</span><span style="font-size:14px; color:#8896aa; text-align:right;">Protect earning power</span></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARRIERS -->
+  <div class="reveal" style="padding:clamp(56px,7vw,90px) clamp(20px,5vw,60px); background:#0c1c33; border-top:1px solid rgba(255,255,255,0.06);">
+    <div style="max-width:1300px; margin:0 auto;">
+      <div style="font-size:12px; letter-spacing:0.24em; text-transform:uppercase; color:#8896aa; margin-bottom:34px;">Our carriers — a leading Tellus / Crump firm</div>
+      <div style="position:relative; overflow:hidden; -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent); mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);">
+        <div style="display:flex; width:max-content; align-items:center; column-gap:clamp(30px,4vw,64px); animation:bpMarquee 40s linear infinite; font-family:'Bodoni Moda',serif; font-size:clamp(19px,2vw,28px); color:#6f7d92; white-space:nowrap;" style-hover="{animationPlayState:'paused'}">
+          <span>Lincoln</span><span style="color:#c9a24b;">·</span><span>John Hancock</span><span style="color:#c9a24b;">·</span><span>AIG</span><span style="color:#c9a24b;">·</span><span>Nationwide</span><span style="color:#c9a24b;">·</span><span>Principal</span><span style="color:#c9a24b;">·</span><span>MassMutual</span><span style="color:#c9a24b;">·</span><span>Mutual of Omaha</span><span style="color:#c9a24b;">·</span><span>Protective</span><span style="color:#c9a24b;">·</span><span>Prudential</span><span style="color:#c9a24b;">·</span><span>Pacific Life</span><span style="color:#c9a24b;">·</span><span>Transamerica</span><span style="color:#c9a24b;">·</span><span>Symetra</span><span style="color:#c9a24b;">·</span><span>Global Atlantic</span><span style="color:#c9a24b;">·</span><span>Allianz</span><span style="color:#c9a24b;">·</span>
+          <span>Lincoln</span><span style="color:#c9a24b;">·</span><span>John Hancock</span><span style="color:#c9a24b;">·</span><span>AIG</span><span style="color:#c9a24b;">·</span><span>Nationwide</span><span style="color:#c9a24b;">·</span><span>Principal</span><span style="color:#c9a24b;">·</span><span>MassMutual</span><span style="color:#c9a24b;">·</span><span>Mutual of Omaha</span><span style="color:#c9a24b;">·</span><span>Protective</span><span style="color:#c9a24b;">·</span><span>Prudential</span><span style="color:#c9a24b;">·</span><span>Pacific Life</span><span style="color:#c9a24b;">·</span><span>Transamerica</span><span style="color:#c9a24b;">·</span><span>Symetra</span><span style="color:#c9a24b;">·</span><span>Global Atlantic</span><span style="color:#c9a24b;">·</span><span>Allianz</span><span style="color:#c9a24b;">·</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <div id="contact" style="position:relative; padding:clamp(90px,13vw,180px) clamp(20px,5vw,60px); background:radial-gradient(120% 100% at 30% 20%,#12294a,#0a1626 60%);">
+    <div style="max-width:1300px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:clamp(40px,6vw,90px); align-items:center;">
+      <div class="reveal">
+        <div style="font-size:12px; letter-spacing:0.3em; text-transform:uppercase; color:#c9a24b; margin-bottom:30px;">Get started</div>
+        <h2 style="font-family:'Bodoni Moda',serif; font-weight:500; font-size:clamp(38px,5.5vw,72px); line-height:1.02; margin:0 0 28px; color:#fff;">Let's write more business, together.</h2>
+        <p style="font-size:17px; line-height:1.66; color:#b7c1d1; font-weight:300; margin:0; max-width:440px;">Tell us about your case or your book of business. A brokerage director responds within one business day.</p>
+      </div>
+      <div class="reveal" style="border-top:1px solid rgba(201,162,75,0.3);">
+        <a href="tel:+13054447401" style="display:flex; justify-content:space-between; align-items:baseline; padding:26px 0; border-bottom:1px solid rgba(255,255,255,0.1);"><span style="font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#8896aa;">Phone</span><span style="font-family:'Bodoni Moda',serif; font-size:clamp(20px,2.4vw,28px); color:#fff;">305-444-7401</span></a>
+        <div style="display:flex; justify-content:space-between; align-items:baseline; padding:26px 0; border-bottom:1px solid rgba(255,255,255,0.1);"><span style="font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#8896aa;">Toll-Free</span><span style="font-family:'Bodoni Moda',serif; font-size:clamp(20px,2.4vw,28px); color:#fff;">1-888-776-4678</span></div>
+        <div style="display:flex; justify-content:space-between; align-items:baseline; padding:26px 0; border-bottom:1px solid rgba(255,255,255,0.1);"><span style="font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#8896aa;">Office</span><span style="font-family:'Bodoni Moda',serif; font-size:clamp(17px,1.8vw,22px); color:#fff; text-align:right;">75 Valencia Ave, Suite 200<br>Coral Gables, FL 33134</span></div>
+        <a href="#contact" class="cta" style="display:inline-block; margin-top:34px; padding:16px 38px; border:1px solid #c9a24b; color:#e2c072; font-size:14px; letter-spacing:0.08em; text-transform:uppercase;" style-hover="{color:'#0a1626'}">Partner with us</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="padding:44px clamp(20px,5vw,60px); background:#070f1c; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; border-top:1px solid rgba(255,255,255,0.06);">
+    <div style="background:#f5f0e6; padding:9px 15px; border-radius:4px; display:inline-flex;"><img src="assets/brandon-logo.png" alt="Brandon Brokerage Group" style="height:24px;"></div>
+    <div style="font-size:12px; color:#5f6d82;">© 1970s–2026 Brandon Brokerage Group · For licensed agents &amp; advisors only</div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      globeCanvas: this._c = this._c || React.createRef(),
+      heroKicker: this._k = this._k || React.createRef(),
+      heroTitle: this._t = this._t || React.createRef(),
+      heroSub: this._s = this._s || React.createRef(),
+      heroCta: this._cta = this._cta || React.createRef(),
+    };
+  }
+  componentDidMount() {
+    this._alive = true;
+    this._waitFor(() => window.THREE, () => this._initGlobe());
+    this._initReveals();
+  }
+  componentWillUnmount() {
+    this._alive = false;
+    if (this._raf) cancelAnimationFrame(this._raf);
+    if (this._io) this._io.disconnect();
+    window.removeEventListener('resize', this._onResize || (()=>{}));
+    window.removeEventListener('pointermove', this._onMove || (()=>{}));
+  }
+  _waitFor(cond, cb, n) {
+    n = n || 0;
+    if (cond()) { cb(); return; }
+    if (n > 120) return;
+    setTimeout(() => this._waitFor(cond, cb, n + 1), 50);
+  }
+  _initGlobe() {
+    const THREE = window.THREE;
+    const canvas = this._c && this._c.current;
+    if (!canvas) return;
+    const parent = canvas.parentElement;
+    let w = parent.clientWidth, h = parent.clientHeight;
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(w, h, false);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(42, w / h, 0.1, 100);
+    camera.position.z = 3.35;
+
+    const group = new THREE.Group();
+    scene.add(group);
+
+    // occluding dark sphere so only front lines show
+    const solid = new THREE.Mesh(
+      new THREE.SphereGeometry(1.19, 48, 48),
+      new THREE.MeshBasicMaterial({ color: 0x0a1626 })
+    );
+    group.add(solid);
+
+    // gold wireframe
+    const wire = new THREE.LineSegments(
+      new THREE.WireframeGeometry(new THREE.SphereGeometry(1.2, 34, 26)),
+      new THREE.LineBasicMaterial({ color: 0xc9a24b, transparent: true, opacity: 0.42 })
+    );
+    group.add(wire);
+
+    // scattered points (cities)
+    const pts = [];
+    for (let i = 0; i < 320; i++) {
+      const u = Math.random(), v = Math.random();
+      const th = 2 * Math.PI * u, ph = Math.acos(2 * v - 1);
+      const r = 1.205;
+      pts.push(r * Math.sin(ph) * Math.cos(th), r * Math.cos(ph), r * Math.sin(ph) * Math.sin(th));
+    }
+    const pg = new THREE.BufferGeometry();
+    pg.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+    group.add(new THREE.Points(pg, new THREE.PointsMaterial({ color: 0xe2c072, size: 0.02, transparent: true, opacity: 0.85 })));
+
+    group.rotation.x = 0.42;
+    group.rotation.z = -0.12;
+    group.position.x = 1.28;
+    group.position.y = 0.05;
+
+    let tx = 0, ty = 0;
+    this._onMove = (e) => {
+      tx = (e.clientY / window.innerHeight - 0.5) * 0.35;
+      ty = (e.clientX / window.innerWidth - 0.5) * 0.5;
+    };
+    window.addEventListener('pointermove', this._onMove);
+
+    this._onResize = () => {
+      w = parent.clientWidth; h = parent.clientHeight;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h; camera.updateProjectionMatrix();
+    };
+    window.addEventListener('resize', this._onResize);
+
+    const tick = () => {
+      if (!this._alive) return;
+      group.rotation.y += 0.0016;
+      group.rotation.x += (0.42 + tx - group.rotation.x) * 0.04;
+      const yGoal = group.rotation.y;
+      camera.position.x += (ty * 0.6 - camera.position.x) * 0.04;
+      camera.lookAt(0, 0, 0);
+      renderer.render(scene, camera);
+      this._raf = requestAnimationFrame(tick);
+    };
+    tick();
+  }
+  _initReveals() {
+    const ease = 'opacity 1s cubic-bezier(.2,.7,.2,1), transform 1.05s cubic-bezier(.2,.7,.2,1)';
+    // hero intro (timed, on mount)
+    const heroEls = [this._k, this._t, this._s, this._cta].map(r => r && r.current).filter(Boolean);
+    heroEls.forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(38px)';
+      el.style.transition = ease;
+      setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'none'; }, 160 + i * 140);
+    });
+    // scroll reveals via IntersectionObserver
+    const items = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+    items.forEach((el) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(44px)';
+      el.style.transition = ease;
+    });
+    if (!('IntersectionObserver' in window)) {
+      items.forEach((el) => { el.style.opacity = '1'; el.style.transform = 'none'; });
+      return;
+    }
+    this._io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'none';
+          this._io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    items.forEach((el) => this._io.observe(el));
+  }
+}
+</script>
+</body>
+</html>
