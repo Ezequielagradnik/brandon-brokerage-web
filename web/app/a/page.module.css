@@ -2,90 +2,56 @@
   width: 100%;
   overflow-x: hidden;
   position: relative;
-  background: #0a1626;
-  color: #eef2f8;
+  background: #ffffff;
+  color: #14213d;
+  font-family: var(--font-manrope), sans-serif;
 }
 
 .page :where(a) {
-  color: #c9a24b;
+  color: #d97706;
   text-decoration: none;
 }
 .page :where(a):hover {
-  color: #e2c072;
+  color: #b45f04;
 }
 .page ::selection {
-  background: #c9a24b;
-  color: #0a1626;
+  background: #d97706;
+  color: #fff;
 }
 
 .nl {
-  color: #4a5568;
-  transition: color 0.3s;
-  font-size: 13.5px;
-  letter-spacing: 0.02em;
+  color: #475569;
+  transition: color 0.2s;
+  font-size: 14.5px;
+  font-weight: 600;
 }
 .nl:hover {
-  color: #9a7526;
+  color: #12294a;
 }
 
 .cta {
   position: relative;
   overflow: hidden;
-  transition: color 0.3s;
+  transition: color 0.25s, background 0.25s, border-color 0.25s;
+  font-weight: 700;
 }
-.cta::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: #e2c072;
-  transform: translateY(101%);
-  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
-  z-index: -1;
+.ctaPrimary {
+  background: #12294a;
+  color: #fff;
+  border: 1px solid #12294a;
 }
-.cta:hover::after {
-  transform: translateY(0);
+.ctaPrimary:hover {
+  background: #d97706;
+  border-color: #d97706;
+  color: #fff;
 }
-.cta:hover {
-  color: #0a1626 !important;
+.ctaGhost {
+  background: transparent;
+  color: #12294a;
+  border: 1px solid #d7dde6;
 }
-
-.lnk {
-  position: relative;
-}
-.lnk::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -3px;
-  width: 100%;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.35s ease;
-}
-.lnk:hover::after {
-  transform: scaleX(1);
-}
-
-.prod {
-  transition: padding-left 0.35s ease, background 0.35s;
-}
-.prod:hover {
-  padding-left: 20px;
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.marquee {
-  animation: bpMarquee 40s linear infinite;
-}
-.marquee:hover {
-  animation-play-state: paused;
-}
-
-@keyframes bpMarquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+.ctaGhost:hover {
+  border-color: #12294a;
 }
 
 .headerBar {
@@ -98,12 +64,98 @@
 .headerNav {
   display: flex;
   align-items: center;
-  gap: clamp(14px, 2.4vw, 36px);
+  gap: clamp(18px, 2.4vw, 34px);
   justify-content: flex-end;
 }
 
 @media (max-width: 900px) {
   .headerNav {
     display: none;
+  }
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(40px, 6vw, 80px);
+  align-items: center;
+}
+
+.heroCards {
+  position: relative;
+  min-height: 360px;
+}
+
+.heroCard {
+  position: absolute;
+}
+
+@media (max-width: 860px) {
+  .heroGrid {
+    grid-template-columns: 1fr;
+  }
+  .heroCards {
+    min-height: 0;
+  }
+  .heroCard {
+    position: static;
+    width: 100% !important;
+    margin-bottom: 16px;
+  }
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e6e9ef;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.serviceCard {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.serviceCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+  border-color: #d97706;
+}
+
+.prodRow {
+  transition: background 0.2s;
+}
+.prodRow:hover {
+  background: #f8f6f2;
+}
+
+.chip {
+  transition: border-color 0.2s, color 0.2s;
+}
+.chip:hover {
+  border-color: #d97706;
+  color: #d97706;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.floatCard {
+  animation: floatIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }

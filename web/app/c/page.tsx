@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import * as THREE from "three";
+import { useRef } from "react";
 import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
 import styles from "./page.module.css";
@@ -13,7 +12,12 @@ const NAV_LINKS = [
   { href: "#contact", label: "Contact" },
 ];
 
-const CARRIERS = ["Lincoln", "John Hancock", "AIG", "Nationwide", "Principal", "MassMutual", "Mutual of Omaha", "Protective", "Prudential", "Pacific Life", "Transamerica", "Symetra", "Global Atlantic", "Allianz"];
+const WHY = [
+  { n: "01", title: "Advanced Sales Support", desc: "Case planning and design, marketing concepts, carrier insight and point-of-sale support — for domestic and foreign national cases alike." },
+  { n: "02", title: "Full Case Management", desc: "A dedicated new-business team packages, submits and follows every case through underwriting, records and delivery." },
+  { n: "03", title: "Quality Carriers & Products", desc: "Full access to over thirty top-rated carriers, as a leading Tellus / Crump firm — with individualized support." },
+  { n: "04", title: "Half a Century of Trust", desc: "Fifty years of brokerage expertise, and a recognized leader in the foreign national market." },
+];
 
 const PRODUCTS = [
   { n: "01", name: "Term Life", desc: "Income & mortgage protection" },
@@ -23,98 +27,15 @@ const PRODUCTS = [
   { n: "05", name: "Disability Income", desc: "Protect earning power" },
 ];
 
-const WHY = [
-  { n: "01", title: "Advanced sales support", desc: "Case planning and design, marketing concepts, carrier insight and point-of-sale support — for domestic and foreign national cases alike." },
-  { n: "02", title: "Full case management", desc: "A dedicated new-business team packages, submits and follows every case through underwriting, records and delivery." },
-  { n: "03", title: "Quality carriers & products", desc: "Full access to over thirty top-rated carriers, as a leading Tellus / Crump firm — with individualized support." },
-  { n: "04", title: "Half a century of trust", desc: "Fifty years of brokerage expertise, and a recognized leader in the foreign national market." },
-];
-
-function useGem(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const parent = canvas.parentElement as HTMLElement;
-    let w = parent.clientWidth, h = parent.clientHeight;
-    let renderer: THREE.WebGLRenderer;
-    try {
-      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-    } catch {
-      return;
-    }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(w, h, false);
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(42, w / h, 0.1, 100);
-    camera.position.z = 4.2;
-
-    const group = new THREE.Group();
-    group.position.x = 1.3;
-    scene.add(group);
-
-    const geo = new THREE.IcosahedronGeometry(1.35, 0);
-    const mat = new THREE.MeshStandardMaterial({
-      color: 0xb99a5f, metalness: 0.85, roughness: 0.28,
-      emissive: 0x1c160a, flatShading: true,
-    });
-    const gem = new THREE.Mesh(geo, mat);
-    group.add(gem);
-
-    const edges = new THREE.LineSegments(
-      new THREE.EdgesGeometry(geo),
-      new THREE.LineBasicMaterial({ color: 0xefe4c8, transparent: true, opacity: 0.55 })
-    );
-    group.add(edges);
-
-    scene.add(new THREE.AmbientLight(0x2a2620, 0.8));
-    const key = new THREE.PointLight(0xffe6b8, 1.5, 40); key.position.set(3, 4, 5); scene.add(key);
-    const rim = new THREE.PointLight(0x9fb4dc, 0.7, 40); rim.position.set(-4, -2, 2); scene.add(rim);
-    const fill = new THREE.PointLight(0xffd9a0, 0.5, 40); fill.position.set(0, -3, 4); scene.add(fill);
-
-    let tx = 0, ty = 0, alive = true, raf = 0;
-    const onMove = (e: PointerEvent) => {
-      tx = (e.clientY / window.innerHeight - 0.5) * 0.5;
-      ty = (e.clientX / window.innerWidth - 0.5) * 0.6;
-    };
-    window.addEventListener("pointermove", onMove);
-
-    const onResize = () => {
-      w = parent.clientWidth; h = parent.clientHeight;
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h; camera.updateProjectionMatrix();
-    };
-    window.addEventListener("resize", onResize);
-
-    const tick = () => {
-      if (!alive) return;
-      gem.rotation.y += 0.004; edges.rotation.y = gem.rotation.y;
-      gem.rotation.x += (0.2 + tx - gem.rotation.x) * 0.04; edges.rotation.x = gem.rotation.x;
-      group.position.y += (ty * 0.25 - group.position.y) * 0.04;
-      renderer.render(scene, camera);
-      raf = requestAnimationFrame(tick);
-    };
-    tick();
-
-    return () => {
-      alive = false;
-      cancelAnimationFrame(raf);
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("resize", onResize);
-      renderer.dispose();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-}
+const CARRIERS = ["Lincoln", "John Hancock", "AIG", "Nationwide", "Principal", "MassMutual", "Mutual of Omaha", "Protective", "Prudential", "Pacific Life", "Transamerica", "Symetra", "Global Atlantic", "Allianz"];
 
 export default function ConceptC() {
   const pageRef = useRef<HTMLDivElement>(null);
-  const gemCanvas = useRef<HTMLCanvasElement>(null);
   const heroKicker = useRef<HTMLDivElement>(null);
   const heroTitle = useRef<HTMLHeadingElement>(null);
   const heroSub = useRef<HTMLParagraphElement>(null);
   const heroCta = useRef<HTMLDivElement>(null);
 
-  useGem(gemCanvas);
   useHeroReveal([heroKicker, heroTitle, heroSub, heroCta]);
   useScrollReveal(pageRef);
 
@@ -122,84 +43,75 @@ export default function ConceptC() {
     <div ref={pageRef} className={styles.page}>
 
       {/* HEADER */}
-      <div style={{ position: "fixed", top: 18, left: 0, right: 0, zIndex: 60, padding: "0 clamp(20px,5vw,60px)", display: "flex", justifyContent: "center" }}>
-        <div className={styles.headerBar} style={{ width: "100%", maxWidth: 1300, background: "rgba(236,231,219,0.94)", backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)", borderRadius: 28, padding: "12px 26px", boxShadow: "0 20px 50px rgba(0,0,0,0.4)" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <a href="#top" style={{ display: "inline-flex" }}><img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 26 }} /></a>
-          <div className={styles.headerNav}>
-            <a href="#why" className={styles.nl}>Firm</a>
-            <a href="#foreign" className={styles.nl}>Foreign National</a>
-            <a href="#products" className={styles.nl}>Products</a>
-            <a href="#contact" className={styles.nl}>Contact</a>
-            <a href="#contact" className={styles.cta} style={{ padding: "11px 22px", border: "1px solid #0c0c0f", borderRadius: 999, color: "#0c0c0f", fontSize: 13, letterSpacing: "0.08em", textTransform: "uppercase" }}>Partner With Us</a>
+      <div className={styles.headerBar} style={{ position: "sticky", top: 0, zIndex: 60, padding: "20px clamp(20px,5vw,60px)", background: "#fff", borderBottom: "2px solid #0a0a0a" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <a href="#top" style={{ display: "inline-flex" }}><img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 26, filter: "grayscale(1) contrast(1.4)" }} /></a>
+        <div className={styles.headerNav}>
+          <a href="#why" className={styles.nl}>Firm</a>
+          <a href="#foreign" className={styles.nl}>Foreign National</a>
+          <a href="#products" className={styles.nl}>Products</a>
+          <a href="#contact" className={styles.nl}>Contact</a>
+          <a href="#contact" className={`${styles.cta} ${styles.ctaBlue}`} style={{ padding: "11px 22px", fontSize: 13 }}>Partner With Us</a>
+        </div>
+        <MobileMenu
+          links={NAV_LINKS}
+          ctaLabel="Partner With Us"
+          ctaHref="#contact"
+          panelBg="#ffffff"
+          textColor="#0a0a0a"
+          accentColor="#1a56ff"
+        />
+      </div>
+
+      {/* HERO */}
+      <div id="top" style={{ position: "relative", padding: "clamp(50px,7vw,90px) clamp(20px,5vw,60px) clamp(70px,9vw,110px)", borderBottom: "2px solid #0a0a0a", overflow: "hidden" }}>
+        <div className={styles.bgType} style={{ top: "6%", left: "-2%", fontSize: "clamp(90px,16vw,240px)", lineHeight: 1 }}>BRANDON</div>
+        <div style={{ position: "relative", maxWidth: 1300, margin: "0 auto" }}>
+          <div ref={heroKicker} style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 36 }}>
+            <span style={{ width: 10, height: 10, background: "#1a56ff" }} />
+            <span style={{ fontSize: 13, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em" }}>Coral Gables — Since the 1970s</span>
           </div>
-          <MobileMenu
-            links={NAV_LINKS}
-            ctaLabel="Partner With Us"
-            ctaHref="#contact"
-            panelBg="#ece7db"
-            textColor="#0c0c0f"
-            accentColor="#0c0c0f"
-          />
+          <h1 ref={heroTitle} style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 900, fontSize: "clamp(40px,7.2vw,108px)", lineHeight: 0.98, letterSpacing: "-0.03em", margin: "0 0 40px", color: "#0a0a0a", maxWidth: 1150 }}>
+            Partnering with producers and advisors to deliver customized solutions with seamless execution.
+          </h1>
+          <div className={styles.heroFooter}>
+            <p ref={heroSub} style={{ fontSize: "clamp(16px,1.4vw,20px)", lineHeight: 1.6, color: "#2a2a2a", fontWeight: 500, margin: 0 }}>
+              For over fifty years, Brandon Brokerage Group has paired advanced sales support and full case management with access to 30+ top-rated carriers — and a rare command of the foreign national market.
+            </p>
+            <div ref={heroCta} style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap", justifyContent: "flex-end" }}>
+              <a href="#contact" className={`${styles.cta} ${styles.ctaBlue}`} style={{ padding: "18px 36px", fontSize: 15 }}>Partner With Us</a>
+              <a href="#products" className={`${styles.cta} ${styles.ctaOutline}`} style={{ padding: "18px 36px", fontSize: 15 }}>Products</a>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* HERO with gold crystal */}
-      <div id="top" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", padding: "120px clamp(20px,5vw,60px) 80px", background: "radial-gradient(130% 100% at 76% 34%, #17161a 0%, #0c0c0f 60%)" }}>
-        <canvas ref={gemCanvas} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block", zIndex: 0 }} />
-        <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(90deg,#0c0c0f 6%,rgba(12,12,15,0.82) 34%,rgba(12,12,15,0.2) 62%,rgba(12,12,15,0) 80%)" }} />
-        <div style={{ position: "relative", zIndex: 2, maxWidth: 1300, margin: "0 auto", width: "100%" }}>
-          <div style={{ maxWidth: 760 }}>
-            <div ref={heroKicker} style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 34 }}>
-              <span style={{ width: 44, height: 1, background: "#d8c7a0" }} />
-              <span style={{ fontSize: 12, letterSpacing: "0.32em", textTransform: "uppercase", color: "#d8c7a0" }}>Coral Gables · Since the 1970s</span>
-            </div>
-            <h1 ref={heroTitle} style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(46px,7vw,92px)", lineHeight: 1.0, margin: "0 0 30px", color: "#fff", letterSpacing: "-0.01em" }}>A brokerage without<br />borders.</h1>
-            <p ref={heroSub} style={{ fontSize: "clamp(17px,1.5vw,20px)", lineHeight: 1.6, color: "#b3ac9d", fontWeight: 300, maxWidth: 520, margin: "0 0 42px" }}>For over fifty years, Brandon Brokerage Group has partnered with producers and advisors — pairing advanced sales support and full case management with access to 30+ top-rated carriers, and a rare command of the foreign national market.</p>
-            <div ref={heroCta} style={{ display: "flex", gap: 26, alignItems: "center", flexWrap: "wrap" }}>
-              <a href="#contact" className={styles.cta} style={{ padding: "16px 34px", border: "1px solid #d8c7a0", color: "#efe4c8", fontSize: 14, letterSpacing: "0.06em", textTransform: "uppercase" }}>Partner with us</a>
-              <a href="#products" className={styles.lnk} style={{ fontSize: 14, letterSpacing: "0.04em", color: "#ece7db" }}>Explore products</a>
-            </div>
-          </div>
-        </div>
-        <div style={{ position: "absolute", bottom: 34, left: "50%", transform: "translateX(-50%)", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
-          <span style={{ fontSize: 10.5, letterSpacing: "0.3em", textTransform: "uppercase", color: "#6f6a5e" }}>Scroll</span>
-          <span style={{ width: 1, height: 38, background: "linear-gradient(#d8c7a0,transparent)" }} />
-        </div>
-      </div>
-
-      {/* STATS STRIP */}
-      <div data-reveal style={{ borderTop: "1px solid rgba(216,199,160,0.2)", borderBottom: "1px solid rgba(216,199,160,0.2)", background: "#0c0c0f" }}>
+      {/* STATS */}
+      <div data-reveal style={{ borderBottom: "2px solid #0a0a0a" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))" }}>
-          <div style={{ padding: "44px clamp(20px,4vw,48px)", borderRight: "1px solid rgba(255,255,255,0.08)" }}><div style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(40px,5vw,60px)", fontWeight: 500, color: "#fff", lineHeight: 0.9 }}>50<span style={{ color: "#d8c7a0" }}>+</span></div><div style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: "#8f887a", marginTop: 14 }}>Years of expertise</div></div>
-          <div style={{ padding: "44px clamp(20px,4vw,48px)", borderRight: "1px solid rgba(255,255,255,0.08)" }}><div style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(40px,5vw,60px)", fontWeight: 500, color: "#fff", lineHeight: 0.9 }}>30<span style={{ color: "#d8c7a0" }}>+</span></div><div style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: "#8f887a", marginTop: 14 }}>Top-rated carriers</div></div>
-          <div style={{ padding: "44px clamp(20px,4vw,48px)", borderRight: "1px solid rgba(255,255,255,0.08)" }}><div style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(40px,5vw,60px)", fontWeight: 500, color: "#fff", lineHeight: 0.9 }}>5</div><div style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: "#8f887a", marginTop: 14 }}>Product lines</div></div>
-          <div style={{ padding: "44px clamp(20px,4vw,48px)" }}><div style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(40px,5vw,60px)", fontWeight: 500, color: "#d8c7a0", lineHeight: 0.9, fontStyle: "italic" }}>FN</div><div style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: "#8f887a", marginTop: 14 }}>Market leader</div></div>
-        </div>
-      </div>
-
-      {/* MISSION */}
-      <div style={{ padding: "clamp(80px,12vw,160px) clamp(20px,5vw,60px)", background: "#0c0c0f" }}>
-        <div style={{ maxWidth: 1000, margin: "0 auto" }}>
-          <div data-reveal style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: "#d8c7a0", marginBottom: 40 }}>Our mission</div>
-          <p data-reveal style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 400, fontSize: "clamp(26px,3.6vw,44px)", lineHeight: 1.34, margin: 0, color: "#ece7db" }}>To provide agents with superior service, personalized sales support and tailored business solutions that <span style={{ fontStyle: "italic", color: "#d8c7a0" }}>build and develop long-term relationships</span>.</p>
+          {[["50+", "Years of expertise"], ["30+", "Top-rated carriers"], ["05", "Product lines"], ["FN", "Market leader"]].map(([n, l], i) => (
+            <div key={l} style={{ padding: "40px clamp(20px,4vw,48px)", borderLeft: i > 0 ? "2px solid #0a0a0a" : undefined }}>
+              <div style={{ fontFamily: "var(--font-archivo), sans-serif", fontSize: "clamp(38px,5vw,58px)", fontWeight: 900, color: n === "FN" ? "#1a56ff" : "#0a0a0a", lineHeight: 0.9 }}>{n}</div>
+              <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", marginTop: 12, color: "#2a2a2a" }}>{l}</div>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* WHY */}
-      <div id="why" style={{ padding: "clamp(60px,8vw,110px) clamp(20px,5vw,60px)", background: "#0c0c0f" }}>
+      <div id="why" style={{ padding: "clamp(60px,8vw,100px) clamp(20px,5vw,60px)" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
-          <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 24, flexWrap: "wrap", marginBottom: 64 }}>
-            <h2 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(30px,4.4vw,56px)", margin: 0, color: "#fff", lineHeight: 1.05, maxWidth: 640 }}>Everything an agent needs, from one desk.</h2>
-            <span style={{ fontSize: 14, color: "#8f887a", maxWidth: 280, fontWeight: 300 }}>Four disciplines, one team behind every case you write.</span>
+          <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: 8, borderBottom: "2px solid #0a0a0a", paddingBottom: 24 }}>
+            <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 900, fontSize: "clamp(30px,4.6vw,58px)", margin: 0, color: "#0a0a0a", letterSpacing: "-0.02em" }}>What we do.</h2>
+            <span style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", color: "#1a56ff" }}>Four disciplines, one desk</span>
           </div>
-          <div>
+          <div data-reveal>
             {WHY.map((w, i) => (
-              <div key={w.n} data-reveal style={{ display: "grid", gridTemplateColumns: "80px 1fr", gap: "clamp(16px,3vw,48px)", padding: "40px 0", borderTop: "1px solid rgba(255,255,255,0.1)", borderBottom: i === WHY.length - 1 ? "1px solid rgba(255,255,255,0.1)" : undefined, alignItems: "baseline" }}>
-                <div style={{ fontFamily: "var(--font-bodoni), serif", fontSize: 30, color: "#d8c7a0", fontStyle: "italic" }}>{w.n}</div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 24, alignItems: "baseline" }}>
-                  <h3 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(22px,2.4vw,30px)", margin: 0, color: "#fff" }}>{w.title}</h3>
-                  <p style={{ fontSize: 15, lineHeight: 1.66, color: "#9a9384", fontWeight: 300, margin: 0 }}>{w.desc}</p>
+              <div key={w.n} className={styles.ledgerRow} style={{ display: "grid", gridTemplateColumns: "90px 1fr", gap: 28, padding: "34px 10px", borderBottom: i === WHY.length - 1 ? "none" : "1px solid #d8d8d8" }}>
+                <div style={{ fontFamily: "var(--font-archivo), sans-serif", fontSize: 26, fontWeight: 900, color: "#c9c9c9" }}>{w.n}</div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 20 }}>
+                  <h3 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(20px,2.2vw,28px)", margin: 0, color: "#0a0a0a", letterSpacing: "-0.01em" }}>{w.title}</h3>
+                  <p style={{ fontSize: 15, lineHeight: 1.6, color: "#3a3a3a", margin: 0, fontWeight: 500 }}>{w.desc}</p>
                 </div>
               </div>
             ))}
@@ -208,80 +120,71 @@ export default function ConceptC() {
       </div>
 
       {/* FOREIGN NATIONAL */}
-      <div id="foreign" style={{ position: "relative", padding: "clamp(90px,13vw,180px) clamp(20px,5vw,60px)", background: "linear-gradient(180deg,#0c0c0f,#131218)" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div data-reveal style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: "#d8c7a0", marginBottom: 34 }}>Signature specialty</div>
-          <h2 data-reveal style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(34px,6vw,76px)", lineHeight: 1.04, margin: "0 0 40px", color: "#fff", maxWidth: 900 }}>We place the cases <span style={{ fontStyle: "italic", color: "#d8c7a0" }}>others turn away</span>.</h2>
-          <div data-reveal style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: "clamp(30px,5vw,80px)", alignItems: "start" }}>
-            <p style={{ fontSize: "clamp(16px,1.5vw,19px)", lineHeight: 1.7, color: "#b3ac9d", fontWeight: 300, margin: 0 }}>With over 50 years of experience, we are an industry leader in the foreign national market. We help agents devise customized sales strategies and wealth-management solutions for their foreign national clients.</p>
-            <p style={{ fontSize: "clamp(16px,1.5vw,19px)", lineHeight: 1.7, color: "#b3ac9d", fontWeight: 300, margin: 0 }}>Our open-architecture approach offers a variety of products and services to best suit your clients&apos; needs — while adhering to all carrier, state and federal guidelines. <a href="#contact" className={styles.lnk} style={{ color: "#d8c7a0" }}>Speak with a specialist</a>.</p>
+      <div id="foreign" style={{ padding: "clamp(70px,10vw,120px) clamp(20px,5vw,60px)", background: "#0a0a0a", color: "#fff" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div data-reveal style={{ fontSize: 13, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: "#1a56ff", marginBottom: 24 }}>Signature Specialty</div>
+          <h2 data-reveal style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 900, fontSize: "clamp(32px,6vw,88px)", lineHeight: 0.98, margin: "0 0 44px", color: "#fff", letterSpacing: "-0.02em", maxWidth: 1000 }}>
+            We place the cases others turn away.
+          </h2>
+          <div data-reveal style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: "clamp(30px,5vw,70px)", borderTop: "2px solid #fff", paddingTop: 32 }}>
+            <p style={{ fontSize: 16, lineHeight: 1.7, color: "#d4d4d4", margin: 0, fontWeight: 500 }}>With over 50 years of experience, we are an industry leader in the foreign national market — devising customized sales strategies and wealth-management solutions.</p>
+            <p style={{ fontSize: 16, lineHeight: 1.7, color: "#d4d4d4", margin: 0, fontWeight: 500 }}>Our open-architecture approach suits your clients&apos; needs while adhering to all carrier, state and federal guidelines. <a href="#contact" style={{ color: "#1a56ff", fontWeight: 700 }}>Speak with a specialist →</a></p>
           </div>
         </div>
       </div>
 
       {/* PRODUCTS */}
-      <div id="products" style={{ padding: "clamp(60px,8vw,110px) clamp(20px,5vw,60px)", background: "#131218" }}>
+      <div id="products" style={{ padding: "clamp(60px,8vw,100px) clamp(20px,5vw,60px)", borderBottom: "2px solid #0a0a0a" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
-          <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: 16 }}>
-            <h2 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(30px,4.4vw,56px)", margin: 0, color: "#fff" }}>Products</h2>
-            <span style={{ fontSize: 13, letterSpacing: "0.16em", textTransform: "uppercase", color: "#d8c7a0" }}>Backed by 30+ carriers</span>
+          <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: 8, borderBottom: "2px solid #0a0a0a", paddingBottom: 24 }}>
+            <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 900, fontSize: "clamp(30px,4.6vw,58px)", margin: 0, color: "#0a0a0a", letterSpacing: "-0.02em" }}>Products.</h2>
+            <span style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", color: "#1a56ff" }}>Backed by 30+ carriers</span>
           </div>
-          <div data-reveal style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}>
-            {PRODUCTS.map((p) => (
-              <a key={p.n} href="#contact" className={styles.prod} style={{ display: "grid", gridTemplateColumns: "60px 1fr auto", gap: "clamp(14px,3vw,40px)", alignItems: "center", padding: "34px 4px", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
-                <span style={{ fontFamily: "var(--font-bodoni), serif", fontStyle: "italic", color: "#d8c7a0", fontSize: 18 }}>{p.n}</span>
-                <span style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(24px,3vw,38px)", color: "#fff" }}>{p.name}</span>
-                <span style={{ fontSize: 14, color: "#8f887a", textAlign: "right" }}>{p.desc}</span>
+          <div data-reveal>
+            {PRODUCTS.map((p, i) => (
+              <a key={p.n} href="#contact" className={styles.ledgerRow} style={{ display: "grid", gridTemplateColumns: "60px 1fr auto", gap: "clamp(14px,3vw,40px)", alignItems: "center", padding: "30px 10px", borderBottom: i === PRODUCTS.length - 1 ? "none" : "1px solid #d8d8d8" }}>
+                <span style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 900, color: "#c9c9c9", fontSize: 18 }}>{p.n}</span>
+                <span style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(22px,3vw,34px)", color: "#0a0a0a", letterSpacing: "-0.01em" }}>{p.name}</span>
+                <span style={{ fontSize: 14, color: "#3a3a3a", textAlign: "right", fontWeight: 600 }}>{p.desc}</span>
               </a>
             ))}
           </div>
         </div>
       </div>
 
-      {/* CARRIERS MARQUEE */}
-      <div data-reveal style={{ padding: "clamp(56px,7vw,90px) clamp(20px,5vw,60px)", background: "#131218", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+      {/* CARRIERS */}
+      <div data-reveal style={{ padding: "clamp(56px,7vw,90px) clamp(20px,5vw,60px)" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
-          <div style={{ fontSize: 12, letterSpacing: "0.24em", textTransform: "uppercase", color: "#8f887a", marginBottom: 34 }}>Our carriers — a leading Tellus / Crump firm</div>
-          <div style={{ position: "relative", overflow: "hidden", WebkitMaskImage: "linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)", maskImage: "linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)" }}>
-            <div className={styles.marquee} style={{ display: "flex", width: "max-content", alignItems: "center", columnGap: "clamp(30px,4vw,64px)", fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(19px,2vw,28px)", color: "#7a7466", whiteSpace: "nowrap" }}>
-              {[0, 1].map((rep) => (
-                <span key={rep} style={{ display: "flex", alignItems: "center", columnGap: "clamp(30px,4vw,64px)" }}>
-                  {CARRIERS.map((c) => (
-                    <span key={c} style={{ display: "flex", alignItems: "center", columnGap: "clamp(30px,4vw,64px)" }}>
-                      <span>{c}</span><span style={{ color: "#d8c7a0" }}>·</span>
-                    </span>
-                  ))}
-                </span>
-              ))}
-            </div>
+          <div style={{ fontSize: 12.5, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", color: "#3a3a3a", marginBottom: 26 }}>Our carriers — a leading Tellus / Crump firm</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 0, border: "2px solid #0a0a0a", borderLeft: "none", borderTop: "none" }}>
+            {CARRIERS.map((c) => (
+              <span key={c} className={styles.chip} style={{ fontSize: 13, fontWeight: 700, color: "#0a0a0a", border: "2px solid #0a0a0a", borderRight: "none", borderBottom: "none", padding: "12px 18px" }}>{c}</span>
+            ))}
           </div>
         </div>
       </div>
 
       {/* CONTACT */}
-      <div id="contact" style={{ position: "relative", padding: "clamp(90px,13vw,180px) clamp(20px,5vw,60px)", background: "radial-gradient(120% 100% at 28% 20%,#1a1820,#0c0c0f 60%)" }}>
+      <div id="contact" style={{ padding: "clamp(70px,10vw,120px) clamp(20px,5vw,60px)", background: "#1a56ff", color: "#fff" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,90px)", alignItems: "center" }}>
           <div data-reveal>
-            <div style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: "#d8c7a0", marginBottom: 30 }}>Get started</div>
-            <h2 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(38px,5.5vw,72px)", lineHeight: 1.02, margin: "0 0 28px", color: "#fff" }}>Let&apos;s write more business, together.</h2>
-            <p style={{ fontSize: 17, lineHeight: 1.66, color: "#b3ac9d", fontWeight: 300, margin: 0, maxWidth: 440 }}>Tell us about your case or your book of business. A brokerage director responds within one business day.</p>
+            <div style={{ fontSize: 13, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: "#0a0a0a", marginBottom: 24 }}>Get Started</div>
+            <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 900, fontSize: "clamp(32px,5vw,64px)", lineHeight: 0.98, margin: "0 0 26px", color: "#fff", letterSpacing: "-0.02em" }}>Let&apos;s write more business, together.</h2>
+            <p style={{ fontSize: 17, lineHeight: 1.6, color: "#e4ebff", margin: 0, maxWidth: 440, fontWeight: 500 }}>Tell us about your case or your book of business. A brokerage director responds within one business day.</p>
           </div>
-          <div data-reveal style={{ borderTop: "1px solid rgba(216,199,160,0.35)" }}>
-            <a href="tel:+13054447401" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "26px 0", borderBottom: "1px solid rgba(255,255,255,0.1)" }}><span style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: "#8f887a" }}>Phone</span><span style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(20px,2.4vw,28px)", color: "#fff" }}>305-444-7401</span></a>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "26px 0", borderBottom: "1px solid rgba(255,255,255,0.1)" }}><span style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: "#8f887a" }}>Toll-Free</span><span style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(20px,2.4vw,28px)", color: "#fff" }}>1-888-776-4678</span></div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "26px 0", borderBottom: "1px solid rgba(255,255,255,0.1)" }}><span style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: "#8f887a" }}>Office</span><span style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(17px,1.8vw,22px)", color: "#fff", textAlign: "right" }}>75 Valencia Ave, Suite 200<br />Coral Gables, FL 33134</span></div>
-            <a href="#contact" className={styles.cta} style={{ display: "inline-block", marginTop: 34, padding: "16px 38px", border: "1px solid #d8c7a0", color: "#efe4c8", fontSize: 14, letterSpacing: "0.08em", textTransform: "uppercase" }}>Partner with us</a>
+          <div data-reveal style={{ border: "2px solid #0a0a0a" }}>
+            <a href="tel:+13054447401" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "24px 22px", borderBottom: "2px solid #0a0a0a" }}><span style={{ fontSize: 12.5, fontWeight: 800, textTransform: "uppercase", color: "#0a0a0a" }}>Phone</span><span style={{ fontFamily: "var(--font-archivo), sans-serif", fontSize: 22, fontWeight: 800, color: "#fff" }}>305-444-7401</span></a>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "24px 22px", borderBottom: "2px solid #0a0a0a" }}><span style={{ fontSize: 12.5, fontWeight: 800, textTransform: "uppercase", color: "#0a0a0a" }}>Toll-Free</span><span style={{ fontFamily: "var(--font-archivo), sans-serif", fontSize: 22, fontWeight: 800, color: "#fff" }}>1-888-776-4678</span></div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "24px 22px" }}><span style={{ fontSize: 12.5, fontWeight: 800, textTransform: "uppercase", color: "#0a0a0a" }}>Office</span><span style={{ fontFamily: "var(--font-archivo), sans-serif", fontSize: 16, fontWeight: 800, color: "#fff", textAlign: "right" }}>75 Valencia Ave, Suite 200<br />Coral Gables, FL 33134</span></div>
           </div>
         </div>
       </div>
 
       {/* FOOTER */}
-      <div style={{ padding: "44px clamp(20px,5vw,60px)", background: "#050505", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-        <div style={{ background: "rgba(236,231,219,0.94)", borderRadius: 999, padding: "8px 18px", display: "inline-flex" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 22 }} />
-        </div>
-        <div style={{ fontSize: 12, color: "#6a6459" }}>© 1970s–2026 Brandon Brokerage Group · For licensed agents &amp; advisors only</div>
+      <div style={{ padding: "28px clamp(20px,5vw,60px)", background: "#0a0a0a", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 20, filter: "grayscale(1) invert(1) contrast(1.4)" }} />
+        <div style={{ fontSize: 11.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.03em", color: "#999" }}>© 1970s–2026 Brandon Brokerage Group · Licensed Agents Only</div>
       </div>
 
     </div>

@@ -2,90 +2,68 @@
   width: 100%;
   overflow-x: hidden;
   position: relative;
-  background: #0c0c0f;
-  color: #ece7db;
+  background: #fff;
+  color: #0a0a0a;
+  font-family: var(--font-archivo), sans-serif;
 }
 
 .page :where(a) {
-  color: #d8c7a0;
+  color: #0a0a0a;
   text-decoration: none;
 }
 .page :where(a):hover {
-  color: #efe4c8;
+  color: #1a56ff;
 }
 .page ::selection {
-  background: #d8c7a0;
-  color: #0c0c0f;
+  background: #1a56ff;
+  color: #fff;
 }
 
 .nl {
-  color: #4a473e;
-  transition: color 0.3s;
-  font-size: 13.5px;
+  color: #0a0a0a;
+  transition: color 0.2s;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
   letter-spacing: 0.02em;
 }
 .nl:hover {
-  color: #9a7526;
+  color: #1a56ff;
 }
 
 .cta {
   position: relative;
   overflow: hidden;
-  transition: color 0.3s;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  font-weight: 800;
+  text-transform: uppercase;
 }
-.cta::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: #efe4c8;
-  transform: translateY(101%);
-  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
-  z-index: -1;
+.ctaBlue {
+  background: #1a56ff;
+  color: #fff;
+  border: 2px solid #1a56ff;
 }
-.cta:hover::after {
-  transform: translateY(0);
+.ctaBlue:hover {
+  background: #0a0a0a;
+  border-color: #0a0a0a;
 }
-.cta:hover {
-  color: #0c0c0f !important;
+.ctaOutline {
+  background: transparent;
+  color: #0a0a0a;
+  border: 2px solid #0a0a0a;
 }
-
-.lnk {
-  position: relative;
+.ctaOutline:hover {
+  background: #0a0a0a;
+  color: #fff;
 }
-.lnk::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -3px;
-  width: 100%;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.35s ease;
+.ctaOutlineLight {
+  background: transparent;
+  color: #fff;
+  border: 2px solid #fff;
 }
-.lnk:hover::after {
-  transform: scaleX(1);
-}
-
-.prod {
-  transition: padding-left 0.35s ease, background 0.35s;
-}
-.prod:hover {
-  padding-left: 20px;
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.marquee {
-  animation: bpMarquee 40s linear infinite;
-}
-.marquee:hover {
-  animation-play-state: paused;
-}
-
-@keyframes bpMarquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+.ctaOutlineLight:hover {
+  background: #fff;
+  color: #0a0a0a;
 }
 
 .headerBar {
@@ -98,7 +76,7 @@
 .headerNav {
   display: flex;
   align-items: center;
-  gap: clamp(14px, 2.4vw, 36px);
+  gap: clamp(20px, 2.4vw, 40px);
   justify-content: flex-end;
 }
 
@@ -106,4 +84,48 @@
   .headerNav {
     display: none;
   }
+}
+
+.ledgerRow {
+  transition: background 0.15s;
+}
+.ledgerRow:hover {
+  background: #f2f2f2;
+}
+
+.chip {
+  transition: background 0.15s, color 0.15s;
+}
+.chip:hover {
+  background: #0a0a0a;
+  color: #fff;
+}
+
+.heroFooter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(30px, 5vw, 70px);
+  align-items: end;
+  border-top: 2px solid #0a0a0a;
+  padding-top: 30px;
+}
+
+@media (max-width: 700px) {
+  .heroFooter {
+    grid-template-columns: 1fr;
+  }
+  .bgType {
+    display: none;
+  }
+}
+
+.bgType {
+  position: absolute;
+  z-index: 0;
+  font-weight: 900;
+  color: transparent;
+  -webkit-text-stroke: 1px #ececec;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
 }

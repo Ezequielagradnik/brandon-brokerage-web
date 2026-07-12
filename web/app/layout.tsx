@@ -1,18 +1,30 @@
 import type { Metadata } from "next";
-import { Bodoni_Moda, Archivo } from "next/font/google";
+import { Archivo, Manrope, Fraunces, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
-const bodoniModa = Bodoni_Moda({
-  variable: "--font-bodoni",
+const archivo = Archivo({
+  variable: "--font-archivo",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+});
+
+const manrope = Manrope({
+  variable: "--font-manrope",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+});
+
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   style: ["normal", "italic"],
 });
 
-const archivo = Archivo({
-  variable: "--font-archivo",
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -26,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${bodoniModa.variable} ${archivo.variable}`}>
+    <html lang="en" className={`${archivo.variable} ${manrope.variable} ${fraunces.variable} ${plexMono.variable}`}>
       <body>{children}</body>
     </html>
   );

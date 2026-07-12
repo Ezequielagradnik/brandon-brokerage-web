@@ -7,71 +7,62 @@ export default function Home() {
       <div style={{ maxWidth: 1280, margin: "0 auto" }}>
 
         <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
-          <div style={{ background: "rgba(245,240,230,0.94)", borderRadius: 999, padding: "8px 18px", display: "inline-flex" }}>
+          <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 10, padding: "8px 18px", display: "inline-flex" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 24 }} />
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 24, flexWrap: "wrap", marginBottom: 8 }}>
-          <div style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: "#c9a24b" }}>Website redesign · Three directions</div>
-        </div>
-        <h1 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(34px,5.2vw,64px)", lineHeight: 1.02, margin: "0 0 18px", color: "#fff" }}>Pick a direction.</h1>
-        <p style={{ fontSize: "clamp(15px,1.4vw,18px)", color: "#9aa6b8", fontWeight: 300, maxWidth: 640, margin: "0 0 clamp(40px,5vw,64px)", lineHeight: 1.6 }}>Same content and structure across all three — one shared editorial language (Bodoni + hairline gold), each with its own palette and a distinct three.js signature. Open any one to see the full, scrollable homepage.</p>
+        <div style={{ fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase", color: "#7a8aa8", marginBottom: 10, fontWeight: 700 }}>Website redesign · Three directions</div>
+        <h1 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: "clamp(30px,4.6vw,52px)", lineHeight: 1.08, margin: "0 0 18px", color: "#fff", letterSpacing: "-0.01em" }}>Pick a direction.</h1>
+        <p style={{ fontSize: "clamp(15px,1.2vw,17px)", color: "#9aa6b8", fontWeight: 500, maxWidth: 680, margin: "0 0 clamp(40px,5vw,64px)", lineHeight: 1.6 }}>Three genuinely different design languages — grounded in how real insurance brokerages and modern B2B financial firms present themselves — sharing the same real homepage copy. Open any one to see the full, scrollable homepage.</p>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 24 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))", gap: 24 }}>
 
-          <Link href="/a" className={styles.card} style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, overflow: "hidden", background: "#0d1b32" }}>
-            <div style={{ position: "relative", height: 220, background: "radial-gradient(120% 120% at 75% 35%,#12233f,#0a1626)", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-              <div style={{ position: "absolute", width: 180, height: 180, borderRadius: "50%", border: "1px solid rgba(201,162,75,0.5)", boxShadow: "inset 0 0 40px rgba(201,162,75,0.15)" }} />
-              <div style={{ position: "absolute", width: 120, height: 180, borderRadius: "50%", border: "1px solid rgba(201,162,75,0.28)" }} />
-              <div style={{ position: "absolute", width: 180, height: 1, background: "rgba(201,162,75,0.4)" }} />
-            </div>
-            <div style={{ padding: "28px 26px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-                <span style={{ fontFamily: "var(--font-bodoni), serif", fontStyle: "italic", color: "#c9a24b", fontSize: 20 }}>A</span>
-                <span style={{ display: "flex", gap: 6 }}>
-                  <span style={{ width: 14, height: 14, borderRadius: "50%", background: "#0a1626", border: "1px solid rgba(255,255,255,0.2)" }} />
-                  <span style={{ width: 14, height: 14, borderRadius: "50%", background: "#c9a24b" }} />
-                </span>
+          <Link href="/a" className={styles.card} style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, overflow: "hidden", background: "#fff" }}>
+            <div style={{ position: "relative", height: 220, background: "#f7f8fa", padding: 24 }}>
+              <div style={{ position: "absolute", top: 24, right: 24, width: "62%", background: "#fff", border: "1px solid #e6e9ef", borderRadius: 10, padding: "14px 16px", boxShadow: "0 10px 30px rgba(15,23,42,0.08)" }}>
+                <div style={{ fontSize: 22, fontWeight: 800, color: "#12294a", fontFamily: "var(--font-manrope), sans-serif" }}>50<span style={{ color: "#d97706" }}>+</span></div>
+                <div style={{ display: "flex", gap: 4, marginTop: 10, height: 24, alignItems: "flex-end" }}>
+                  {[30, 55, 40, 70, 50].map((h, i) => (<div key={i} style={{ flex: 1, height: `${h}%`, background: i === 3 ? "#d97706" : "#e7ecf3", borderRadius: 2 }} />))}
+                </div>
               </div>
-              <h2 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: 26, margin: "0 0 8px", color: "#fff" }}>Midnight &amp; Gold</h2>
-              <p style={{ fontSize: 14, color: "#9aa6b8", fontWeight: 300, lineHeight: 1.6, margin: "0 0 18px" }}>Deep navy, gold hairlines. Signature: a rotating <strong style={{ color: "#e2c072", fontWeight: 500 }}>wireframe globe</strong> — a nod to the logo and the foreign national market.</p>
-              <span style={{ fontSize: 13, letterSpacing: "0.08em", textTransform: "uppercase", color: "#e2c072" }}>Open homepage →</span>
+              <div style={{ position: "absolute", bottom: 24, left: 24, background: "#12294a", color: "#fff", borderRadius: 10, padding: "10px 16px", fontSize: 12, fontWeight: 700 }}>Foreign National Desk</div>
+            </div>
+            <div style={{ padding: "26px 24px" }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", color: "#d97706", marginBottom: 10 }}>01 — Corporate Modern</div>
+              <h2 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: 24, margin: "0 0 8px", color: "#12294a" }}>Trust, built like software.</h2>
+              <p style={{ fontSize: 14, color: "#5c6675", fontWeight: 500, lineHeight: 1.6, margin: "0 0 16px" }}>Clean sans-serif, navy &amp; amber, dashboard-style stat cards — the register of a modern B2B brokerage platform (Highland Capital, Crump).</p>
+              <span style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", color: "#12294a" }}>Open homepage →</span>
             </div>
           </Link>
 
-          <Link href="/b" className={styles.card} style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, overflow: "hidden", background: "#f3efe6" }}>
-            <div style={{ position: "relative", height: 220, background: "radial-gradient(90% 90% at 72% 40%, rgba(169,129,47,0.5), rgba(243,239,230,0) 60%), radial-gradient(80% 80% at 55% 72%, rgba(18,41,74,0.35), rgba(243,239,230,0) 60%), #f3efe6" }} />
-            <div style={{ padding: "28px 26px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-                <span style={{ fontFamily: "var(--font-bodoni), serif", fontStyle: "italic", color: "#a9812f", fontSize: 20 }}>B</span>
-                <span style={{ display: "flex", gap: 6 }}>
-                  <span style={{ width: 14, height: 14, borderRadius: "50%", background: "#f3efe6", border: "1px solid rgba(18,41,74,0.25)" }} />
-                  <span style={{ width: 14, height: 14, borderRadius: "50%", background: "#12294a" }} />
-                  <span style={{ width: 14, height: 14, borderRadius: "50%", background: "#a9812f" }} />
-                </span>
-              </div>
-              <h2 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: 26, margin: "0 0 8px", color: "#12294a" }}>Ivory &amp; Sapphire</h2>
-              <p style={{ fontSize: 14, color: "#5c6675", fontWeight: 400, lineHeight: 1.6, margin: "0 0 18px" }}>Light, airy and premium. Signature: a soft animated <strong style={{ color: "#a9812f", fontWeight: 600 }}>silk gradient</strong> shader flowing navy and gold across ivory.</p>
-              <span style={{ fontSize: 13, letterSpacing: "0.08em", textTransform: "uppercase", color: "#a9812f" }}>Open homepage →</span>
+          <Link href="/b" className={styles.card} style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, overflow: "hidden", background: "#f5efe0" }}>
+            <div style={{ position: "relative", height: 220, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg width="96" height="96" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="57" fill="none" stroke="#1f3d2f" strokeWidth="1" />
+                <circle cx="60" cy="60" r="40" fill="none" stroke="#a67c3d" strokeWidth="1.4" />
+                <text x="60" y="55" textAnchor="middle" fontFamily="serif" fontStyle="italic" fontSize="22" fill="#1f3d2f">50</text>
+                <text x="60" y="72" textAnchor="middle" fontFamily="monospace" fontSize="8" letterSpacing="1" fill="#1f3d2f">YEARS</text>
+              </svg>
+            </div>
+            <div style={{ padding: "26px 24px" }}>
+              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#a67c3d", marginBottom: 10, fontFamily: "monospace" }}>02 — Heritage Engraved</div>
+              <h2 style={{ fontFamily: "serif", fontWeight: 500, fontSize: 24, margin: "0 0 8px", color: "#1f3d2f" }}>Fifty years, on paper.</h2>
+              <p style={{ fontSize: 14, color: "#3f5245", fontWeight: 400, lineHeight: 1.6, margin: "0 0 16px" }}>Ivory paper, engraved guilloche linework, a wax-seal emblem — the register of a stock certificate, nodding to currency and heritage design (Plaid&apos;s 2025 refresh).</p>
+              <span style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", color: "#1f3d2f", fontFamily: "monospace" }}>Open homepage →</span>
             </div>
           </Link>
 
-          <Link href="/c" className={styles.card} style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, overflow: "hidden", background: "#111015" }}>
-            <div style={{ position: "relative", height: 220, background: "radial-gradient(120% 120% at 72% 40%,#1b1a20,#0c0c0f)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <div style={{ width: 120, height: 120, background: "linear-gradient(135deg,#efe4c8,#b99a5f 55%,#6f5c33)", clipPath: "polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)", boxShadow: "0 20px 50px rgba(216,199,160,0.25)" }} />
+          <Link href="/c" className={styles.card} style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, overflow: "hidden", background: "#fff" }}>
+            <div style={{ position: "relative", height: 220, background: "#0a0a0a", display: "flex", alignItems: "center", padding: "0 24px" }}>
+              <div style={{ fontFamily: "sans-serif", fontWeight: 900, fontSize: 46, color: "#fff", lineHeight: 0.95, letterSpacing: "-0.02em" }}>NO<br />BORDERS.</div>
+              <div style={{ position: "absolute", bottom: 20, left: 24, width: 40, height: 6, background: "#1a56ff" }} />
             </div>
-            <div style={{ padding: "28px 26px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-                <span style={{ fontFamily: "var(--font-bodoni), serif", fontStyle: "italic", color: "#d8c7a0", fontSize: 20 }}>C</span>
-                <span style={{ display: "flex", gap: 6 }}>
-                  <span style={{ width: 14, height: 14, borderRadius: "50%", background: "#0c0c0f", border: "1px solid rgba(255,255,255,0.2)" }} />
-                  <span style={{ width: 14, height: 14, borderRadius: "50%", background: "#d8c7a0" }} />
-                </span>
-              </div>
-              <h2 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: 26, margin: "0 0 8px", color: "#fff" }}>Obsidian &amp; Champagne</h2>
-              <p style={{ fontSize: 14, color: "#9a9384", fontWeight: 300, lineHeight: 1.6, margin: "0 0 18px" }}>High-end, near-black minimal. Signature: a faceted <strong style={{ color: "#efe4c8", fontWeight: 500 }}>gold gem</strong> slowly turning in the light.</p>
-              <span style={{ fontSize: 13, letterSpacing: "0.08em", textTransform: "uppercase", color: "#d8c7a0" }}>Open homepage →</span>
+            <div style={{ padding: "26px 24px" }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", color: "#1a56ff", marginBottom: 10 }}>03 — Bold Editorial</div>
+              <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 900, fontSize: 24, margin: "0 0 8px", color: "#0a0a0a", letterSpacing: "-0.01em" }}>Black, white, and one blue.</h2>
+              <p style={{ fontSize: 14, color: "#3a3a3a", fontWeight: 500, lineHeight: 1.6, margin: "0 0 16px" }}>Oversized type, sharp edges, thick rules, zero gradients — the high-contrast, no-gloss register 2026 fintech is moving toward (Coinbase Sans, Mercury).</p>
+              <span style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", color: "#0a0a0a" }}>Open homepage →</span>
             </div>
           </Link>
 
