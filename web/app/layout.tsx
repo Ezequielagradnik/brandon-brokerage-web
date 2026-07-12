@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
-import { Archivo, Manrope, Fraunces, IBM_Plex_Mono } from "next/font/google";
+import { Archivo, Manrope, Fraunces, IBM_Plex_Mono, Bodoni_Moda } from "next/font/google";
 import "./globals.css";
 
 const archivo = Archivo({
   variable: "--font-archivo",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800", "900"],
+});
+
+const bodoniModa = Bodoni_Moda({
+  variable: "--font-bodoni",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
 });
 
 const manrope = Manrope({
@@ -38,7 +45,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${archivo.variable} ${manrope.variable} ${fraunces.variable} ${plexMono.variable}`}>
+    <html lang="en" className={`${archivo.variable} ${manrope.variable} ${fraunces.variable} ${plexMono.variable} ${bodoniModa.variable}`}>
       <body>{children}</body>
     </html>
   );

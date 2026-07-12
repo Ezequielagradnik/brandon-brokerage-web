@@ -12,9 +12,9 @@ export default function Home() {
             <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 24 }} />
           </div>
         </div>
-        <div style={{ fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase", color: "#7a8aa8", marginBottom: 10, fontWeight: 700 }}>Website redesign · Three directions</div>
+        <div style={{ fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase", color: "#7a8aa8", marginBottom: 10, fontWeight: 700 }}>Website redesign · Four directions</div>
         <h1 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: "clamp(30px,4.6vw,52px)", lineHeight: 1.08, margin: "0 0 18px", color: "#fff", letterSpacing: "-0.01em" }}>Pick a direction.</h1>
-        <p style={{ fontSize: "clamp(15px,1.2vw,17px)", color: "#9aa6b8", fontWeight: 500, maxWidth: 680, margin: "0 0 clamp(40px,5vw,64px)", lineHeight: 1.6 }}>Three genuinely different design languages — grounded in how real insurance brokerages and modern B2B financial firms present themselves — sharing the same real homepage copy. Open any one to see the full, scrollable homepage.</p>
+        <p style={{ fontSize: "clamp(15px,1.2vw,17px)", color: "#9aa6b8", fontWeight: 500, maxWidth: 680, margin: "0 0 clamp(40px,5vw,64px)", lineHeight: 1.6 }}>Four genuinely different design languages — grounded in how real insurance brokerages and modern B2B financial firms present themselves — sharing the same real homepage copy. Open any one to see the full, scrollable homepage.</p>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))", gap: 24 }}>
 
@@ -63,6 +63,16 @@ export default function Home() {
               <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 900, fontSize: 24, margin: "0 0 8px", color: "#0a0a0a", letterSpacing: "-0.01em" }}>Black, white, and one blue.</h2>
               <p style={{ fontSize: 14, color: "#3a3a3a", fontWeight: 500, lineHeight: 1.6, margin: "0 0 16px" }}>Oversized type, sharp edges, thick rules, zero gradients — the high-contrast, no-gloss register 2026 fintech is moving toward (Coinbase Sans, Mercury).</p>
               <span style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", color: "#0a0a0a" }}>Open homepage →</span>
+            </div>
+          </Link>
+
+          <Link href="/d" className={styles.card} style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, overflow: "hidden", background: "#f3efe6" }}>
+            <div style={{ position: "relative", height: 220, background: "radial-gradient(90% 90% at 72% 40%, rgba(169,129,47,0.5), rgba(243,239,230,0) 60%), radial-gradient(80% 80% at 55% 72%, rgba(18,41,74,0.35), rgba(243,239,230,0) 60%), #f3efe6" }} />
+            <div style={{ padding: "26px 24px" }}>
+              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#a9812f", marginBottom: 10 }}>04 — Ivory &amp; Sapphire</div>
+              <h2 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: 24, margin: "0 0 8px", color: "#12294a" }}>Light, animated, premium.</h2>
+              <p style={{ fontSize: 14, color: "#5c6675", fontWeight: 400, lineHeight: 1.6, margin: "0 0 16px" }}>The original ivory &amp; navy direction — Bodoni serif over a soft animated silk-gradient shader flowing gold and navy across the page.</p>
+              <span style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", color: "#a9812f" }}>Open homepage →</span>
             </div>
           </Link>
 
