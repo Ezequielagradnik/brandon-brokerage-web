@@ -47,6 +47,13 @@
   transform: translateX(0);
 }
 
+@media (min-width: 901px) {
+  .panel,
+  .backdrop {
+    display: none !important;
+  }
+}
+
 .close {
   align-self: flex-end;
   background: none;
