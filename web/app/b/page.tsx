@@ -53,7 +53,12 @@ function useSilk(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     if (!canvas) return;
     const parent = canvas.parentElement as HTMLElement;
     let w = parent.clientWidth, h = parent.clientHeight;
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    } catch {
+      return;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(w, h, false);
     const scene = new THREE.Scene();
@@ -110,10 +115,10 @@ export default function ConceptB() {
     <div ref={pageRef} className={styles.page}>
 
       {/* HEADER */}
-      <div style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 60, padding: "22px clamp(20px,5vw,60px)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <div className={styles.headerBar} style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 60, padding: "22px clamp(20px,5vw,60px)" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <a href="#top" style={{ display: "inline-flex" }}><img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 30 }} /></a>
-        <div style={{ display: "flex", alignItems: "center", gap: "clamp(18px,2.4vw,36px)", flexWrap: "wrap", justifyContent: "flex-end" }}>
+        <div className={styles.headerNav}>
           <a href="#why" className={styles.nl}>Firm</a>
           <a href="#foreign" className={styles.nl}>Foreign National</a>
           <a href="#products" className={styles.nl}>Products</a>

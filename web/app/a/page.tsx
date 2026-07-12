@@ -28,7 +28,12 @@ function useGlobe(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     if (!canvas) return;
     const parent = canvas.parentElement as HTMLElement;
     let w = parent.clientWidth, h = parent.clientHeight;
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    } catch {
+      return;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(w, h, false);
     const scene = new THREE.Scene();
@@ -119,10 +124,10 @@ export default function ConceptA() {
 
       {/* HEADER */}
       <div style={{ position: "fixed", top: 18, left: 0, right: 0, zIndex: 60, padding: "0 clamp(20px,5vw,60px)", display: "flex", justifyContent: "center" }}>
-        <div style={{ width: "100%", maxWidth: 1300, background: "rgba(245,240,230,0.94)", backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)", borderRadius: 999, padding: "12px 26px", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0 20px 50px rgba(0,0,0,0.35)" }}>
+        <div className={styles.headerBar} style={{ width: "100%", maxWidth: 1300, background: "rgba(245,240,230,0.94)", backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)", borderRadius: 28, padding: "12px 26px", boxShadow: "0 20px 50px rgba(0,0,0,0.35)" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <a href="#top" style={{ display: "inline-flex" }}><img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 26 }} /></a>
-          <div style={{ display: "flex", alignItems: "center", gap: "clamp(18px,2.4vw,36px)", flexWrap: "wrap", justifyContent: "flex-end" }}>
+          <div className={styles.headerNav}>
             <a href="#why" className={styles.nl}>Firm</a>
             <a href="#foreign" className={styles.nl}>Foreign National</a>
             <a href="#products" className={styles.nl}>Products</a>
