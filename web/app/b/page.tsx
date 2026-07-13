@@ -122,9 +122,13 @@ export default function ConceptB() {
       {/* WHY — LEDGER LIST */}
       <div id="why" style={{ padding: "clamp(64px,8vw,110px) clamp(20px,5vw,60px)" }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <div data-reveal style={{ textAlign: "center", marginBottom: 56 }}>
+          <div data-reveal style={{ textAlign: "center", marginBottom: 40 }}>
             <div className={styles.mono} style={{ fontSize: 12, letterSpacing: "0.18em", color: "#a67c3d", marginBottom: 16 }}>ARTICLES OF SERVICE</div>
             <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 500, fontSize: "clamp(26px,3.2vw,38px)", margin: 0, color: "#1f3d2f" }}>Everything an agent needs, from one desk.</h2>
+          </div>
+          <div data-reveal className={`${styles.frame} ${styles.photoFrame}`} style={{ height: 260, marginBottom: 48 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/handshake-moody.jpg" alt="Advisor and client shaking hands" />
           </div>
           <div data-reveal>
             {WHY.map((w, i) => (
@@ -142,6 +146,8 @@ export default function ConceptB() {
 
       {/* FOREIGN NATIONAL */}
       <div id="foreign" style={{ position: "relative", padding: "clamp(70px,10vw,120px) clamp(20px,5vw,60px)", background: "#1f3d2f", color: "#f5efe0", overflow: "hidden" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/miami-palms-sunset.jpg" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.22, filter: "grayscale(1) sepia(0.3)" }} />
         <Guilloche color="#f5efe0" opacity={0.08} />
         <div style={{ position: "relative", maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
           <div className={styles.mono} style={{ fontSize: 12, letterSpacing: "0.18em", color: "#c8a76a", marginBottom: 22 }}>SIGNATURE SPECIALTY</div>

@@ -192,6 +192,10 @@ export default function ConceptD() {
             <h2 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(30px,4.4vw,56px)", margin: 0, color: "#12294a", lineHeight: 1.05, maxWidth: 640 }}>Everything an agent needs, from one desk.</h2>
             <span style={{ fontSize: 14, color: "#6b7482", maxWidth: 280, fontWeight: 400 }}>Four disciplines, one team behind every case you write.</span>
           </div>
+          <div data-reveal style={{ borderRadius: 4, overflow: "hidden", height: 280, marginBottom: 56 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/miami-palms-day.jpg" alt="Miami skyline and palm trees" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
           <div>
             {WHY.map((w, i) => (
               <div key={w.n} data-reveal style={{ display: "grid", gridTemplateColumns: "80px 1fr", gap: "clamp(16px,3vw,48px)", padding: "40px 0", borderTop: "1px solid rgba(18,41,74,0.16)", borderBottom: i === WHY.length - 1 ? "1px solid rgba(18,41,74,0.16)" : undefined, alignItems: "baseline" }}>
@@ -207,8 +211,10 @@ export default function ConceptD() {
       </div>
 
       {/* FOREIGN NATIONAL */}
-      <div id="foreign" style={{ position: "relative", padding: "clamp(90px,13vw,180px) clamp(20px,5vw,60px)", background: "#f3efe6" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+      <div id="foreign" style={{ position: "relative", padding: "clamp(90px,13vw,180px) clamp(20px,5vw,60px)", background: "#f3efe6", overflow: "hidden" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/globe-gold.jpg" alt="" style={{ position: "absolute", top: "50%", right: "-60px", transform: "translateY(-50%)", width: 340, height: 340, borderRadius: "50%", objectFit: "cover", opacity: 0.85 }} />
+        <div style={{ position: "relative", maxWidth: 1100, margin: "0 auto" }}>
           <div data-reveal style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: "#9a7526", marginBottom: 34 }}>Signature specialty</div>
           <h2 data-reveal style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(34px,6vw,76px)", lineHeight: 1.04, margin: "0 0 40px", color: "#12294a", maxWidth: 900 }}>We place the cases <span style={{ fontStyle: "italic", color: "#a9812f" }}>others turn away</span>.</h2>
           <div data-reveal style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: "clamp(30px,5vw,80px)", alignItems: "start" }}>

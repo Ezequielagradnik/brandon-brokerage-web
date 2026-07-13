@@ -6,15 +6,15 @@ export default function Home() {
     <div className={styles.page} style={{ padding: "clamp(48px,7vw,96px) clamp(20px,5vw,64px)" }}>
       <div style={{ maxWidth: 1440, margin: "0 auto" }}>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
-          <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 10, padding: "8px 18px", display: "inline-flex" }}>
+        <div style={{ textAlign: "center", margin: "0 auto clamp(40px,5vw,64px)", maxWidth: 760 }}>
+          <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 40px", display: "inline-flex", marginBottom: 32 }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 24 }} />
+            <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 52 }} />
           </div>
+          <div style={{ fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase", color: "#7a8aa8", marginBottom: 14, fontWeight: 700 }}>Website redesign · Four directions</div>
+          <h1 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: "clamp(30px,4.6vw,52px)", lineHeight: 1.08, margin: "0 0 18px", color: "#fff", letterSpacing: "-0.01em" }}>Pick a <span style={{ color: "#e2c072" }}>direction</span>.</h1>
+          <p style={{ fontSize: "clamp(15px,1.2vw,17px)", color: "#9aa6b8", fontWeight: 500, margin: "0 auto", lineHeight: 1.6 }}>Four genuinely different design languages — grounded in how real insurance brokerages and modern B2B financial firms present themselves — sharing the same real homepage copy. Open any one to see the full, scrollable homepage.</p>
         </div>
-        <div style={{ fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase", color: "#7a8aa8", marginBottom: 10, fontWeight: 700 }}>Website redesign · Four directions</div>
-        <h1 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: "clamp(30px,4.6vw,52px)", lineHeight: 1.08, margin: "0 0 18px", color: "#fff", letterSpacing: "-0.01em" }}>Pick a direction.</h1>
-        <p style={{ fontSize: "clamp(15px,1.2vw,17px)", color: "#9aa6b8", fontWeight: 500, maxWidth: 680, margin: "0 0 clamp(40px,5vw,64px)", lineHeight: 1.6 }}>Four genuinely different design languages — grounded in how real insurance brokerages and modern B2B financial firms present themselves — sharing the same real homepage copy. Open any one to see the full, scrollable homepage.</p>
 
         <div className={styles.grid}>
 

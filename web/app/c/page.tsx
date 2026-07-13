@@ -105,6 +105,10 @@ export default function ConceptC() {
             <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 900, fontSize: "clamp(30px,4.6vw,58px)", margin: 0, color: "#0a0a0a", letterSpacing: "-0.02em" }}>What we do.</h2>
             <span style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", color: "#1a56ff" }}>Four disciplines, one desk</span>
           </div>
+          <div data-reveal style={{ border: "2px solid #0a0a0a", height: 300, overflow: "hidden", marginBottom: 8 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/handshake-clean.jpg" alt="Advisor and client shaking hands" style={{ width: "100%", height: "100%", objectFit: "cover", filter: "grayscale(1) contrast(1.1)" }} />
+          </div>
           <div data-reveal>
             {WHY.map((w, i) => (
               <div key={w.n} className={styles.ledgerRow} style={{ display: "grid", gridTemplateColumns: "90px 1fr", gap: 28, padding: "34px 10px", borderBottom: i === WHY.length - 1 ? "none" : "1px solid #d8d8d8" }}>
@@ -120,8 +124,11 @@ export default function ConceptC() {
       </div>
 
       {/* FOREIGN NATIONAL */}
-      <div id="foreign" style={{ padding: "clamp(70px,10vw,120px) clamp(20px,5vw,60px)", background: "#0a0a0a", color: "#fff" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+      <div id="foreign" style={{ position: "relative", padding: "clamp(70px,10vw,120px) clamp(20px,5vw,60px)", background: "#0a0a0a", color: "#fff", overflow: "hidden" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/miami-night.jpg" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.35, filter: "grayscale(1) contrast(1.15)" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg,#0a0a0a 25%,rgba(10,10,10,0.4))" }} />
+        <div style={{ position: "relative", maxWidth: 1200, margin: "0 auto" }}>
           <div data-reveal style={{ fontSize: 13, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: "#1a56ff", marginBottom: 24 }}>Signature Specialty</div>
           <h2 data-reveal style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 900, fontSize: "clamp(32px,6vw,88px)", lineHeight: 0.98, margin: "0 0 44px", color: "#fff", letterSpacing: "-0.02em", maxWidth: 1000 }}>
             We place the cases others turn away.

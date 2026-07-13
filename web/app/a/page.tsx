@@ -118,6 +118,11 @@ export default function ConceptA() {
           </div>
 
           <div className={styles.heroCards}>
+            <div className={`${styles.card} ${styles.floatCard} ${styles.heroCard} ${styles.heroPhoto}`} style={{ inset: 0, overflow: "hidden", animationDelay: "0s" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/miami-aerial-day.jpg" alt="Miami skyline" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg,rgba(14,28,51,0.05),rgba(14,28,51,0.35))" }} />
+            </div>
             <div className={`${styles.card} ${styles.floatCard} ${styles.heroCard}`} style={{ top: 0, right: 0, width: "78%", padding: "26px 26px 22px", animationDelay: "0.05s" }}>
               <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: "#8a94a6", marginBottom: 16 }}>Book of business snapshot</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
@@ -177,7 +182,11 @@ export default function ConceptA() {
             <div style={{ fontSize: 13, fontWeight: 700, color: "#d97706", letterSpacing: "0.04em", marginBottom: 14 }}>WHAT WE DO</div>
             <h2 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: "clamp(28px,3.4vw,42px)", margin: 0, color: "#0e1c33", lineHeight: 1.15, letterSpacing: "-0.01em" }}>Everything an agent needs, from one desk.</h2>
           </div>
-          <div data-reveal style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 20 }}>
+          <div data-reveal className={styles.whyGrid}>
+            <div className={styles.card} style={{ overflow: "hidden", padding: 0 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/handshake-office.jpg" alt="Advisor and client shaking hands" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            </div>
             {SERVICES.map((s) => (
               <div key={s.title} className={`${styles.card} ${styles.serviceCard}`} style={{ padding: "28px 26px" }}>
                 <div style={{ width: 48, height: 48, borderRadius: 12, background: "#fdf1e0", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 18 }}>{s.icon}</div>
@@ -190,8 +199,11 @@ export default function ConceptA() {
       </div>
 
       {/* FOREIGN NATIONAL */}
-      <div id="foreign" style={{ padding: "clamp(70px,10vw,120px) clamp(20px,5vw,60px)", background: "#12294a" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+      <div id="foreign" style={{ position: "relative", padding: "clamp(70px,10vw,120px) clamp(20px,5vw,60px)", background: "#12294a", overflow: "hidden" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/miami-sunset.jpg" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.28 }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg,#12294a 30%,rgba(18,41,74,0.55) 70%,rgba(18,41,74,0.3))" }} />
+        <div style={{ position: "relative", maxWidth: 1100, margin: "0 auto" }}>
           <div data-reveal style={{ fontSize: 13, fontWeight: 700, color: "#f0b053", letterSpacing: "0.04em", marginBottom: 20 }}>SIGNATURE SPECIALTY</div>
           <h2 data-reveal style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: "clamp(28px,4.4vw,52px)", lineHeight: 1.14, margin: "0 0 32px", color: "#fff", maxWidth: 780, letterSpacing: "-0.01em" }}>We place the cases others turn away.</h2>
           <div data-reveal style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: "clamp(28px,4vw,60px)" }}>

@@ -112,3 +112,23 @@
   border-color: #a67c3d;
   color: #a67c3d;
 }
+
+.photoFrame {
+  position: relative;
+  overflow: hidden;
+}
+.photoFrame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(1) sepia(0.4) contrast(1.05);
+}
+.photoFrame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #1f3d2f;
+  mix-blend-mode: color;
+  opacity: 0.6;
+}
