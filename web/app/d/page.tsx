@@ -101,15 +101,97 @@ function useSilk(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
   }, []);
 }
 
+// Champagne globe with orbiting rings for the Signature Specialty section.
+function useGlobe(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    let w = canvas.clientWidth, h = canvas.clientHeight;
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    } catch {
+      return;
+    }
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(w, h, false);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
+    camera.position.z = 3.7;
+
+    // globe (champagne, softly lit)
+    const globe = new THREE.Group();
+    scene.add(globe);
+    const sphere = new THREE.Mesh(
+      new THREE.SphereGeometry(1.25, 64, 64),
+      new THREE.MeshStandardMaterial({ color: 0xcbb98d, metalness: 0.45, roughness: 0.55, emissive: 0x1a1508, emissiveIntensity: 0.4 })
+    );
+    globe.add(sphere);
+    // lat/long grid to read as a globe
+    const grid = new THREE.LineSegments(
+      new THREE.WireframeGeometry(new THREE.SphereGeometry(1.255, 24, 18)),
+      new THREE.LineBasicMaterial({ color: 0x6b5a34, transparent: true, opacity: 0.28 })
+    );
+    globe.add(grid);
+    globe.rotation.x = 0.35;
+
+    // orbiting rings
+    const rings = new THREE.Group();
+    scene.add(rings);
+    const ringMat1 = new THREE.MeshBasicMaterial({ color: 0x8fb8b0, transparent: true, opacity: 0.7, side: THREE.DoubleSide });
+    const ringMat2 = new THREE.MeshBasicMaterial({ color: 0xc8a76a, transparent: true, opacity: 0.6, side: THREE.DoubleSide });
+    const r1 = new THREE.Mesh(new THREE.TorusGeometry(1.75, 0.006, 8, 128), ringMat1);
+    r1.rotation.x = 1.15; r1.rotation.y = 0.3;
+    const r2 = new THREE.Mesh(new THREE.TorusGeometry(1.95, 0.005, 8, 128), ringMat2);
+    r2.rotation.x = 1.5; r2.rotation.z = 0.6;
+    const r3 = new THREE.Mesh(new THREE.TorusGeometry(1.62, 0.005, 8, 128), ringMat1);
+    r3.rotation.x = 0.7; r3.rotation.y = 1.1;
+    rings.add(r1, r2, r3);
+
+    scene.add(new THREE.AmbientLight(0xfff2d8, 0.9));
+    const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(3, 3, 4); scene.add(key);
+    const rim = new THREE.DirectionalLight(0x9fb4dc, 0.5); rim.position.set(-4, -1, -2); scene.add(rim);
+
+    let alive = true, raf = 0;
+    const onResize = () => {
+      w = canvas.clientWidth; h = canvas.clientHeight;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h; camera.updateProjectionMatrix();
+    };
+    window.addEventListener("resize", onResize);
+
+    const tick = () => {
+      if (!alive) return;
+      globe.rotation.y += 0.0016;
+      r1.rotation.z += 0.0018;
+      r2.rotation.y += 0.0022;
+      r3.rotation.z -= 0.0015;
+      renderer.render(scene, camera);
+      raf = requestAnimationFrame(tick);
+    };
+    tick();
+
+    return () => {
+      alive = false;
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onResize);
+      renderer.dispose();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+}
+
 export default function ConceptD() {
   const pageRef = useRef<HTMLDivElement>(null);
   const silkCanvas = useRef<HTMLCanvasElement>(null);
+  const globeCanvas = useRef<HTMLCanvasElement>(null);
   const heroKicker = useRef<HTMLDivElement>(null);
   const heroTitle = useRef<HTMLHeadingElement>(null);
   const heroSub = useRef<HTMLParagraphElement>(null);
   const heroCta = useRef<HTMLDivElement>(null);
 
   useSilk(silkCanvas);
+  useGlobe(globeCanvas);
   useHeroReveal([heroKicker, heroTitle, heroSub, heroCta]);
   useScrollReveal(pageRef);
 
@@ -206,8 +288,9 @@ export default function ConceptD() {
 
       {/* FOREIGN NATIONAL */}
       <div id="foreign" style={{ position: "relative", padding: "clamp(90px,13vw,180px) clamp(20px,5vw,60px)", background: "#f3efe6", overflow: "hidden" }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/globe-gold.jpg" alt="" style={{ position: "absolute", top: "50%", right: "clamp(-80px,-4vw,-40px)", transform: "translateY(-50%)", width: "clamp(220px,26vw,360px)", height: "clamp(220px,26vw,360px)", borderRadius: "50%", objectFit: "cover", opacity: 0.9 }} />
+        <div style={{ position: "absolute", top: "50%", right: "clamp(-90px,-5vw,-50px)", transform: "translateY(-50%)", width: "clamp(260px,30vw,420px)", height: "clamp(260px,30vw,420px)", borderRadius: "50%", overflow: "hidden", background: "radial-gradient(circle at 40% 35%, #2b3a44, #0f171d 72%)" }}>
+          <canvas ref={globeCanvas} style={{ width: "100%", height: "100%", display: "block" }} />
+        </div>
         <div style={{ position: "relative", maxWidth: 1100, margin: "0 auto" }}>
           <div data-reveal style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: "#9a7526", marginBottom: 34 }}>Signature specialty</div>
           <h2 data-reveal style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(34px,6vw,76px)", lineHeight: 1.04, margin: "0 0 40px", color: "#12294a", maxWidth: 760 }}>We place the cases <span style={{ fontStyle: "italic", color: "#a9812f" }}>others turn away</span>.</h2>

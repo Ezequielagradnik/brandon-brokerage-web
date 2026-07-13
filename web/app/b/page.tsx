@@ -27,14 +27,20 @@ const CARRIERS = ["Lincoln", "John Hancock", "AIG", "Nationwide", "Principal", "
 function Seal() {
   return (
     <svg width="120" height="120" viewBox="0 0 120 120" className={styles.seal}>
+      {/* outer + inner boundary define the band the text rides in */}
       <circle cx="60" cy="60" r="57" fill="none" stroke="#1f3d2f" strokeWidth="1" />
-      <circle cx="60" cy="60" r="49" fill="none" stroke="#1f3d2f" strokeWidth="1" opacity="0.5" />
-      <circle cx="60" cy="60" r="40" fill="none" stroke="#a67c3d" strokeWidth="1.4" />
-      <text x="60" y="55" textAnchor="middle" fontFamily="var(--font-fraunces), serif" fontStyle="italic" fontSize="22" fill="#1f3d2f">50</text>
-      <text x="60" y="72" textAnchor="middle" fontFamily="var(--font-plex-mono), monospace" fontSize="8" letterSpacing="1" fill="#1f3d2f">YEARS</text>
-      <path id="sealArcTop" d="M 14 60 A 46 46 0 0 1 106 60" fill="none" />
-      <text fontFamily="var(--font-plex-mono), monospace" fontSize="6.5" letterSpacing="1" fill="#1f3d2f">
-        <textPath href="#sealArcTop" startOffset="50%" textAnchor="middle">CORAL GABLES · FLORIDA</textPath>
+      <circle cx="60" cy="60" r="44" fill="none" stroke="#1f3d2f" strokeWidth="1" opacity="0.5" />
+      <circle cx="60" cy="60" r="37" fill="none" stroke="#a67c3d" strokeWidth="1.4" />
+      <text x="60" y="55" textAnchor="middle" fontFamily="var(--font-fraunces), serif" fontStyle="italic" fontSize="20" fill="#1f3d2f">50</text>
+      <text x="60" y="70" textAnchor="middle" fontFamily="var(--font-plex-mono), monospace" fontSize="7" letterSpacing="1" fill="#1f3d2f">YEARS</text>
+      {/* text arc sits at r=50.5, centered in the 57↔44 band */}
+      <path id="sealTop" d="M 9.5 60 A 50.5 50.5 0 0 1 110.5 60" fill="none" />
+      <path id="sealBot" d="M 9.5 60 A 50.5 50.5 0 0 0 110.5 60" fill="none" />
+      <text fontFamily="var(--font-plex-mono), monospace" fontSize="6" letterSpacing="2" fill="#1f3d2f">
+        <textPath href="#sealTop" startOffset="50%" textAnchor="middle">CORAL GABLES · FLORIDA</textPath>
+      </text>
+      <text fontFamily="var(--font-plex-mono), monospace" fontSize="6" letterSpacing="3" fill="#a67c3d">
+        <textPath href="#sealBot" startOffset="50%" textAnchor="middle">EST. 1970s</textPath>
       </text>
     </svg>
   );

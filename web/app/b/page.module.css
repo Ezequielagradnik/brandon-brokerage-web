@@ -38,6 +38,7 @@
 .cta {
   position: relative;
   overflow: hidden;
+  isolation: isolate;
   transition: color 0.3s;
   font-family: var(--font-plex-mono), monospace;
 }
