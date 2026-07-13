@@ -38,8 +38,8 @@ function Seal() {
       <circle cx="60" cy="60" r="40" fill="none" stroke="#a67c3d" strokeWidth="1.4" />
       <text x="60" y="55" textAnchor="middle" fontFamily="var(--font-fraunces), serif" fontStyle="italic" fontSize="22" fill="#1f3d2f">50</text>
       <text x="60" y="72" textAnchor="middle" fontFamily="var(--font-plex-mono), monospace" fontSize="8" letterSpacing="1" fill="#1f3d2f">YEARS</text>
-      <path id="sealArcTop" d="M 18 60 A 42 42 0 0 1 102 60" fill="none" />
-      <text fontFamily="var(--font-plex-mono), monospace" fontSize="7.5" letterSpacing="2" fill="#1f3d2f">
+      <path id="sealArcTop" d="M 14 60 A 46 46 0 0 1 106 60" fill="none" />
+      <text fontFamily="var(--font-plex-mono), monospace" fontSize="6.5" letterSpacing="1" fill="#1f3d2f">
         <textPath href="#sealArcTop" startOffset="50%" textAnchor="middle">CORAL GABLES · FLORIDA</textPath>
       </text>
     </svg>
