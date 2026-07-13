@@ -44,8 +44,8 @@
   border: 2px solid #1a56ff;
 }
 .ctaBlue:hover {
-  background: #0a0a0a;
-  border-color: #0a0a0a;
+  background: #0033cc;
+  border-color: #0033cc;
 }
 .ctaOutline {
   background: transparent;
@@ -53,7 +53,8 @@
   border: 2px solid #0a0a0a;
 }
 .ctaOutline:hover {
-  background: #0a0a0a;
+  background: #1a56ff;
+  border-color: #1a56ff;
   color: #fff;
 }
 .ctaOutlineLight {
@@ -95,10 +96,26 @@
 
 .chip {
   transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 .chip:hover {
-  background: #0a0a0a;
+  background: #1a56ff;
+  border-color: #1a56ff !important;
   color: #fff;
+}
+
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: bpMarquee 36s linear infinite;
+}
+.marquee:hover {
+  animation-play-state: paused;
+}
+@keyframes bpMarquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 /* What We Offer — editorial image cards */

@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import * as THREE from "three";
 import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
 import { OFFERINGS } from "@/lib/offerings";
@@ -12,6 +13,76 @@ const NAV_LINKS = [
   { href: "#products", label: "Products" },
   { href: "#contact", label: "Contact" },
 ];
+
+// Subtle editorial accent: a slow blue wireframe globe on the black section.
+function useWireframeGlobe(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    let w = canvas.clientWidth, h = canvas.clientHeight;
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    } catch {
+      return;
+    }
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(w, h, false);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(42, w / h, 0.1, 100);
+    camera.position.z = 3.4;
+
+    const group = new THREE.Group();
+    scene.add(group);
+
+    const wire = new THREE.LineSegments(
+      new THREE.WireframeGeometry(new THREE.SphereGeometry(1.25, 30, 22)),
+      new THREE.LineBasicMaterial({ color: 0x1a56ff, transparent: true, opacity: 0.55 })
+    );
+    group.add(wire);
+
+    const pts: number[] = [];
+    for (let i = 0; i < 260; i++) {
+      const u = Math.random(), v = Math.random();
+      const th = 2 * Math.PI * u, ph = Math.acos(2 * v - 1);
+      const r = 1.26;
+      pts.push(r * Math.sin(ph) * Math.cos(th), r * Math.cos(ph), r * Math.sin(ph) * Math.sin(th));
+    }
+    const pg = new THREE.BufferGeometry();
+    pg.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3));
+    group.add(new THREE.Points(pg, new THREE.PointsMaterial({ color: 0x9fb8ff, size: 0.022, transparent: true, opacity: 0.7 })));
+
+    group.rotation.x = 0.35;
+
+    let tx = 0, alive = true, raf = 0;
+    const onMove = (e: PointerEvent) => { tx = (e.clientY / window.innerHeight - 0.5) * 0.3; };
+    window.addEventListener("pointermove", onMove);
+    const onResize = () => {
+      w = canvas.clientWidth; h = canvas.clientHeight;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h; camera.updateProjectionMatrix();
+    };
+    window.addEventListener("resize", onResize);
+
+    const tick = () => {
+      if (!alive) return;
+      group.rotation.y += 0.0018;
+      group.rotation.x += (0.35 + tx - group.rotation.x) * 0.03;
+      renderer.render(scene, camera);
+      raf = requestAnimationFrame(tick);
+    };
+    tick();
+
+    return () => {
+      alive = false;
+      cancelAnimationFrame(raf);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("resize", onResize);
+      renderer.dispose();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+}
 
 const PRODUCTS = [
   { n: "01", name: "Term Life", desc: "Income & mortgage protection" },
@@ -29,9 +100,11 @@ export default function ConceptC() {
   const heroTitle = useRef<HTMLHeadingElement>(null);
   const heroSub = useRef<HTMLParagraphElement>(null);
   const heroCta = useRef<HTMLDivElement>(null);
+  const globeCanvas = useRef<HTMLCanvasElement>(null);
 
   useHeroReveal([heroKicker, heroTitle, heroSub, heroCta]);
   useScrollReveal(pageRef);
+  useWireframeGlobe(globeCanvas);
 
   return (
     <div ref={pageRef} className={styles.page}>
@@ -39,7 +112,7 @@ export default function ConceptC() {
       {/* HEADER */}
       <div className={styles.headerBar} style={{ position: "sticky", top: 0, zIndex: 60, padding: "20px clamp(20px,5vw,60px)", background: "#fff", borderBottom: "2px solid #0a0a0a" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <a href="#top" style={{ display: "inline-flex" }}><img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 26, filter: "grayscale(1) contrast(1.4)" }} /></a>
+        <a href="#top" style={{ display: "inline-flex" }}><img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 28 }} /></a>
         <div className={styles.headerNav}>
           <a href="#why" className={styles.nl}>Firm</a>
           <a href="#foreign" className={styles.nl}>Foreign National</a>
@@ -119,9 +192,8 @@ export default function ConceptC() {
 
       {/* FOREIGN NATIONAL */}
       <div id="foreign" style={{ position: "relative", padding: "clamp(70px,10vw,120px) clamp(20px,5vw,60px)", background: "#0a0a0a", color: "#fff", overflow: "hidden" }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/miami-night.jpg" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.35, filter: "grayscale(1) contrast(1.15)" }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg,#0a0a0a 25%,rgba(10,10,10,0.4))" }} />
+        <canvas ref={globeCanvas} style={{ position: "absolute", top: 0, right: 0, width: "min(48%,620px)", height: "100%", display: "block" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg,#0a0a0a 34%,rgba(10,10,10,0.35) 62%,rgba(10,10,10,0))" }} />
         <div style={{ position: "relative", maxWidth: 1200, margin: "0 auto" }}>
           <div data-reveal style={{ fontSize: 13, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: "#1a56ff", marginBottom: 24 }}>Signature Specialty</div>
           <h2 data-reveal style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 900, fontSize: "clamp(32px,6vw,88px)", lineHeight: 0.98, margin: "0 0 44px", color: "#fff", letterSpacing: "-0.02em", maxWidth: 1000 }}>
@@ -157,10 +229,16 @@ export default function ConceptC() {
       <div data-reveal style={{ padding: "clamp(56px,7vw,90px) clamp(20px,5vw,60px)" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
           <div style={{ fontSize: 12.5, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", color: "#3a3a3a", marginBottom: 26 }}>Our carriers — a leading Tellus / Crump firm</div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 0, border: "2px solid #0a0a0a", borderLeft: "none", borderTop: "none" }}>
-            {CARRIERS.map((c) => (
-              <span key={c} className={styles.chip} style={{ fontSize: 13, fontWeight: 700, color: "#0a0a0a", border: "2px solid #0a0a0a", borderRight: "none", borderBottom: "none", padding: "12px 18px" }}>{c}</span>
-            ))}
+          <div style={{ position: "relative", overflow: "hidden", WebkitMaskImage: "linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)", maskImage: "linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)" }}>
+            <div className={styles.marquee}>
+              {[0, 1].map((rep) => (
+                <div key={rep} style={{ display: "flex", gap: 12, paddingRight: 12 }} aria-hidden={rep === 1}>
+                  {CARRIERS.map((c) => (
+                    <span key={c} className={styles.chip} style={{ fontSize: 13, fontWeight: 700, color: "#0a0a0a", border: "2px solid #0a0a0a", padding: "12px 18px", background: "#fff" }}>{c}</span>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -183,8 +261,10 @@ export default function ConceptC() {
 
       {/* FOOTER */}
       <div style={{ padding: "28px clamp(20px,5vw,60px)", background: "#0a0a0a", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 20, filter: "grayscale(1) invert(1) contrast(1.4)" }} />
+        <div style={{ background: "#fff", padding: "8px 16px", display: "inline-flex" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 20 }} />
+        </div>
         <div style={{ fontSize: 11.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.03em", color: "#999" }}>© 1970s–2026 Brandon Brokerage Group · Licensed Agents Only</div>
       </div>
 
