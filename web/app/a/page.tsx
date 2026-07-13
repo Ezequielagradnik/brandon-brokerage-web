@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
+import { OFFERINGS } from "@/lib/offerings";
 import styles from "./page.module.css";
 
 const NAV_LINKS = [
@@ -10,47 +11,6 @@ const NAV_LINKS = [
   { href: "#foreign", label: "Foreign National" },
   { href: "#products", label: "Products" },
   { href: "#contact", label: "Contact" },
-];
-
-const SERVICES = [
-  {
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="#12294a" strokeWidth="1.6">
-        <path d="M13 3l9 3.5v6c0 6-4 9.5-9 11-5-1.5-9-5-9-11v-6L13 3z" />
-      </svg>
-    ),
-    title: "Foreign National Expertise",
-    desc: "Customized sales strategies and wealth-management solutions for foreign national clients — adhering to all carrier, state and federal guidelines.",
-  },
-  {
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="#12294a" strokeWidth="1.6">
-        <path d="M3 13h6l2.5-6 4 12L18 13h5" />
-      </svg>
-    ),
-    title: "Advanced Sales Support",
-    desc: "Case planning and design, marketing concepts, carrier insight and point-of-sale support — for domestic and foreign national cases alike.",
-  },
-  {
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="#12294a" strokeWidth="1.6">
-        <rect x="3" y="7" width="20" height="15" rx="2" />
-        <path d="M8 7V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2" />
-      </svg>
-    ),
-    title: "Full Case Management",
-    desc: "A dedicated new-business team packages, submits and follows every case through underwriting, records and delivery.",
-  },
-  {
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="#12294a" strokeWidth="1.6">
-        <circle cx="13" cy="13" r="10" />
-        <path d="M8.5 13.5l3 3 6-6.5" />
-      </svg>
-    ),
-    title: "Quality Carriers & Products",
-    desc: "Full access to over thirty top-rated carriers, as a leading Tellus / Crump firm — with individualized support.",
-  },
 ];
 
 const PRODUCTS = [
@@ -118,47 +78,38 @@ export default function ConceptA() {
           </div>
 
           <div className={styles.heroCards}>
-            <div className={`${styles.card} ${styles.floatCard} ${styles.heroCard} ${styles.heroPhoto}`} style={{ inset: 0, overflow: "hidden", animationDelay: "0s" }}>
+            <div className={`${styles.floatCard} ${styles.heroPhoto}`} style={{ borderRadius: 16, overflow: "hidden", boxShadow: "0 30px 70px rgba(15,23,42,0.16)", animationDelay: "0s" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/images/miami-aerial-day.jpg" alt="Miami skyline" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg,rgba(14,28,51,0.05),rgba(14,28,51,0.35))" }} />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg,rgba(14,28,51,0.04),rgba(14,28,51,0.22))" }} />
             </div>
-            <div className={`${styles.card} ${styles.floatCard} ${styles.heroCard}`} style={{ top: 0, right: 0, width: "78%", padding: "26px 26px 22px", animationDelay: "0.05s" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: "#8a94a6", marginBottom: 16 }}>Book of business snapshot</div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
+
+            <div className={`${styles.card} ${styles.floatCard} ${styles.heroCardBL}`} style={{ padding: "20px 22px", animationDelay: "0.18s" }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: "#8a94a6", marginBottom: 12 }}>Book of business</div>
+              <div style={{ display: "flex", gap: 22 }}>
                 <div>
-                  <div style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: 30, color: "#0e1c33" }}>50<span style={{ color: "#d97706" }}>+</span></div>
-                  <div style={{ fontSize: 12.5, color: "#6b7688" }}>Years of expertise</div>
+                  <div style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: 26, color: "#0e1c33" }}>50<span style={{ color: "#d97706" }}>+</span></div>
+                  <div style={{ fontSize: 11.5, color: "#6b7688" }}>Years</div>
                 </div>
                 <div>
-                  <div style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: 30, color: "#0e1c33" }}>30<span style={{ color: "#d97706" }}>+</span></div>
-                  <div style={{ fontSize: 12.5, color: "#6b7688" }}>Top-rated carriers</div>
+                  <div style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: 26, color: "#0e1c33" }}>30<span style={{ color: "#d97706" }}>+</span></div>
+                  <div style={{ fontSize: 11.5, color: "#6b7688" }}>Carriers</div>
                 </div>
               </div>
-              <div style={{ marginTop: 20, display: "flex", alignItems: "flex-end", gap: 6, height: 54 }}>
+              <div style={{ marginTop: 16, display: "flex", alignItems: "flex-end", gap: 5, height: 40 }}>
                 {[38, 58, 46, 70, 52, 84, 64].map((h, i) => (
-                  <div key={i} style={{ flex: 1, height: `${h}%`, borderRadius: 4, background: i === 5 ? "#d97706" : "#e7ecf3" }} />
+                  <div key={i} style={{ flex: 1, height: `${h}%`, borderRadius: 3, background: i === 5 ? "#d97706" : "#e7ecf3" }} />
                 ))}
               </div>
             </div>
 
-            <div className={`${styles.card} ${styles.floatCard} ${styles.heroCard}`} style={{ bottom: 0, left: 0, width: "62%", padding: "22px 24px", animationDelay: "0.22s" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 9, background: "#12294a", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <svg width="18" height="18" viewBox="0 0 26 26" fill="none" stroke="#fff" strokeWidth="1.8"><path d="M13 3l9 3.5v6c0 6-4 9.5-9 11-5-1.5-9-5-9-11v-6L13 3z" /></svg>
-                </div>
-                <div style={{ fontWeight: 700, fontSize: 14.5, color: "#0e1c33" }}>Foreign National Desk</div>
-              </div>
-              <div style={{ fontSize: 13, color: "#6b7688", lineHeight: 1.55 }}>Industry-leading command of cross-border underwriting and compliance.</div>
-            </div>
-
-            <div className={`${styles.card} ${styles.floatCard} ${styles.heroCard}`} style={{ top: "38%", right: "4%", padding: "14px 18px", display: "flex", alignItems: "center", gap: 10, animationDelay: "0.38s" }}>
-              <div style={{ width: 30, height: 30, borderRadius: "50%", background: "#e7f6ee", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div className={`${styles.card} ${styles.floatCard} ${styles.heroCardTR}`} style={{ padding: "13px 16px", display: "flex", alignItems: "center", gap: 10, animationDelay: "0.34s" }}>
+              <div style={{ width: 30, height: 30, borderRadius: "50%", background: "#e7f6ee", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                 <svg width="16" height="16" viewBox="0 0 26 26" fill="none" stroke="#1a8a4c" strokeWidth="2.2"><path d="M6 14l5 5 9-11" /></svg>
               </div>
               <div>
-                <div style={{ fontWeight: 700, fontSize: 13, color: "#0e1c33" }}>Case approved</div>
-                <div style={{ fontSize: 11.5, color: "#8a94a6" }}>Tellus / Crump network</div>
+                <div style={{ fontWeight: 700, fontSize: 12.5, color: "#0e1c33" }}>Case approved</div>
+                <div style={{ fontSize: 11, color: "#8a94a6" }}>Tellus / Crump network</div>
               </div>
             </div>
           </div>
@@ -178,20 +129,22 @@ export default function ConceptA() {
       {/* WHY / SERVICES */}
       <div id="why" style={{ padding: "clamp(64px,8vw,110px) clamp(20px,5vw,60px)", background: "#f8f9fb" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
-          <div data-reveal style={{ maxWidth: 640, marginBottom: 52 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: "#d97706", letterSpacing: "0.04em", marginBottom: 14 }}>WHAT WE DO</div>
+          <div data-reveal style={{ maxWidth: 640, marginBottom: 44 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: "#d97706", letterSpacing: "0.04em", marginBottom: 14 }}>WHAT WE OFFER</div>
             <h2 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: "clamp(28px,3.4vw,42px)", margin: 0, color: "#0e1c33", lineHeight: 1.15, letterSpacing: "-0.01em" }}>Everything an agent needs, from one desk.</h2>
           </div>
-          <div data-reveal className={styles.whyGrid}>
-            <div className={styles.card} style={{ overflow: "hidden", padding: 0 }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/handshake-office.jpg" alt="Advisor and client shaking hands" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-            </div>
-            {SERVICES.map((s) => (
-              <div key={s.title} className={`${styles.card} ${styles.serviceCard}`} style={{ padding: "28px 26px" }}>
-                <div style={{ width: 48, height: 48, borderRadius: 12, background: "#fdf1e0", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 18 }}>{s.icon}</div>
-                <h3 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 700, fontSize: 17.5, margin: "0 0 10px", color: "#0e1c33" }}>{s.title}</h3>
-                <p style={{ fontSize: 14.5, lineHeight: 1.6, color: "#5c6579", margin: 0 }}>{s.desc}</p>
+          <div data-reveal className={styles.offerGrid}>
+            {OFFERINGS.map((o) => (
+              <div key={o.n} className={`${styles.card} ${styles.offerCard}`}>
+                <div className={styles.offerImgWrap}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={o.img} alt={o.title} className={styles.offerImg} />
+                  <span className={styles.offerNum}>{o.n}</span>
+                </div>
+                <div style={{ padding: "22px 24px 26px" }}>
+                  <h3 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 700, fontSize: 18, margin: "0 0 10px", color: "#0e1c33", lineHeight: 1.25 }}>{o.title}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.6, color: "#5c6579", margin: 0 }}>{o.desc}</p>
+                </div>
               </div>
             ))}
           </div>

@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
+import { OFFERINGS } from "@/lib/offerings";
 import styles from "./page.module.css";
 
 const NAV_LINKS = [
@@ -10,13 +11,6 @@ const NAV_LINKS = [
   { href: "#foreign", label: "Foreign National" },
   { href: "#products", label: "Products" },
   { href: "#contact", label: "Contact" },
-];
-
-const WHY = [
-  { n: "01", title: "Advanced Sales Support", desc: "Case planning and design, marketing concepts, carrier insight and point-of-sale support — for domestic and foreign national cases alike." },
-  { n: "02", title: "Full Case Management", desc: "A dedicated new-business team packages, submits and follows every case through underwriting, records and delivery." },
-  { n: "03", title: "Quality Carriers & Products", desc: "Full access to over thirty top-rated carriers, as a leading Tellus / Crump firm — with individualized support." },
-  { n: "04", title: "Half a Century of Trust", desc: "Fifty years of brokerage expertise, and a recognized leader in the foreign national market." },
 ];
 
 const PRODUCTS = [
@@ -101,21 +95,21 @@ export default function ConceptC() {
       {/* WHY */}
       <div id="why" style={{ padding: "clamp(60px,8vw,100px) clamp(20px,5vw,60px)" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
-          <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: 8, borderBottom: "2px solid #0a0a0a", paddingBottom: 24 }}>
-            <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 900, fontSize: "clamp(30px,4.6vw,58px)", margin: 0, color: "#0a0a0a", letterSpacing: "-0.02em" }}>What we do.</h2>
+          <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: 40, borderBottom: "2px solid #0a0a0a", paddingBottom: 24 }}>
+            <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 900, fontSize: "clamp(30px,4.6vw,58px)", margin: 0, color: "#0a0a0a", letterSpacing: "-0.02em" }}>What we offer.</h2>
             <span style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", color: "#1a56ff" }}>Four disciplines, one desk</span>
           </div>
-          <div data-reveal style={{ border: "2px solid #0a0a0a", height: 300, overflow: "hidden", marginBottom: 8 }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/handshake-clean.jpg" alt="Advisor and client shaking hands" style={{ width: "100%", height: "100%", objectFit: "cover", filter: "grayscale(1) contrast(1.1)" }} />
-          </div>
-          <div data-reveal>
-            {WHY.map((w, i) => (
-              <div key={w.n} className={styles.ledgerRow} style={{ display: "grid", gridTemplateColumns: "90px 1fr", gap: 28, padding: "34px 10px", borderBottom: i === WHY.length - 1 ? "none" : "1px solid #d8d8d8" }}>
-                <div style={{ fontFamily: "var(--font-archivo), sans-serif", fontSize: 26, fontWeight: 900, color: "#c9c9c9" }}>{w.n}</div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 20 }}>
-                  <h3 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(20px,2.2vw,28px)", margin: 0, color: "#0a0a0a", letterSpacing: "-0.01em" }}>{w.title}</h3>
-                  <p style={{ fontSize: 15, lineHeight: 1.6, color: "#3a3a3a", margin: 0, fontWeight: 500 }}>{w.desc}</p>
+          <div data-reveal className={styles.offerGrid}>
+            {OFFERINGS.map((o) => (
+              <div key={o.n} className={styles.offerCard}>
+                <div className={styles.offerImgWrap}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={o.img} alt={o.title} className={styles.offerImg} />
+                  <span className={styles.offerNum}>{o.n}</span>
+                </div>
+                <div style={{ padding: "20px 20px 24px" }}>
+                  <h3 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: 18, margin: "0 0 10px", color: "#0a0a0a", letterSpacing: "-0.01em", lineHeight: 1.2 }}>{o.title}</h3>
+                  <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#3a3a3a", margin: 0, fontWeight: 500 }}>{o.desc}</p>
                 </div>
               </div>
             ))}

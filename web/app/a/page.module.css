@@ -83,31 +83,43 @@
 
 .heroCards {
   position: relative;
-  min-height: 360px;
-}
-
-.heroCard {
-  position: absolute;
 }
 
 .heroPhoto {
   position: relative;
+  height: 440px;
+}
+
+/* Book of business — hangs off the bottom-left corner, mostly over the gutter */
+.heroCardBL {
+  position: absolute;
+  bottom: -26px;
+  left: -34px;
+  width: 230px;
+  z-index: 2;
+}
+
+/* Case approved pill — hangs off the top-right corner */
+.heroCardTR {
+  position: absolute;
+  top: -18px;
+  right: -18px;
+  z-index: 2;
 }
 
 @media (max-width: 860px) {
   .heroGrid {
     grid-template-columns: 1fr;
   }
-  .heroCards {
-    min-height: 0;
-  }
-  .heroCard {
-    position: static;
-    width: 100% !important;
-    margin-bottom: 16px;
-  }
   .heroPhoto {
-    height: 220px;
+    height: 240px;
+  }
+  .heroCardBL {
+    left: -12px;
+    bottom: -30px;
+  }
+  .heroCardTR {
+    right: -6px;
   }
 }
 
@@ -126,6 +138,63 @@
 
 .whyGrid > *:first-child {
   min-height: 220px;
+}
+
+/* What We Offer — image cards */
+.offerGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.offerCard {
+  overflow: hidden;
+  padding: 0;
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+.offerCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 46px rgba(15, 23, 42, 0.12);
+}
+
+.offerImgWrap {
+  position: relative;
+  height: 168px;
+  overflow: hidden;
+}
+.offerImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.offerCard:hover .offerImg {
+  transform: scale(1.07);
+}
+.offerNum {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-family: var(--font-manrope), sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  color: #fff;
+  background: rgba(14, 28, 51, 0.72);
+  backdrop-filter: blur(4px);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+@media (max-width: 1000px) {
+  .offerGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .offerGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .serviceCard {

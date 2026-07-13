@@ -101,6 +101,64 @@
   color: #fff;
 }
 
+/* What We Offer — editorial image cards */
+.offerGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 2px solid #0a0a0a;
+  border-right: none;
+  border-bottom: none;
+}
+.offerCard {
+  border-right: 2px solid #0a0a0a;
+  border-bottom: 2px solid #0a0a0a;
+  background: #fff;
+  transition: background 0.2s;
+}
+.offerCard:hover {
+  background: #f2f2f2;
+}
+.offerImgWrap {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+  border-bottom: 2px solid #0a0a0a;
+}
+.offerImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(1) contrast(1.1);
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.3s;
+}
+.offerCard:hover .offerImg {
+  transform: scale(1.06);
+  filter: grayscale(0) contrast(1.05);
+}
+.offerNum {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 900;
+  font-size: 14px;
+  color: #fff;
+  background: #1a56ff;
+  padding: 6px 12px;
+}
+
+@media (max-width: 1000px) {
+  .offerGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .offerGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .heroFooter {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

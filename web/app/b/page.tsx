@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
 import Guilloche from "@/components/Guilloche";
+import { OFFERINGS } from "@/lib/offerings";
 import styles from "./page.module.css";
 
 const NAV_LINKS = [
@@ -11,13 +12,6 @@ const NAV_LINKS = [
   { href: "#foreign", label: "Foreign National" },
   { href: "#products", label: "Products" },
   { href: "#contact", label: "Contact" },
-];
-
-const WHY = [
-  { n: "I", title: "Advanced Sales Support", desc: "Case planning and design, marketing concepts, carrier insight and point-of-sale support — for domestic and foreign national cases alike." },
-  { n: "II", title: "Full Case Management", desc: "A dedicated new-business team packages, submits and follows every case through underwriting, records and delivery." },
-  { n: "III", title: "Quality Carriers & Products", desc: "Full access to over thirty top-rated carriers, as a leading Tellus / Crump firm — with individualized support." },
-  { n: "IV", title: "Half a Century of Trust", desc: "Fifty years of brokerage expertise, and a recognized leader in the foreign national market." },
 ];
 
 const PRODUCTS = [
@@ -119,27 +113,29 @@ export default function ConceptB() {
         </div>
       </div>
 
-      {/* WHY — LEDGER LIST */}
+      {/* WHY — IMAGE LEFT / LEDGER RIGHT */}
       <div id="why" style={{ padding: "clamp(64px,8vw,110px) clamp(20px,5vw,60px)" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <div data-reveal style={{ textAlign: "center", marginBottom: 40 }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div data-reveal style={{ marginBottom: 44 }}>
             <div className={styles.mono} style={{ fontSize: 12, letterSpacing: "0.18em", color: "#a67c3d", marginBottom: 16 }}>ARTICLES OF SERVICE</div>
-            <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 500, fontSize: "clamp(26px,3.2vw,38px)", margin: 0, color: "#1f3d2f" }}>Everything an agent needs, from one desk.</h2>
+            <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 500, fontSize: "clamp(26px,3.2vw,40px)", margin: 0, color: "#1f3d2f", maxWidth: 620 }}>Everything an agent needs, from one desk.</h2>
           </div>
-          <div data-reveal className={`${styles.frame} ${styles.photoFrame}`} style={{ height: 260, marginBottom: 48 }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/handshake-moody.jpg" alt="Advisor and client shaking hands" />
-          </div>
-          <div data-reveal>
-            {WHY.map((w, i) => (
-              <div key={w.n} className={styles.ledgerRow} style={{ display: "grid", gridTemplateColumns: "70px 1fr", gap: 24, padding: "28px 16px", borderTop: "1px solid #1f3d2f2e", borderBottom: i === WHY.length - 1 ? "1px solid #1f3d2f2e" : undefined }}>
-                <div style={{ fontFamily: "var(--font-fraunces), serif", fontStyle: "italic", fontSize: 26, color: "#a67c3d" }}>{w.n}</div>
-                <div>
-                  <h3 style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 500, fontSize: 20, margin: "0 0 8px", color: "#1f3d2f" }}>{w.title}</h3>
-                  <p style={{ fontSize: 15, lineHeight: 1.65, color: "#3f5245", margin: 0 }}>{w.desc}</p>
+          <div data-reveal className={styles.articlesLayout}>
+            <div className={`${styles.frame} ${styles.photoFrame} ${styles.articlesPhoto}`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/handshake-moody.jpg" alt="Advisor and client shaking hands" />
+            </div>
+            <div>
+              {OFFERINGS.map((o, i) => (
+                <div key={o.n} className={styles.ledgerRow} style={{ display: "grid", gridTemplateColumns: "54px 1fr", gap: 20, padding: "24px 12px", borderTop: "1px solid #1f3d2f2e", borderBottom: i === OFFERINGS.length - 1 ? "1px solid #1f3d2f2e" : undefined }}>
+                  <div className={styles.mono} style={{ fontSize: 13, color: "#a67c3d", paddingTop: 4 }}>{o.n}</div>
+                  <div>
+                    <h3 style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 500, fontSize: 19, margin: "0 0 8px", color: "#1f3d2f" }}>{o.title}</h3>
+                    <p style={{ fontSize: 14, lineHeight: 1.6, color: "#3f5245", margin: 0 }}>{o.desc}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
