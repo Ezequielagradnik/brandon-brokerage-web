@@ -191,10 +191,16 @@ export default function ConceptA() {
       <div data-reveal style={{ padding: "clamp(56px,7vw,90px) clamp(20px,5vw,60px)", background: "#f8f9fb", borderTop: "1px solid #eceef2" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: "#8a94a6", letterSpacing: "0.04em", marginBottom: 24 }}>OUR CARRIERS — A LEADING TELLUS / CRUMP FIRM</div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-            {CARRIERS.map((c) => (
-              <span key={c} className={styles.chip} style={{ fontSize: 14, fontWeight: 600, color: "#3c4658", border: "1px solid #dde2ea", borderRadius: 999, padding: "9px 18px" }}>{c}</span>
-            ))}
+          <div style={{ position: "relative", overflow: "hidden", WebkitMaskImage: "linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)", maskImage: "linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)" }}>
+            <div className={styles.marquee}>
+              {[0, 1].map((rep) => (
+                <div key={rep} style={{ display: "flex", gap: 12, paddingRight: 12 }} aria-hidden={rep === 1}>
+                  {CARRIERS.map((c) => (
+                    <span key={c} className={styles.chip} style={{ fontSize: 14, fontWeight: 600, color: "#3c4658", border: "1px solid #dde2ea", borderRadius: 999, padding: "9px 18px", whiteSpace: "nowrap", background: "#fff" }}>{c}</span>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
