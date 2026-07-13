@@ -101,7 +101,7 @@ function useSilk(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
   }, []);
 }
 
-// Champagne globe with orbiting rings for the Signature Specialty section.
+// Navy + gold "global network" globe for the Signature Specialty section.
 function useGlobe(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -117,42 +117,72 @@ function useGlobe(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     renderer.setSize(w, h, false);
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
-    camera.position.z = 3.7;
+    camera.position.z = 3.5;
 
-    // globe (champagne, softly lit)
     const globe = new THREE.Group();
+    globe.rotation.z = -0.16;
     scene.add(globe);
-    const sphere = new THREE.Mesh(
-      new THREE.SphereGeometry(1.25, 64, 64),
-      new THREE.MeshStandardMaterial({ color: 0xcbb98d, metalness: 0.45, roughness: 0.55, emissive: 0x1a1508, emissiveIntensity: 0.4 })
+
+    // Solid navy occluder so only the front-facing gold lines show through.
+    const occluder = new THREE.Mesh(
+      new THREE.SphereGeometry(1.19, 64, 64),
+      new THREE.MeshBasicMaterial({ color: 0x0b1b30 })
     );
-    globe.add(sphere);
-    // lat/long grid to read as a globe
-    const grid = new THREE.LineSegments(
-      new THREE.WireframeGeometry(new THREE.SphereGeometry(1.255, 24, 18)),
-      new THREE.LineBasicMaterial({ color: 0x6b5a34, transparent: true, opacity: 0.28 })
+    globe.add(occluder);
+
+    // Gold graticule (lat/long)
+    const grat = new THREE.LineSegments(
+      new THREE.WireframeGeometry(new THREE.SphereGeometry(1.2, 40, 26)),
+      new THREE.LineBasicMaterial({ color: 0xc8a76a, transparent: true, opacity: 0.5 })
     );
-    globe.add(grid);
-    globe.rotation.x = 0.35;
+    globe.add(grat);
 
-    // orbiting rings
-    const rings = new THREE.Group();
-    scene.add(rings);
-    const ringMat1 = new THREE.MeshBasicMaterial({ color: 0x8fb8b0, transparent: true, opacity: 0.7, side: THREE.DoubleSide });
-    const ringMat2 = new THREE.MeshBasicMaterial({ color: 0xc8a76a, transparent: true, opacity: 0.6, side: THREE.DoubleSide });
-    const r1 = new THREE.Mesh(new THREE.TorusGeometry(1.75, 0.006, 8, 128), ringMat1);
-    r1.rotation.x = 1.15; r1.rotation.y = 0.3;
-    const r2 = new THREE.Mesh(new THREE.TorusGeometry(1.95, 0.005, 8, 128), ringMat2);
-    r2.rotation.x = 1.5; r2.rotation.z = 0.6;
-    const r3 = new THREE.Mesh(new THREE.TorusGeometry(1.62, 0.005, 8, 128), ringMat1);
-    r3.rotation.x = 0.7; r3.rotation.y = 1.1;
-    rings.add(r1, r2, r3);
+    // Gold "city" points scattered on the surface
+    const pts: number[] = [];
+    for (let i = 0; i < 420; i++) {
+      const u = Math.random(), v = Math.random();
+      const th = 2 * Math.PI * u, ph = Math.acos(2 * v - 1);
+      const r = 1.205;
+      pts.push(r * Math.sin(ph) * Math.cos(th), r * Math.cos(ph), r * Math.sin(ph) * Math.sin(th));
+    }
+    const pg = new THREE.BufferGeometry();
+    pg.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3));
+    globe.add(new THREE.Points(pg, new THREE.PointsMaterial({ color: 0xf0d9a6, size: 0.03, transparent: true, opacity: 0.95 })));
 
-    scene.add(new THREE.AmbientLight(0xfff2d8, 0.9));
-    const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(3, 3, 4); scene.add(key);
-    const rim = new THREE.DirectionalLight(0x9fb4dc, 0.5); rim.position.set(-4, -1, -2); scene.add(rim);
+    // A couple of great-circle "flight paths" (thin gold arcs on the surface)
+    function greatCircle(tilt: number, spin: number, color: number, opacity: number) {
+      const seg = 128, arr: number[] = [];
+      for (let i = 0; i <= seg; i++) {
+        const a = (i / seg) * Math.PI * 2;
+        arr.push(Math.cos(a) * 1.212, Math.sin(a) * 1.212, 0);
+      }
+      const g = new THREE.BufferGeometry();
+      g.setAttribute("position", new THREE.Float32BufferAttribute(arr, 3));
+      const line = new THREE.Line(g, new THREE.LineBasicMaterial({ color, transparent: true, opacity }));
+      line.rotation.x = tilt;
+      line.rotation.y = spin;
+      return line;
+    }
+    globe.add(greatCircle(1.1, 0.4, 0xe0c489, 0.55));
+    globe.add(greatCircle(0.5, 1.3, 0x9fb4dc, 0.4));
 
-    let alive = true, raf = 0;
+    // Thin champagne orbit ring floating outside, gently revolving.
+    const orbit = new THREE.Group();
+    scene.add(orbit);
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(1.62, 0.004, 8, 160),
+      new THREE.MeshBasicMaterial({ color: 0xc8a76a, transparent: true, opacity: 0.5 })
+    );
+    ring.rotation.x = 1.32;
+    orbit.add(ring);
+    // small travelling dot on the orbit
+    const dot = new THREE.Mesh(
+      new THREE.SphereGeometry(0.028, 16, 16),
+      new THREE.MeshBasicMaterial({ color: 0xf0d9a6 })
+    );
+    orbit.add(dot);
+
+    let alive = true, raf = 0, t = 0;
     const onResize = () => {
       w = canvas.clientWidth; h = canvas.clientHeight;
       renderer.setSize(w, h, false);
@@ -162,10 +192,11 @@ function useGlobe(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
 
     const tick = () => {
       if (!alive) return;
-      globe.rotation.y += 0.0016;
-      r1.rotation.z += 0.0018;
-      r2.rotation.y += 0.0022;
-      r3.rotation.z -= 0.0015;
+      t += 0.01;
+      globe.rotation.y += 0.0018;
+      orbit.rotation.y += 0.0022;
+      const a = t * 0.8;
+      dot.position.set(Math.cos(a) * 1.62 * Math.cos(1.32), Math.sin(a) * 1.62, Math.cos(a) * 1.62 * Math.sin(1.32));
       renderer.render(scene, camera);
       raf = requestAnimationFrame(tick);
     };
@@ -288,7 +319,7 @@ export default function ConceptD() {
 
       {/* FOREIGN NATIONAL */}
       <div id="foreign" style={{ position: "relative", padding: "clamp(90px,13vw,180px) clamp(20px,5vw,60px)", background: "#f3efe6", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: "50%", right: "clamp(-90px,-5vw,-50px)", transform: "translateY(-50%)", width: "clamp(260px,30vw,420px)", height: "clamp(260px,30vw,420px)", borderRadius: "50%", overflow: "hidden", background: "radial-gradient(circle at 40% 35%, #2b3a44, #0f171d 72%)" }}>
+        <div style={{ position: "absolute", top: "50%", right: "clamp(-90px,-5vw,-50px)", transform: "translateY(-50%)", width: "clamp(260px,30vw,420px)", height: "clamp(260px,30vw,420px)", borderRadius: "50%", overflow: "hidden", background: "radial-gradient(circle at 38% 30%, #16304f, #081221 74%)", boxShadow: "0 30px 80px rgba(12,28,51,0.28)" }}>
           <canvas ref={globeCanvas} style={{ width: "100%", height: "100%", display: "block" }} />
         </div>
         <div style={{ position: "relative", maxWidth: 1100, margin: "0 auto" }}>
