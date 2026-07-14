@@ -11,9 +11,9 @@ export default function Home() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 52 }} />
           </div>
-          <div style={{ fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase", color: "#7a8aa8", marginBottom: 14, fontWeight: 700 }}>Website redesign · Five directions</div>
+          <div style={{ fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase", color: "#7a8aa8", marginBottom: 14, fontWeight: 700 }}>Website redesign · Six directions</div>
           <h1 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: "clamp(30px,4.6vw,52px)", lineHeight: 1.08, margin: "0 0 18px", color: "#fff", letterSpacing: "-0.01em" }}>Pick a <span style={{ color: "#e2c072" }}>direction</span>.</h1>
-          <p style={{ fontSize: "clamp(15px,1.2vw,17px)", color: "#9aa6b8", fontWeight: 500, margin: "0 auto", lineHeight: 1.6 }}>Five genuinely different design languages — grounded in how real insurance brokerages and modern B2B financial firms present themselves — sharing the same real homepage copy. Open any one to see the full, scrollable homepage.</p>
+          <p style={{ fontSize: "clamp(15px,1.2vw,17px)", color: "#9aa6b8", fontWeight: 500, margin: "0 auto", lineHeight: 1.6 }}>Six genuinely different design languages — grounded in how real insurance brokerages and modern B2B financial firms present themselves — sharing the same real homepage copy. Open any one to see the full, scrollable homepage.</p>
         </div>
 
         <div className={styles.grid}>
@@ -95,6 +95,21 @@ export default function Home() {
               <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: 19, margin: "0 0 8px", color: "#0a0f1c", letterSpacing: "-0.01em" }}>Formal, wired in blue.</h2>
               <p style={{ fontSize: 13, color: "#3a4358", fontWeight: 500, lineHeight: 1.55, margin: "0 0 14px" }}>Black &amp; electric blue, mono labels, blueprint grid — with a live Three.js particle network behind the hero.</p>
               <span style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "#2563eb" }}>Open homepage →</span>
+            </div>
+          </Link>
+
+          <Link href="/f" className={styles.card} style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, overflow: "hidden", background: "#f6f2ea" }}>
+            <div style={{ position: "relative", height: 190, overflow: "hidden" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/miami-palms-sunset.jpg" alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(12,9,6,0.35), rgba(12,9,6,0.6))" }} />
+              <div style={{ position: "absolute", bottom: 16, left: 16, right: 16, fontFamily: "var(--font-fraunces), serif", fontStyle: "italic", fontSize: 21, color: "#fdfaf4", lineHeight: 1.2 }}>seamless execution.</div>
+            </div>
+            <div style={{ padding: "20px 18px" }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "#a87f4a", marginBottom: 8 }}>06 — Photo Luxe</div>
+              <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 500, fontSize: 19, margin: "0 0 8px", color: "#191613" }}>Photography does the talking.</h2>
+              <p style={{ fontSize: 13, color: "#544c40", fontWeight: 500, lineHeight: 1.55, margin: "0 0 14px" }}>Full-bleed Miami photography, cream &amp; bronze, Fraunces serif — private-bank calm, boutique-hotel warmth.</p>
+              <span style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "#a87f4a" }}>Open homepage →</span>
             </div>
           </Link>
 
