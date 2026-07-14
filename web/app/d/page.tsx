@@ -130,12 +130,18 @@ function useGlobe(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     );
     globe.add(occluder);
 
-    // Gold graticule (lat/long)
+    // Gold graticule (lat/long) — dense mesh
     const grat = new THREE.LineSegments(
-      new THREE.WireframeGeometry(new THREE.SphereGeometry(1.2, 40, 26)),
-      new THREE.LineBasicMaterial({ color: 0xc8a76a, transparent: true, opacity: 0.5 })
+      new THREE.WireframeGeometry(new THREE.SphereGeometry(1.2, 64, 40)),
+      new THREE.LineBasicMaterial({ color: 0xc8a76a, transparent: true, opacity: 0.42 })
     );
     globe.add(grat);
+    // brighter accent meridians/parallels on top for depth
+    const gratAccent = new THREE.LineSegments(
+      new THREE.WireframeGeometry(new THREE.SphereGeometry(1.202, 16, 10)),
+      new THREE.LineBasicMaterial({ color: 0xe0c489, transparent: true, opacity: 0.7 })
+    );
+    globe.add(gratAccent);
 
     // Gold "city" points scattered on the surface
     const pts: number[] = [];
@@ -149,9 +155,14 @@ function useGlobe(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     pg.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3));
     globe.add(new THREE.Points(pg, new THREE.PointsMaterial({ color: 0xf0d9a6, size: 0.03, transparent: true, opacity: 0.95 })));
 
-    // A couple of great-circle "flight paths" (thin gold arcs on the surface)
-    function greatCircle(tilt: number, spin: number, color: number, opacity: number) {
-      const seg = 128, arr: number[] = [];
+    // Independently-revolving great-circle "flight paths" — each sweeps the
+    // globe on its own axis so several lines are visibly moving at once.
+    // (Added to the scene, not the globe group, so their motion reads
+    // separately from the globe's own spin; the navy occluder still hides
+    // whatever passes behind.)
+    const arcs: { obj: THREE.Line; ax: "x" | "y" | "z"; sp: number }[] = [];
+    function makeArc(rx: number, ry: number, rz: number, color: number, opacity: number, axis: "x" | "y" | "z", speed: number) {
+      const seg = 160, arr: number[] = [];
       for (let i = 0; i <= seg; i++) {
         const a = (i / seg) * Math.PI * 2;
         arr.push(Math.cos(a) * 1.212, Math.sin(a) * 1.212, 0);
@@ -159,28 +170,35 @@ function useGlobe(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
       const g = new THREE.BufferGeometry();
       g.setAttribute("position", new THREE.Float32BufferAttribute(arr, 3));
       const line = new THREE.Line(g, new THREE.LineBasicMaterial({ color, transparent: true, opacity }));
-      line.rotation.x = tilt;
-      line.rotation.y = spin;
-      return line;
+      line.rotation.set(rx, ry, rz);
+      scene.add(line);
+      arcs.push({ obj: line, ax: axis, sp: speed });
     }
-    globe.add(greatCircle(1.1, 0.4, 0xe0c489, 0.55));
-    globe.add(greatCircle(0.5, 1.3, 0x9fb4dc, 0.4));
+    makeArc(1.1, 0.4, 0, 0xe0c489, 0.7, "x", 0.0042);
+    makeArc(0.5, 1.3, 0, 0x9fb4dc, 0.5, "y", -0.0034);
+    makeArc(1.5, 2.1, 0.3, 0xe0c489, 0.5, "z", 0.0038);
+    makeArc(0.2, 0.9, 0, 0xc8a76a, 0.45, "y", 0.0028);
+    makeArc(2.3, 1.7, 0, 0x9fb4dc, 0.4, "x", -0.0046);
+    makeArc(0.9, 0.0, 1.2, 0xe0c489, 0.4, "z", -0.003);
 
-    // Thin champagne orbit ring floating outside, gently revolving.
-    const orbit = new THREE.Group();
-    scene.add(orbit);
-    const ring = new THREE.Mesh(
-      new THREE.TorusGeometry(1.62, 0.004, 8, 160),
-      new THREE.MeshBasicMaterial({ color: 0xc8a76a, transparent: true, opacity: 0.5 })
-    );
-    ring.rotation.x = 1.32;
-    orbit.add(ring);
-    // small travelling dot on the orbit
-    const dot = new THREE.Mesh(
-      new THREE.SphereGeometry(0.028, 16, 16),
-      new THREE.MeshBasicMaterial({ color: 0xf0d9a6 })
-    );
-    orbit.add(dot);
+    // Two thin champagne orbit rings outside, each with a travelling dot.
+    function makeOrbit(radius: number, tilt: number, color: number, ringOpacity: number) {
+      const grp = new THREE.Group();
+      const ring = new THREE.Mesh(
+        new THREE.TorusGeometry(radius, 0.004, 8, 180),
+        new THREE.MeshBasicMaterial({ color, transparent: true, opacity: ringOpacity })
+      );
+      ring.rotation.x = tilt;
+      grp.add(ring);
+      const dot = new THREE.Mesh(new THREE.SphereGeometry(0.026, 16, 16), new THREE.MeshBasicMaterial({ color: 0xf0d9a6 }));
+      grp.add(dot);
+      scene.add(grp);
+      return { grp, dot, radius, tilt };
+    }
+    const orbits = [
+      makeOrbit(1.6, 1.32, 0xc8a76a, 0.5),
+      makeOrbit(1.82, 0.6, 0x9fb4dc, 0.4),
+    ];
 
     let alive = true, raf = 0, t = 0;
     const onResize = () => {
@@ -193,10 +211,13 @@ function useGlobe(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     const tick = () => {
       if (!alive) return;
       t += 0.01;
-      globe.rotation.y += 0.0018;
-      orbit.rotation.y += 0.0022;
-      const a = t * 0.8;
-      dot.position.set(Math.cos(a) * 1.62 * Math.cos(1.32), Math.sin(a) * 1.62, Math.cos(a) * 1.62 * Math.sin(1.32));
+      globe.rotation.y += 0.0016;
+      arcs.forEach((a) => { a.obj.rotation[a.ax] += a.sp; });
+      orbits.forEach((o, i) => {
+        o.grp.rotation.y += 0.0022 * (i % 2 ? -1 : 1);
+        const a = t * (0.7 + i * 0.35);
+        o.dot.position.set(Math.cos(a) * o.radius * Math.cos(o.tilt), Math.sin(a) * o.radius, Math.cos(a) * o.radius * Math.sin(o.tilt));
+      });
       renderer.render(scene, camera);
       raf = requestAnimationFrame(tick);
     };

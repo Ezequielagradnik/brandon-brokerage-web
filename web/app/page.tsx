@@ -11,9 +11,9 @@ export default function Home() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 52 }} />
           </div>
-          <div style={{ fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase", color: "#7a8aa8", marginBottom: 14, fontWeight: 700 }}>Website redesign · Four directions</div>
+          <div style={{ fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase", color: "#7a8aa8", marginBottom: 14, fontWeight: 700 }}>Website redesign · Five directions</div>
           <h1 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: "clamp(30px,4.6vw,52px)", lineHeight: 1.08, margin: "0 0 18px", color: "#fff", letterSpacing: "-0.01em" }}>Pick a <span style={{ color: "#e2c072" }}>direction</span>.</h1>
-          <p style={{ fontSize: "clamp(15px,1.2vw,17px)", color: "#9aa6b8", fontWeight: 500, margin: "0 auto", lineHeight: 1.6 }}>Four genuinely different design languages — grounded in how real insurance brokerages and modern B2B financial firms present themselves — sharing the same real homepage copy. Open any one to see the full, scrollable homepage.</p>
+          <p style={{ fontSize: "clamp(15px,1.2vw,17px)", color: "#9aa6b8", fontWeight: 500, margin: "0 auto", lineHeight: 1.6 }}>Five genuinely different design languages — grounded in how real insurance brokerages and modern B2B financial firms present themselves — sharing the same real homepage copy. Open any one to see the full, scrollable homepage.</p>
         </div>
 
         <div className={styles.grid}>
@@ -73,6 +73,28 @@ export default function Home() {
               <h2 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: 19, margin: "0 0 8px", color: "#12294a" }}>Light, animated, premium.</h2>
               <p style={{ fontSize: 13, color: "#5c6675", fontWeight: 400, lineHeight: 1.55, margin: "0 0 14px" }}>The original direction — Bodoni serif over an animated silk-gradient shader flowing gold and navy across ivory.</p>
               <span style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "#a9812f" }}>Open homepage →</span>
+            </div>
+          </Link>
+
+          <Link href="/e" className={styles.card} style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, overflow: "hidden", background: "#fff" }}>
+            <div style={{ position: "relative", height: 190, background: "radial-gradient(120% 100% at 50% 0%, #0a1226, #05070d 70%)", overflow: "hidden" }}>
+              <svg width="100%" height="100%" viewBox="0 0 300 190" style={{ position: "absolute", inset: 0 }}>
+                <g stroke="#2563eb" strokeWidth="1" opacity="0.55">
+                  <line x1="40" y1="60" x2="120" y2="40" /><line x1="120" y1="40" x2="190" y2="90" /><line x1="190" y1="90" x2="260" y2="55" />
+                  <line x1="40" y1="60" x2="90" y2="130" /><line x1="90" y1="130" x2="190" y2="90" /><line x1="90" y1="130" x2="180" y2="155" />
+                  <line x1="180" y1="155" x2="260" y2="120" /><line x1="260" y1="55" x2="260" y2="120" /><line x1="120" y1="40" x2="40" y2="60" />
+                </g>
+                <g fill="#5c8dff">
+                  <circle cx="40" cy="60" r="3.4" /><circle cx="120" cy="40" r="3.4" /><circle cx="190" cy="90" r="3.4" />
+                  <circle cx="260" cy="55" r="3.4" /><circle cx="90" cy="130" r="3.4" /><circle cx="180" cy="155" r="3.4" /><circle cx="260" cy="120" r="3.4" />
+                </g>
+              </svg>
+            </div>
+            <div style={{ padding: "20px 18px" }}>
+              <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.07em", textTransform: "uppercase", color: "#2563eb", marginBottom: 8 }}>05 — Corporate Tech</div>
+              <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: 19, margin: "0 0 8px", color: "#0a0f1c", letterSpacing: "-0.01em" }}>Formal, wired in blue.</h2>
+              <p style={{ fontSize: 13, color: "#3a4358", fontWeight: 500, lineHeight: 1.55, margin: "0 0 14px" }}>Black &amp; electric blue, mono labels, blueprint grid — with a live Three.js particle network behind the hero.</p>
+              <span style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "#2563eb" }}>Open homepage →</span>
             </div>
           </Link>
 

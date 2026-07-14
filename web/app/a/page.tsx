@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
 import { OFFERINGS } from "@/lib/offerings";
@@ -14,11 +14,26 @@ const NAV_LINKS = [
 ];
 
 const PRODUCTS = [
-  { name: "Term Life", desc: "Income & mortgage protection", tag: "Life" },
-  { name: "Permanent Life", desc: "Whole, universal & IUL", tag: "Life" },
-  { name: "Annuities", desc: "Fixed & indexed income", tag: "Retirement" },
-  { name: "Long-Term Care", desc: "Traditional & hybrid", tag: "Care" },
-  { name: "Disability Income", desc: "Protect earning power", tag: "Income" },
+  {
+    name: "Term Life", desc: "Income & mortgage protection", tag: "Life",
+    icon: <path d="M13 3l8 3v6c0 5.2-3.4 8.4-8 9.8C8.4 20.4 5 17.2 5 12V6l8-3z" />,
+  },
+  {
+    name: "Permanent Life", desc: "Whole, universal & IUL", tag: "Life",
+    icon: <><path d="M4 21V9l9-5 9 5v12" /><path d="M9 21v-6h8v6" /></>,
+  },
+  {
+    name: "Annuities", desc: "Fixed & indexed income", tag: "Retirement",
+    icon: <><path d="M4 19h16" /><path d="M6 19V11M11 19V7M16 19v-5M21 19V5" /></>,
+  },
+  {
+    name: "Long-Term Care", desc: "Traditional & hybrid", tag: "Care",
+    icon: <path d="M13 20.5C6 16 3.5 12.5 3.5 9A4.2 4.2 0 0 1 13 6.4 4.2 4.2 0 0 1 22.5 9c0 3.5-2.5 7-9.5 11.5z" />,
+  },
+  {
+    name: "Disability Income", desc: "Protect earning power", tag: "Income",
+    icon: <><path d="M13 3l8 3v6c0 5.2-3.4 8.4-8 9.8C8.4 20.4 5 17.2 5 12V6l8-3z" /><path d="M9.5 12l2.2 2.2L16 9.8" /></>,
+  },
 ];
 
 const CARRIERS = ["Lincoln", "John Hancock", "AIG", "Nationwide", "Principal", "MassMutual", "Mutual of Omaha", "Protective", "Prudential", "Pacific Life", "Transamerica", "Symetra", "Global Atlantic", "Allianz"];
@@ -29,17 +44,25 @@ export default function ConceptA() {
   const heroTitle = useRef<HTMLHeadingElement>(null);
   const heroSub = useRef<HTMLParagraphElement>(null);
   const heroCta = useRef<HTMLDivElement>(null);
+  const [scrolled, setScrolled] = useState(false);
 
   useHeroReveal([heroKicker, heroTitle, heroSub, heroCta]);
   useScrollReveal(pageRef);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 16);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <div ref={pageRef} className={styles.page}>
 
       {/* HEADER */}
-      <div className={styles.headerBar} style={{ position: "sticky", top: 0, zIndex: 60, padding: "18px clamp(20px,5vw,60px)", background: "rgba(255,255,255,0.92)", backdropFilter: "blur(10px)", borderBottom: "1px solid #eceef2" }}>
+      <div className={styles.headerBar} style={{ position: "sticky", top: 0, zIndex: 60, padding: scrolled ? "12px clamp(20px,5vw,60px)" : "18px clamp(20px,5vw,60px)", background: scrolled ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.92)", backdropFilter: "blur(10px)", borderBottom: "1px solid #eceef2", boxShadow: scrolled ? "0 8px 30px rgba(15,23,42,0.08)" : "none", transition: "padding 0.28s ease, box-shadow 0.28s ease, background 0.28s ease" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <a href="#top" style={{ display: "inline-flex" }}><img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 28 }} /></a>
+        <a href="#top" style={{ display: "inline-flex" }}><img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: scrolled ? 24 : 28, transition: "height 0.28s ease" }} /></a>
         <div className={styles.headerNav}>
           <a href="#why" className={styles.nl}>Firm</a>
           <a href="#foreign" className={styles.nl}>Foreign National</a>
@@ -122,7 +145,7 @@ export default function ConceptA() {
           <div style={{ padding: "38px clamp(20px,4vw,48px)", borderRight: "1px solid #eceef2" }}><div style={{ fontFamily: "var(--font-manrope), sans-serif", fontSize: "clamp(32px,4vw,44px)", fontWeight: 800, color: "#0e1c33" }}>50<span style={{ color: "#d97706" }}>+</span></div><div style={{ fontSize: 13, color: "#6b7688", marginTop: 8, fontWeight: 600 }}>Years of expertise</div></div>
           <div style={{ padding: "38px clamp(20px,4vw,48px)", borderRight: "1px solid #eceef2" }}><div style={{ fontFamily: "var(--font-manrope), sans-serif", fontSize: "clamp(32px,4vw,44px)", fontWeight: 800, color: "#0e1c33" }}>30<span style={{ color: "#d97706" }}>+</span></div><div style={{ fontSize: 13, color: "#6b7688", marginTop: 8, fontWeight: 600 }}>Top-rated carriers</div></div>
           <div style={{ padding: "38px clamp(20px,4vw,48px)", borderRight: "1px solid #eceef2" }}><div style={{ fontFamily: "var(--font-manrope), sans-serif", fontSize: "clamp(32px,4vw,44px)", fontWeight: 800, color: "#0e1c33" }}>5</div><div style={{ fontSize: 13, color: "#6b7688", marginTop: 8, fontWeight: 600 }}>Product lines</div></div>
-          <div style={{ padding: "38px clamp(20px,4vw,48px)" }}><div style={{ fontFamily: "var(--font-manrope), sans-serif", fontSize: "clamp(32px,4vw,44px)", fontWeight: 800, color: "#d97706" }}>FN</div><div style={{ fontSize: 13, color: "#6b7688", marginTop: 8, fontWeight: 600 }}>Market leader</div></div>
+          <div style={{ padding: "38px clamp(20px,4vw,48px)" }}><div style={{ fontFamily: "var(--font-manrope), sans-serif", fontSize: "clamp(32px,4vw,44px)", fontWeight: 800, color: "#d97706" }}>No.1</div><div style={{ fontSize: 13, color: "#6b7688", marginTop: 8, fontWeight: 600 }}>Foreign national market</div></div>
         </div>
       </div>
 
@@ -169,18 +192,27 @@ export default function ConceptA() {
       {/* PRODUCTS */}
       <div id="products" style={{ padding: "clamp(64px,8vw,110px) clamp(20px,5vw,60px)", background: "#fff" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
-          <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: 30 }}>
-            <h2 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: "clamp(26px,3.4vw,40px)", margin: 0, color: "#0e1c33" }}>Products</h2>
-            <span style={{ fontSize: 13.5, fontWeight: 700, color: "#d97706" }}>Backed by 30+ carriers</span>
+          <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: 34 }}>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#d97706", letterSpacing: "0.04em", marginBottom: 12 }}>PRODUCTS</div>
+              <h2 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: "clamp(26px,3.4vw,40px)", margin: 0, color: "#0e1c33", letterSpacing: "-0.01em" }}>Five lines, one relationship.</h2>
+            </div>
+            <span style={{ fontSize: 13.5, fontWeight: 700, color: "#8a94a6" }}>Backed by 30+ carriers</span>
           </div>
-          <div data-reveal>
+          <div data-reveal className={styles.prodGrid}>
             {PRODUCTS.map((p) => (
-              <a key={p.name} href="#contact" className={`${styles.card} ${styles.prodRow}`} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 18, padding: "20px 24px", marginBottom: 12, color: "#0e1c33" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                  <span style={{ fontSize: 11.5, fontWeight: 700, color: "#92450b", background: "#fdf1e0", padding: "5px 10px", borderRadius: 999 }}>{p.tag}</span>
-                  <span style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 700, fontSize: 18 }}>{p.name}</span>
+              <a key={p.name} href="#contact" className={`${styles.card} ${styles.prodCard}`}>
+                <div className={styles.prodTop}>
+                  <span className={styles.prodIcon}>
+                    <svg width="22" height="22" viewBox="0 0 26 26" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">{p.icon}</svg>
+                  </span>
+                  <span className={styles.prodArrow} aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+                  </span>
                 </div>
-                <span style={{ fontSize: 14, color: "#6b7688" }}>{p.desc}</span>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: "#92450b" }}>{p.tag}</div>
+                <h3 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 700, fontSize: 19, margin: "6px 0 6px", color: "#0e1c33" }}>{p.name}</h3>
+                <p style={{ fontSize: 13.5, lineHeight: 1.55, color: "#6b7688", margin: 0 }}>{p.desc}</p>
               </a>
             ))}
           </div>
@@ -222,13 +254,48 @@ export default function ConceptA() {
       </div>
 
       {/* FOOTER */}
-      <div style={{ padding: "34px clamp(20px,5vw,60px)", background: "#0e1c33", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
-        <div style={{ background: "rgba(255,255,255,0.94)", borderRadius: 10, padding: "7px 16px", display: "inline-flex" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 20 }} />
+      <footer style={{ background: "#0e1c33", padding: "clamp(48px,6vw,72px) clamp(20px,5vw,60px) 0" }}>
+        <div style={{ maxWidth: 1300, margin: "0 auto" }}>
+          <div className={styles.footerGrid}>
+            <div>
+              <div style={{ background: "rgba(255,255,255,0.94)", borderRadius: 10, padding: "9px 16px", display: "inline-flex", marginBottom: 18 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 22 }} />
+              </div>
+              <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#8fa0bd", margin: 0, maxWidth: 280 }}>A leading Tellus / Crump firm serving producers and financial advisors since the 1970s.</p>
+            </div>
+
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "#f0b053", marginBottom: 16 }}>Company</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+                {NAV_LINKS.map((l) => (
+                  <a key={l.href} href={l.href} className={styles.footLink} style={{ fontSize: 14, color: "#c3cddc" }}>{l.label}</a>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "#f0b053", marginBottom: 16 }}>Contact</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 11, fontSize: 14, color: "#c3cddc" }}>
+                <a href="tel:+13054447401" className={styles.footLink}>305-444-7401</a>
+                <a href="tel:+18887764678" className={styles.footLink}>1-888-776-4678</a>
+                <span style={{ color: "#8fa0bd", lineHeight: 1.5 }}>75 Valencia Ave, Suite 200<br />Coral Gables, FL 33134</span>
+              </div>
+            </div>
+
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "#f0b053", marginBottom: 16 }}>Get started</div>
+              <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#8fa0bd", margin: "0 0 16px" }}>A brokerage director responds within one business day.</p>
+              <a href="#contact" className={`${styles.cta} ${styles.ctaPrimary}`} style={{ display: "inline-block", padding: "11px 22px", borderRadius: 8, fontSize: 13.5 }}>Partner with us</a>
+            </div>
+          </div>
+
+          <div style={{ borderTop: "1px solid #22375a", marginTop: "clamp(40px,5vw,56px)", padding: "24px 0", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+            <div style={{ fontSize: 12.5, color: "#7c8aa3" }}>© 1970s–2026 Brandon Brokerage Group. All rights reserved.</div>
+            <div style={{ fontSize: 12.5, color: "#7c8aa3" }}>For licensed agents &amp; advisors only</div>
+          </div>
         </div>
-        <div style={{ fontSize: 12.5, color: "#7c8aa3" }}>© 1970s–2026 Brandon Brokerage Group · For licensed agents &amp; advisors only</div>
-      </div>
+      </footer>
 
     </div>
   );

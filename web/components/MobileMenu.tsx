@@ -37,21 +37,15 @@ export default function MobileMenu({ links, ctaLabel, ctaHref, panelBg, textColo
     <>
       <button
         type="button"
-        aria-label={open ? "Close menu" : "Open menu"}
+        aria-label="Open menu"
         aria-expanded={open}
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => setOpen(true)}
         className={styles.toggle}
-        style={{ color: textColor }}
+        style={{ color: textColor, ...(open ? { display: "none" } : {}) }}
       >
-        {open ? (
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8">
-            <path d="M2 2l18 18M20 2L2 20" />
-          </svg>
-        ) : (
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8">
-            <path d="M2 5h18M2 11h18M2 17h18" />
-          </svg>
-        )}
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path d="M2 5h18M2 11h18M2 17h18" />
+        </svg>
       </button>
 
       {open && <div className={styles.backdrop} onClick={() => setOpen(false)} />}

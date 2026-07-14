@@ -1,7 +1,6 @@
 .page {
   width: 100%;
-  overflow-x: hidden;
-  position: relative;
+  overflow-x: clip;
   background: #ffffff;
   color: #14213d;
   font-family: var(--font-manrope), sans-serif;
@@ -20,20 +19,39 @@
 }
 
 .nl {
+  position: relative;
   color: #475569;
   transition: color 0.2s;
   font-size: 14.5px;
   font-weight: 600;
 }
+.nl::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 100%;
+  height: 2px;
+  background: #d97706;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
 .nl:hover {
   color: #12294a;
+}
+.nl:hover::after {
+  transform: scaleX(1);
 }
 
 .cta {
   position: relative;
   overflow: hidden;
-  transition: color 0.25s, background 0.25s, border-color 0.25s;
+  transition: color 0.25s, background 0.25s, border-color 0.25s, transform 0.25s ease, box-shadow 0.25s ease;
   font-weight: 700;
+}
+.cta:hover {
+  transform: translateY(-2px);
 }
 .ctaPrimary {
   background: #12294a;
@@ -44,6 +62,7 @@
   background: #d97706;
   border-color: #d97706;
   color: #fff;
+  box-shadow: 0 12px 26px rgba(217, 119, 6, 0.32);
 }
 .ctaGhost {
   background: transparent;
@@ -52,6 +71,29 @@
 }
 .ctaGhost:hover {
   border-color: #12294a;
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.1);
+}
+
+.footerGrid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+  gap: clamp(28px, 4vw, 56px);
+}
+.footLink {
+  transition: color 0.2s;
+}
+.footLink:hover {
+  color: #f0b053 !important;
+}
+@media (max-width: 860px) {
+  .footerGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 520px) {
+  .footerGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .headerBar {
@@ -206,11 +248,63 @@
   border-color: #d97706;
 }
 
-.prodRow {
-  transition: background 0.2s;
+.prodGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
 }
-.prodRow:hover {
-  background: #f8f6f2;
+.prodCard {
+  padding: 22px 22px 24px;
+  color: #0e1c33;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.prodCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 44px rgba(15, 23, 42, 0.1);
+  border-color: #f3dcb2;
+}
+.prodTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.prodIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  background: #fdf1e0;
+  color: #12294a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s, color 0.25s;
+}
+.prodCard:hover .prodIcon {
+  background: #d97706;
+  color: #fff;
+}
+.prodArrow {
+  color: #c4ccd8;
+  transform: translateX(-4px);
+  opacity: 0;
+  transition: transform 0.25s ease, opacity 0.25s ease, color 0.25s;
+}
+.prodCard:hover .prodArrow {
+  opacity: 1;
+  transform: translateX(0);
+  color: #d97706;
+}
+
+@media (max-width: 1080px) {
+  .prodGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .prodGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .chip {
