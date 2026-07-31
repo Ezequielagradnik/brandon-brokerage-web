@@ -2,9 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
+import { useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
 import { OFFERINGS } from "@/lib/offerings";
+import { WordsReveal, CursorDot, Sweep, FadeIn } from "@/components/motion";
 import styles from "./page.module.css";
 
 const NAV_LINKS = [
@@ -96,18 +97,14 @@ const CARRIERS = ["Lincoln", "John Hancock", "AIG", "Nationwide", "Principal", "
 
 export default function ConceptC() {
   const pageRef = useRef<HTMLDivElement>(null);
-  const heroKicker = useRef<HTMLDivElement>(null);
-  const heroTitle = useRef<HTMLHeadingElement>(null);
-  const heroSub = useRef<HTMLParagraphElement>(null);
-  const heroCta = useRef<HTMLDivElement>(null);
   const globeCanvas = useRef<HTMLCanvasElement>(null);
 
-  useHeroReveal([heroKicker, heroTitle, heroSub, heroCta]);
   useScrollReveal(pageRef);
   useWireframeGlobe(globeCanvas);
 
   return (
     <div ref={pageRef} className={styles.page}>
+      <CursorDot color="#1a56ff" />
 
       {/* HEADER */}
       <div className={styles.headerBar} style={{ position: "sticky", top: 0, zIndex: 60, padding: "20px clamp(20px,5vw,60px)", background: "#fff", borderBottom: "2px solid #0a0a0a" }}>
@@ -134,21 +131,30 @@ export default function ConceptC() {
       <div id="top" style={{ position: "relative", padding: "clamp(50px,7vw,90px) clamp(20px,5vw,60px) clamp(70px,9vw,110px)", borderBottom: "2px solid #0a0a0a", overflow: "hidden" }}>
         <div className={styles.bgType} style={{ top: "6%", left: "-2%", fontSize: "clamp(90px,16vw,240px)", lineHeight: 1 }}>BRANDON</div>
         <div style={{ position: "relative", maxWidth: 1300, margin: "0 auto" }}>
-          <div ref={heroKicker} style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 36 }}>
+          <FadeIn delay={0.1} style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 36 }}>
             <span style={{ width: 10, height: 10, background: "#1a56ff" }} />
             <span style={{ fontSize: 13, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em" }}>Coral Gables — Since the 1970s</span>
-          </div>
-          <h1 ref={heroTitle} style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 900, fontSize: "clamp(40px,7.2vw,108px)", lineHeight: 0.98, letterSpacing: "-0.03em", margin: "0 0 40px", color: "#0a0a0a", maxWidth: 1150 }}>
-            Partnering with producers and advisors to deliver customized solutions with seamless execution.
+          </FadeIn>
+          <h1 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 900, fontSize: "clamp(40px,7.2vw,108px)", lineHeight: 1.02, letterSpacing: "-0.03em", margin: "0 0 40px", color: "#0a0a0a", maxWidth: 1150 }}>
+            <WordsReveal
+              delay={0.25}
+              stagger={0.045}
+              segments={[
+                { text: "Partnering with producers and advisors to deliver customized solutions with" },
+                { text: "seamless execution.", style: { color: "#1a56ff" } },
+              ]}
+            />
           </h1>
           <div className={styles.heroFooter}>
-            <p ref={heroSub} style={{ fontSize: "clamp(16px,1.4vw,20px)", lineHeight: 1.6, color: "#2a2a2a", fontWeight: 500, margin: 0 }}>
-              For over fifty years, Brandon Brokerage Group has paired advanced sales support and full case management with access to 30+ top-rated carriers — and a rare command of the foreign national market.
-            </p>
-            <div ref={heroCta} style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap", justifyContent: "flex-end" }}>
+            <FadeIn delay={0.85} style={{ margin: 0 }}>
+              <p style={{ fontSize: "clamp(16px,1.4vw,20px)", lineHeight: 1.6, color: "#2a2a2a", fontWeight: 500, margin: 0 }}>
+                For over fifty years, Brandon Brokerage Group has paired advanced sales support and full case management with access to 30+ top-rated carriers — and a rare command of the foreign national market.
+              </p>
+            </FadeIn>
+            <FadeIn delay={1} style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap", justifyContent: "flex-end" }}>
               <a href="#contact" className={`${styles.cta} ${styles.ctaBlue}`} style={{ padding: "18px 36px", fontSize: 15 }}>Partner With Us</a>
               <a href="#products" className={`${styles.cta} ${styles.ctaOutline}`} style={{ padding: "18px 36px", fontSize: 15 }}>Products</a>
-            </div>
+            </FadeIn>
           </div>
         </div>
       </div>
@@ -168,7 +174,8 @@ export default function ConceptC() {
       {/* WHY */}
       <div id="why" style={{ padding: "clamp(60px,8vw,100px) clamp(20px,5vw,60px)" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
-          <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: 40, borderBottom: "2px solid #0a0a0a", paddingBottom: 24 }}>
+          <div data-reveal style={{ position: "relative", overflow: "hidden", display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: 40, borderBottom: "2px solid #0a0a0a", paddingBottom: 24 }}>
+            <Sweep color="#1a56ff" />
             <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 900, fontSize: "clamp(30px,4.6vw,58px)", margin: 0, color: "#0a0a0a", letterSpacing: "-0.02em" }}>What we offer.</h2>
             <span style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", color: "#1a56ff" }}>Four disciplines, one desk</span>
           </div>
@@ -177,12 +184,13 @@ export default function ConceptC() {
               <div key={o.n} className={styles.offerCard}>
                 <div className={styles.offerImgWrap}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={o.img} alt={o.title} className={styles.offerImg} />
+                  <img src={o.img} alt={o.title} className={styles.offerImg} data-photo-slot={`offer-${o.n}`} />
                   <span className={styles.offerNum}>{o.n}</span>
                 </div>
                 <div style={{ padding: "20px 20px 24px" }}>
                   <h3 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: 18, margin: "0 0 10px", color: "#0a0a0a", letterSpacing: "-0.01em", lineHeight: 1.2 }}>{o.title}</h3>
-                  <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#3a3a3a", margin: 0, fontWeight: 500 }}>{o.desc}</p>
+                  <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#3a3a3a", margin: "0 0 12px", fontWeight: 500 }}>{o.blurb}</p>
+                  <a href="#contact" style={{ fontSize: 12.5, fontWeight: 800, textTransform: "uppercase", color: "#1a56ff" }}>Learn more →</a>
                 </div>
               </div>
             ))}
@@ -201,7 +209,7 @@ export default function ConceptC() {
           </h2>
           <div data-reveal style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: "clamp(30px,5vw,70px)", borderTop: "2px solid #fff", paddingTop: 32 }}>
             <p style={{ fontSize: 16, lineHeight: 1.7, color: "#d4d4d4", margin: 0, fontWeight: 500 }}>With over 50 years of experience, we are an industry leader in the foreign national market — devising customized sales strategies and wealth-management solutions.</p>
-            <p style={{ fontSize: 16, lineHeight: 1.7, color: "#d4d4d4", margin: 0, fontWeight: 500 }}>Our open-architecture approach suits your clients&apos; needs while adhering to all carrier, state and federal guidelines. <a href="#contact" style={{ color: "#1a56ff", fontWeight: 700 }}>Speak with a specialist →</a></p>
+            <p style={{ fontSize: 16, lineHeight: 1.7, color: "#d4d4d4", margin: 0, fontWeight: 500 }}>Our open-architecture approach suits your clients&apos; needs while adhering to all carrier, state and federal guidelines. <a href="#contact" style={{ color: "#1a56ff", fontWeight: 700 }}>Partner with us →</a></p>
           </div>
         </div>
       </div>
@@ -209,7 +217,8 @@ export default function ConceptC() {
       {/* PRODUCTS */}
       <div id="products" style={{ padding: "clamp(60px,8vw,100px) clamp(20px,5vw,60px)", borderBottom: "2px solid #0a0a0a" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
-          <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: 8, borderBottom: "2px solid #0a0a0a", paddingBottom: 24 }}>
+          <div data-reveal style={{ position: "relative", overflow: "hidden", display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: 8, borderBottom: "2px solid #0a0a0a", paddingBottom: 24 }}>
+            <Sweep color="#0a0a0a" />
             <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 900, fontSize: "clamp(30px,4.6vw,58px)", margin: 0, color: "#0a0a0a", letterSpacing: "-0.02em" }}>Products.</h2>
             <span style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", color: "#1a56ff" }}>Backed by 30+ carriers</span>
           </div>
@@ -247,7 +256,7 @@ export default function ConceptC() {
       <div id="contact" style={{ padding: "clamp(70px,10vw,120px) clamp(20px,5vw,60px)", background: "#1a56ff", color: "#fff" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,90px)", alignItems: "center" }}>
           <div data-reveal>
-            <div style={{ fontSize: 13, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: "#0a0a0a", marginBottom: 24 }}>Get Started</div>
+            <div style={{ fontSize: 13, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: "#0a0a0a", marginBottom: 24 }}>Contact</div>
             <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 900, fontSize: "clamp(32px,5vw,64px)", lineHeight: 0.98, margin: "0 0 26px", color: "#fff", letterSpacing: "-0.02em" }}>Let&apos;s write more business, together.</h2>
             <p style={{ fontSize: 17, lineHeight: 1.6, color: "#e4ebff", margin: 0, maxWidth: 440, fontWeight: 500 }}>Tell us about your case or your book of business. A brokerage director responds within one business day.</p>
           </div>

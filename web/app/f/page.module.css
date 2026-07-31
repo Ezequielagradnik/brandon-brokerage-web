@@ -19,7 +19,7 @@
 }
 
 .serif {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-cormorant), serif;
 }
 
 .nl {
@@ -120,14 +120,14 @@
   height: 100%;
   object-fit: cover;
   transform-origin: 62% 38%;
-  animation: kenburns 24s cubic-bezier(0.2, 0.6, 0.3, 1) forwards;
+  animation: kenburns 44s ease-in-out infinite alternate;
 }
 @keyframes kenburns {
   from {
-    transform: scale(1.14);
+    transform: scale(1.02);
   }
   to {
-    transform: scale(1.02);
+    transform: scale(1.12);
   }
 }
 @media (prefers-reduced-motion: reduce) {

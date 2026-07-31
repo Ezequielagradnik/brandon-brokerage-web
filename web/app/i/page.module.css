@@ -28,6 +28,7 @@
 .cta {
   position: relative;
   overflow: hidden;
+  isolation: isolate;
   transition: color 0.3s;
   border: 1px solid #1a1814;
   color: #1a1814 !important;
@@ -37,12 +38,12 @@
   position: absolute;
   inset: 0;
   background: #1a1814;
-  transform: translateY(101%);
-  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  clip-path: circle(0px at var(--mx, 50%) var(--my, 50%));
+  transition: clip-path 0.55s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: -1;
 }
 .cta:hover::after {
-  transform: translateY(0);
+  clip-path: circle(160% at var(--mx, 50%) var(--my, 50%));
 }
 .cta:hover {
   color: #f7f4ee !important;

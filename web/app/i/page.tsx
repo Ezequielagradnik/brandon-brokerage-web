@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
 import { OFFERINGS } from "@/lib/offerings";
-import { ScrollProgress, MaskReveal, FadeIn, CountUp, ParallaxImg, ClipReveal, GrowLine, Magnetic } from "@/components/motion";
+import { ScrollProgress, MaskReveal, LettersReveal, FadeIn, CountUp, ParallaxImg, ClipReveal, GrowLine, Magnetic, ctaFillFromCursor } from "@/components/motion";
 import styles from "./page.module.css";
 
 const NAV_LINKS = [
@@ -50,11 +50,11 @@ export default function ConceptI() {
           {NAV_LINKS.map((l) => (
             <a key={l.href} href={l.href} className={styles.nl}>{l.label}</a>
           ))}
-          <a href="#contact" className={styles.cta} style={{ padding: "10px 22px", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase" }}>Inquire</a>
+          <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ padding: "10px 22px", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase" }}>Partner with us</a>
         </div>
         <MobileMenu
           links={NAV_LINKS}
-          ctaLabel="Inquire"
+          ctaLabel="Partner with us"
           ctaHref="#contact"
           panelBg={PAPER}
           textColor={INK}
@@ -76,16 +76,16 @@ export default function ConceptI() {
           <div className={styles.mastGrid} style={{ paddingBottom: "clamp(40px,6vw,80px)" }}>
             <div className={styles.mastText}>
               <h1 style={{ fontFamily: serif, fontWeight: 400, fontSize: "clamp(50px,8.2vw,124px)", lineHeight: 0.98, margin: "0 0 clamp(34px,4.5vw,60px)", color: INK, letterSpacing: "-0.015em" }}>
-                <MaskReveal delay={0.35}>Seamless</MaskReveal>
-                <MaskReveal delay={0.5}><span style={{ fontStyle: "italic", marginLeft: "clamp(30px,8vw,150px)" }}>execution,</span></MaskReveal>
-                <MaskReveal delay={0.65}>since the &rsquo;70s.</MaskReveal>
+                <span style={{ display: "block" }}><LettersReveal text="Seamless" delay={0.3} /></span>
+                <span style={{ display: "block", fontStyle: "italic", marginLeft: "clamp(30px,8vw,150px)" }}><LettersReveal text="execution," delay={0.62} /></span>
+                <span style={{ display: "block" }}><LettersReveal text="since the ’70s." delay={0.98} /></span>
               </h1>
               <FadeIn delay={1.15}>
                 <p style={{ maxWidth: 460, fontSize: 16, lineHeight: 1.75, color: MUTED, fontWeight: 400, margin: "0 0 30px" }}>We partner with producers and financial advisors to deliver customized business solutions — advanced sales support, full case management and 30+ top-rated carriers behind every case.</p>
               </FadeIn>
               <FadeIn delay={1.35} style={{ display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap" }}>
                 <Magnetic>
-                  <a href="#contact" className={styles.cta} style={{ display: "inline-block", padding: "15px 34px", fontSize: 12.5, letterSpacing: "0.1em", textTransform: "uppercase" }}>Partner with us</a>
+                  <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "15px 34px", fontSize: 12.5, letterSpacing: "0.1em", textTransform: "uppercase" }}>Partner with us</a>
                 </Magnetic>
                 <a href="#firm" className={styles.lnk} style={{ fontSize: 13, letterSpacing: "0.06em", color: INK }}>The firm, in brief</a>
               </FadeIn>
@@ -93,7 +93,7 @@ export default function ConceptI() {
             <div className={styles.mastFig}>
               <ClipReveal delay={0.75} style={{ height: "clamp(340px,42vw,560px)" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/miami-palms-day.jpg" alt="Coral Gables, Florida" className={styles.bw} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <img src="/images/miami-palms-day.jpg" alt="Coral Gables, Florida" data-photo-slot="hero" className={styles.bw} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </ClipReveal>
               <FadeIn delay={1.5} y={10} style={{ display: "flex", justifyContent: "space-between", gap: 10, padding: "12px 2px 0", flexWrap: "wrap" }}>
                 <span style={label}>Fig. 01</span>
@@ -110,7 +110,8 @@ export default function ConceptI() {
           <ParallaxImg
             src="/images/handshake-moody.jpg"
             alt="A firm handshake"
-            range={54}
+            range={44}
+            photoSlot="firm"
             style={{ height: "clamp(300px,52vh,600px)" }}
             imgClassName={styles.bw}
           />
@@ -146,7 +147,7 @@ export default function ConceptI() {
       {/* MISSION — indented editorial pull quote */}
       <div style={{ padding: "clamp(90px,13vw,170px) clamp(20px,5vw,60px)" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(12,minmax(0,1fr))", gap: "clamp(16px,2.4vw,36px)" }}>
-          <div data-reveal style={{ gridColumn: "1 / span 2", ...label, paddingTop: 10 }}>No. 01<br />Mission</div>
+          <div data-reveal style={{ gridColumn: "1 / span 2", ...label, paddingTop: 10, position: "sticky", top: 110, alignSelf: "start" }}>No. 01<br />Mission</div>
           <p data-reveal style={{ gridColumn: "4 / span 9", fontFamily: serif, fontWeight: 400, fontSize: "clamp(26px,3.6vw,46px)", lineHeight: 1.32, margin: 0, color: INK }}>To provide agents with superior service, personalized sales support and tailored business solutions that build <span style={{ fontStyle: "italic" }}>long-term relationships</span>.</p>
         </div>
       </div>
@@ -162,12 +163,13 @@ export default function ConceptI() {
             {OFFERINGS.map((o, i) => (
               <div key={o.n} data-reveal className={styles.offRow}>
                 <div className={i % 2 === 0 ? styles.offImgA : styles.offImgB}>
-                  <ParallaxImg src={o.img} alt={o.title} range={34} style={{ height: "clamp(240px,34vw,420px)" }} imgClassName={styles.bw} />
+                  <ParallaxImg src={o.img} alt={o.title} range={28} photoSlot={`offer-${o.n}`} style={{ height: "clamp(240px,34vw,420px)" }} imgClassName={styles.bw} />
                 </div>
                 <div className={i % 2 === 0 ? styles.offTextA : styles.offTextB}>
                   <div style={{ fontFamily: serif, fontStyle: "italic", fontSize: 20, color: MUTED, marginBottom: 14 }}>({o.n})</div>
                   <h3 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(26px,2.8vw,38px)", margin: "0 0 16px", color: INK, lineHeight: 1.12 }}>{o.title}</h3>
-                  <p style={{ fontSize: 14.5, lineHeight: 1.75, color: MUTED, fontWeight: 400, margin: 0 }}>{o.desc}</p>
+                  <p style={{ fontSize: 14.5, lineHeight: 1.75, color: MUTED, fontWeight: 400, margin: "0 0 16px" }}>{o.blurb}</p>
+                  <a href="#contact" className={styles.lnk} style={{ fontSize: 11.5, letterSpacing: "0.24em", textTransform: "uppercase", color: INK }}>Learn more</a>
                 </div>
               </div>
             ))}
@@ -178,14 +180,14 @@ export default function ConceptI() {
       {/* FOREIGN NATIONAL — ink band, inverse */}
       <div id="foreign" style={{ padding: "clamp(90px,13vw,170px) clamp(20px,5vw,60px)", background: INK }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(12,minmax(0,1fr))", gap: "clamp(16px,2.4vw,36px)" }}>
-          <div data-reveal style={{ gridColumn: "1 / span 2", fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: "#948c7c", paddingTop: 12 }}>No. 03<br />Specialty</div>
+          <div data-reveal style={{ gridColumn: "1 / span 2", fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: "#948c7c", paddingTop: 12, position: "sticky", top: 110, alignSelf: "start" }}>No. 03<br />Specialty</div>
           <div style={{ gridColumn: "4 / span 9" }}>
             <h2 data-reveal style={{ fontFamily: serif, fontWeight: 400, fontSize: "clamp(34px,5.4vw,74px)", lineHeight: 1.04, margin: "0 0 34px", color: PAPER }}>The foreign national market — <span style={{ fontStyle: "italic" }}>we place the cases others turn away.</span></h2>
             <div data-reveal style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: "clamp(24px,3vw,44px)", maxWidth: 760 }}>
               <p style={{ fontSize: 15, lineHeight: 1.8, color: "#b6ad9e", fontWeight: 400, margin: 0 }}>With over 50 years of experience, we are an industry leader in the foreign national market — devising customized sales strategies and wealth-management solutions for international clients.</p>
               <p style={{ fontSize: 15, lineHeight: 1.8, color: "#b6ad9e", fontWeight: 400, margin: 0 }}>Open architecture. A variety of products and services to suit each client — always within carrier, state and federal guidelines.</p>
             </div>
-            <a data-reveal href="#contact" className={`${styles.cta} ${styles.ctaInverse}`} style={{ display: "inline-block", marginTop: 40, padding: "15px 34px", fontSize: 12.5, letterSpacing: "0.1em", textTransform: "uppercase" }}>Speak with a specialist</a>
+            <a data-reveal href="#contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaInverse}`} style={{ display: "inline-block", marginTop: 40, padding: "15px 34px", fontSize: 12.5, letterSpacing: "0.1em", textTransform: "uppercase" }}>Partner with us</a>
           </div>
         </div>
       </div>
@@ -241,7 +243,7 @@ export default function ConceptI() {
             <div>
               <div style={{ ...label, marginBottom: 14 }}>Response</div>
               <p style={{ fontSize: 14.5, lineHeight: 1.7, color: MUTED, margin: "0 0 22px" }}>A brokerage director responds within one business day.</p>
-              <a href="#contact" className={styles.cta} style={{ display: "inline-block", padding: "14px 32px", fontSize: 12.5, letterSpacing: "0.1em", textTransform: "uppercase" }}>Partner with us</a>
+              <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "14px 32px", fontSize: 12.5, letterSpacing: "0.1em", textTransform: "uppercase" }}>Partner with us</a>
             </div>
           </div>
         </div>

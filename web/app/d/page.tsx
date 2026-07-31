@@ -2,9 +2,12 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
+import { useScrollReveal } from "@/hooks/useReveals";
+import { useGlobe, GOLD_GLOBE } from "@/hooks/useGlobe";
 import MobileMenu from "@/components/MobileMenu";
 import { OFFERINGS } from "@/lib/offerings";
+import { ScrollProgress, WordsReveal, FadeIn, CountUp, GrowLine, Magnetic, ctaFillFromCursor, EASE } from "@/components/motion";
+import { motion } from "framer-motion";
 import styles from "./page.module.css";
 
 const NAV_LINKS = [
@@ -24,17 +27,23 @@ const PRODUCTS = [
   { n: "05", name: "Disability Income", desc: "Protect earning power" },
 ];
 
+const NAVY = "#12294a";
+const GOLD = "#a9812f";
+const GOLD_DIM = "#9a7526";
+const MUTED = "#6b7482";
+const BODY = "#4a5568";
+
 const VERTEX_SHADER = "varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position,1.0); }";
 const FRAGMENT_SHADER = `
 precision highp float;
-varying vec2 vUv; uniform float t; uniform vec2 res;
+varying vec2 vUv; uniform float t; uniform vec2 res; uniform vec2 m;
 float hash(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
 float noise(vec2 p){ vec2 i=floor(p),f=fract(p); float a=hash(i),b=hash(i+vec2(1,0)),c=hash(i+vec2(0,1)),d=hash(i+vec2(1,1)); vec2 u=f*f*(3.0-2.0*f); return mix(mix(a,b,u.x),mix(c,d,u.x),u.y); }
 void main(){
   vec2 uv=vUv; uv.x*=res.x/res.y;
-  float n=noise(uv*2.0+vec2(t*0.05,t*0.03))*0.6+noise(uv*4.0-vec2(t*0.04))*0.4;
-  vec2 c1=vec2(0.72+0.12*sin(t*0.12), 0.42+0.10*cos(t*0.10));
-  vec2 c2=vec2(0.55+0.10*cos(t*0.09), 0.72+0.10*sin(t*0.11));
+  float n=noise(uv*2.0+vec2(t*0.05,t*0.03)+(m-0.5)*0.35)*0.6+noise(uv*4.0-vec2(t*0.04))*0.4;
+  vec2 c1=vec2(0.72+0.12*sin(t*0.12), 0.42+0.10*cos(t*0.10))+(m-0.5)*0.12;
+  vec2 c2=vec2(0.55+0.10*cos(t*0.09), 0.72+0.10*sin(t*0.11))-(m-0.5)*0.08;
   vec2 p=vUv; p.x*=res.x/res.y;
   float d1=distance(p,vec2(c1.x*res.x/res.y,c1.y));
   float d2=distance(p,vec2(c2.x*res.x/res.y,c2.y));
@@ -45,6 +54,7 @@ void main(){
   col=mix(col,gold, smoothstep(0.55,0.0,d1)*(0.5+0.2*n));
   col=mix(col,navy, smoothstep(0.6,0.0,d2)*(0.32+0.15*n));
   col+= (n-0.5)*0.03;
+  col=mix(col,ivory,0.22);
   gl_FragColor=vec4(col,1.0);
 }
 `;
@@ -65,7 +75,11 @@ function useSilk(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     renderer.setSize(w, h, false);
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-    const uniforms = { t: { value: 0 }, res: { value: new THREE.Vector2(w, h) } };
+    const uniforms = {
+      t: { value: 0 },
+      res: { value: new THREE.Vector2(w, h) },
+      m: { value: new THREE.Vector2(0.5, 0.5) },
+    };
     const mat = new THREE.ShaderMaterial({
       uniforms,
       vertexShader: VERTEX_SHADER,
@@ -75,17 +89,27 @@ function useSilk(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     scene.add(quad);
 
     let alive = true, raf = 0;
+    let mx = 0.5, my = 0.5;
     const onResize = () => {
       w = parent.clientWidth; h = parent.clientHeight;
       renderer.setSize(w, h, false);
       uniforms.res.value.set(w, h);
     };
     window.addEventListener("resize", onResize);
+    // The silk flow leans gently toward the cursor.
+    const onMove = (e: PointerEvent) => {
+      mx = e.clientX / window.innerWidth;
+      my = 1 - e.clientY / window.innerHeight;
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
 
     const start = performance.now();
     const tick = () => {
       if (!alive) return;
-      uniforms.t.value = (performance.now() - start) / 1000;
+      // 40% slower than the original flow, so the text breathes.
+      uniforms.t.value = ((performance.now() - start) / 1000) * 0.6;
+      uniforms.m.value.x += (mx - uniforms.m.value.x) * 0.03;
+      uniforms.m.value.y += (my - uniforms.m.value.y) * 0.03;
       renderer.render(scene, camera);
       raf = requestAnimationFrame(tick);
     };
@@ -95,138 +119,7 @@ function useSilk(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
       alive = false;
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
-      renderer.dispose();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-}
-
-// Navy + gold "global network" globe for the Signature Specialty section.
-function useGlobe(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    let w = canvas.clientWidth, h = canvas.clientHeight;
-    let renderer: THREE.WebGLRenderer;
-    try {
-      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-    } catch {
-      return;
-    }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(w, h, false);
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
-    camera.position.z = 3.5;
-
-    const globe = new THREE.Group();
-    globe.rotation.z = -0.16;
-    scene.add(globe);
-
-    // Solid navy occluder so only the front-facing gold lines show through.
-    const occluder = new THREE.Mesh(
-      new THREE.SphereGeometry(1.19, 64, 64),
-      new THREE.MeshBasicMaterial({ color: 0x0b1b30 })
-    );
-    globe.add(occluder);
-
-    // Gold graticule (lat/long) — dense mesh
-    const grat = new THREE.LineSegments(
-      new THREE.WireframeGeometry(new THREE.SphereGeometry(1.2, 64, 40)),
-      new THREE.LineBasicMaterial({ color: 0xc8a76a, transparent: true, opacity: 0.42 })
-    );
-    globe.add(grat);
-    // brighter accent meridians/parallels on top for depth
-    const gratAccent = new THREE.LineSegments(
-      new THREE.WireframeGeometry(new THREE.SphereGeometry(1.202, 16, 10)),
-      new THREE.LineBasicMaterial({ color: 0xe0c489, transparent: true, opacity: 0.7 })
-    );
-    globe.add(gratAccent);
-
-    // Gold "city" points scattered on the surface
-    const pts: number[] = [];
-    for (let i = 0; i < 420; i++) {
-      const u = Math.random(), v = Math.random();
-      const th = 2 * Math.PI * u, ph = Math.acos(2 * v - 1);
-      const r = 1.205;
-      pts.push(r * Math.sin(ph) * Math.cos(th), r * Math.cos(ph), r * Math.sin(ph) * Math.sin(th));
-    }
-    const pg = new THREE.BufferGeometry();
-    pg.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3));
-    globe.add(new THREE.Points(pg, new THREE.PointsMaterial({ color: 0xf0d9a6, size: 0.03, transparent: true, opacity: 0.95 })));
-
-    // Independently-revolving great-circle "flight paths" — each sweeps the
-    // globe on its own axis so several lines are visibly moving at once.
-    // (Added to the scene, not the globe group, so their motion reads
-    // separately from the globe's own spin; the navy occluder still hides
-    // whatever passes behind.)
-    const arcs: { obj: THREE.Line; ax: "x" | "y" | "z"; sp: number }[] = [];
-    function makeArc(rx: number, ry: number, rz: number, color: number, opacity: number, axis: "x" | "y" | "z", speed: number) {
-      const seg = 160, arr: number[] = [];
-      for (let i = 0; i <= seg; i++) {
-        const a = (i / seg) * Math.PI * 2;
-        arr.push(Math.cos(a) * 1.212, Math.sin(a) * 1.212, 0);
-      }
-      const g = new THREE.BufferGeometry();
-      g.setAttribute("position", new THREE.Float32BufferAttribute(arr, 3));
-      const line = new THREE.Line(g, new THREE.LineBasicMaterial({ color, transparent: true, opacity }));
-      line.rotation.set(rx, ry, rz);
-      scene.add(line);
-      arcs.push({ obj: line, ax: axis, sp: speed });
-    }
-    makeArc(1.1, 0.4, 0, 0xe0c489, 0.7, "x", 0.0042);
-    makeArc(0.5, 1.3, 0, 0x9fb4dc, 0.5, "y", -0.0034);
-    makeArc(1.5, 2.1, 0.3, 0xe0c489, 0.5, "z", 0.0038);
-    makeArc(0.2, 0.9, 0, 0xc8a76a, 0.45, "y", 0.0028);
-    makeArc(2.3, 1.7, 0, 0x9fb4dc, 0.4, "x", -0.0046);
-    makeArc(0.9, 0.0, 1.2, 0xe0c489, 0.4, "z", -0.003);
-
-    // Two thin champagne orbit rings outside, each with a travelling dot.
-    function makeOrbit(radius: number, tilt: number, color: number, ringOpacity: number) {
-      const grp = new THREE.Group();
-      const ring = new THREE.Mesh(
-        new THREE.TorusGeometry(radius, 0.004, 8, 180),
-        new THREE.MeshBasicMaterial({ color, transparent: true, opacity: ringOpacity })
-      );
-      ring.rotation.x = tilt;
-      grp.add(ring);
-      const dot = new THREE.Mesh(new THREE.SphereGeometry(0.026, 16, 16), new THREE.MeshBasicMaterial({ color: 0xf0d9a6 }));
-      grp.add(dot);
-      scene.add(grp);
-      return { grp, dot, radius, tilt };
-    }
-    const orbits = [
-      makeOrbit(1.6, 1.32, 0xc8a76a, 0.5),
-      makeOrbit(1.82, 0.6, 0x9fb4dc, 0.4),
-    ];
-
-    let alive = true, raf = 0, t = 0;
-    const onResize = () => {
-      w = canvas.clientWidth; h = canvas.clientHeight;
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h; camera.updateProjectionMatrix();
-    };
-    window.addEventListener("resize", onResize);
-
-    const tick = () => {
-      if (!alive) return;
-      t += 0.01;
-      globe.rotation.y += 0.0016;
-      arcs.forEach((a) => { a.obj.rotation[a.ax] += a.sp; });
-      orbits.forEach((o, i) => {
-        o.grp.rotation.y += 0.0022 * (i % 2 ? -1 : 1);
-        const a = t * (0.7 + i * 0.35);
-        o.dot.position.set(Math.cos(a) * o.radius * Math.cos(o.tilt), Math.sin(a) * o.radius, Math.cos(a) * o.radius * Math.sin(o.tilt));
-      });
-      renderer.render(scene, camera);
-      raf = requestAnimationFrame(tick);
-    };
-    tick();
-
-    return () => {
-      alive = false;
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", onResize);
+      window.removeEventListener("pointermove", onMove);
       renderer.dispose();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -237,29 +130,26 @@ export default function ConceptD() {
   const pageRef = useRef<HTMLDivElement>(null);
   const silkCanvas = useRef<HTMLCanvasElement>(null);
   const globeCanvas = useRef<HTMLCanvasElement>(null);
-  const heroKicker = useRef<HTMLDivElement>(null);
-  const heroTitle = useRef<HTMLHeadingElement>(null);
-  const heroSub = useRef<HTMLParagraphElement>(null);
-  const heroCta = useRef<HTMLDivElement>(null);
 
   useSilk(silkCanvas);
-  useGlobe(globeCanvas);
-  useHeroReveal([heroKicker, heroTitle, heroSub, heroCta]);
+  useGlobe(globeCanvas, GOLD_GLOBE);
   useScrollReveal(pageRef);
+
+  const serif = "var(--font-bodoni), serif";
 
   return (
     <div ref={pageRef} className={styles.page}>
+      <ScrollProgress color={GOLD} />
 
       {/* HEADER */}
       <div className={styles.headerBar} style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 60, padding: "22px clamp(20px,5vw,60px)" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <a href="#top" style={{ display: "inline-flex" }}><img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 30 }} /></a>
         <div className={styles.headerNav}>
-          <a href="#why" className={styles.nl}>Firm</a>
-          <a href="#foreign" className={styles.nl}>Foreign National</a>
-          <a href="#products" className={styles.nl}>Products</a>
-          <a href="#contact" className={styles.nl}>Contact</a>
-          <a href="#contact" className={`${styles.cta} ${styles.ctaGold}`} style={{ padding: "11px 22px", border: "1px solid #12294a", color: "#12294a", fontSize: 13, letterSpacing: "0.08em", textTransform: "uppercase" }}>Partner With Us</a>
+          {NAV_LINKS.map((l) => (
+            <a key={l.href} href={l.href} className={styles.nl}>{l.label}</a>
+          ))}
+          <a href="#contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaGold}`} style={{ padding: "11px 22px", border: "1px solid #12294a", color: "#12294a", fontSize: 13, letterSpacing: "0.08em", textTransform: "uppercase" }}>Partner With Us</a>
         </div>
         <MobileMenu
           links={NAV_LINKS}
@@ -277,16 +167,29 @@ export default function ConceptD() {
         <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(90deg,#f3efe6 5%,rgba(243,239,230,0.86) 32%,rgba(243,239,230,0.25) 60%,rgba(243,239,230,0) 80%)" }} />
         <div style={{ position: "relative", zIndex: 2, maxWidth: 1300, margin: "0 auto", width: "100%" }}>
           <div style={{ maxWidth: 760 }}>
-            <div ref={heroKicker} style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 34 }}>
-              <span style={{ width: 44, height: 1, background: "#a9812f" }} />
-              <span style={{ fontSize: 12, letterSpacing: "0.32em", textTransform: "uppercase", color: "#9a7526" }}>Coral Gables · Since the 1970s</span>
-            </div>
-            <h1 ref={heroTitle} style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(38px,5.6vw,74px)", lineHeight: 1.06, margin: "0 0 30px", color: "#12294a", letterSpacing: "-0.01em" }}>Partnering with producers and financial advisors to deliver customized business solutions with seamless execution.</h1>
-            <p ref={heroSub} style={{ fontSize: "clamp(17px,1.5vw,20px)", lineHeight: 1.6, color: "#4a5568", fontWeight: 400, maxWidth: 520, margin: "0 0 42px" }}>For over fifty years, Brandon Brokerage Group has paired advanced sales support and full case management with access to 30+ top-rated carriers — and a rare command of the foreign national market.</p>
-            <div ref={heroCta} style={{ display: "flex", gap: 26, alignItems: "center", flexWrap: "wrap" }}>
-              <a href="#contact" className={styles.cta} style={{ padding: "16px 34px", border: "1px solid #12294a", color: "#12294a", fontSize: 14, letterSpacing: "0.06em", textTransform: "uppercase" }}>Partner with us</a>
-              <a href="#products" className={styles.lnk} style={{ fontSize: 14, letterSpacing: "0.04em", color: "#12294a" }}>Explore products</a>
-            </div>
+            <FadeIn delay={0.1} style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 34 }}>
+              <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.3, ease: EASE }} style={{ width: 44, height: 1, background: GOLD, transformOrigin: "0 50%" }} />
+              <span style={{ fontSize: 12, letterSpacing: "0.32em", textTransform: "uppercase", color: GOLD_DIM }}>Coral Gables · Since the 1970s</span>
+            </FadeIn>
+            <h1 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(38px,5.6vw,74px)", lineHeight: 1.08, margin: "0 0 30px", color: NAVY, letterSpacing: "-0.01em" }}>
+              <WordsReveal
+                delay={0.25}
+                stagger={0.045}
+                segments={[
+                  { text: "Partnering with producers and financial advisors to deliver customized business solutions with" },
+                  { text: "seamless execution.", style: { fontStyle: "italic", color: GOLD } },
+                ]}
+              />
+            </h1>
+            <FadeIn delay={1.1}>
+              <p style={{ fontSize: "clamp(17px,1.5vw,20px)", lineHeight: 1.6, color: BODY, fontWeight: 400, maxWidth: 520, margin: "0 0 42px" }}>For over fifty years, Brandon Brokerage Group has paired advanced sales support and full case management with access to 30+ top-rated carriers — and a rare command of the foreign national market.</p>
+            </FadeIn>
+            <FadeIn delay={1.3} style={{ display: "flex", gap: 26, alignItems: "center", flexWrap: "wrap" }}>
+              <Magnetic>
+                <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "16px 34px", border: "1px solid #12294a", color: "#12294a", fontSize: 14, letterSpacing: "0.06em", textTransform: "uppercase" }}>Partner with us</a>
+              </Magnetic>
+              <a href="#products" className={styles.lnk} style={{ fontSize: 14, letterSpacing: "0.04em", color: NAVY }}>Explore products</a>
+            </FadeIn>
           </div>
         </div>
         <div style={{ position: "absolute", bottom: 34, left: "50%", transform: "translateX(-50%)", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
@@ -295,94 +198,131 @@ export default function ConceptD() {
         </div>
       </div>
 
-      {/* STATS STRIP */}
-      <div data-reveal style={{ borderTop: "1px solid rgba(18,41,74,0.16)", borderBottom: "1px solid rgba(18,41,74,0.16)", background: "#f3efe6" }}>
-        <div style={{ maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))" }}>
-          <div style={{ padding: "44px clamp(20px,4vw,48px)", borderRight: "1px solid rgba(18,41,74,0.1)" }}><div style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(40px,5vw,60px)", fontWeight: 500, color: "#12294a", lineHeight: 0.9 }}>50<span style={{ color: "#a9812f" }}>+</span></div><div style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: "#6b7482", marginTop: 14 }}>Years of expertise</div></div>
-          <div style={{ padding: "44px clamp(20px,4vw,48px)", borderRight: "1px solid rgba(18,41,74,0.1)" }}><div style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(40px,5vw,60px)", fontWeight: 500, color: "#12294a", lineHeight: 0.9 }}>30<span style={{ color: "#a9812f" }}>+</span></div><div style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: "#6b7482", marginTop: 14 }}>Top-rated carriers</div></div>
-          <div style={{ padding: "44px clamp(20px,4vw,48px)", borderRight: "1px solid rgba(18,41,74,0.1)" }}><div style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(40px,5vw,60px)", fontWeight: 500, color: "#12294a", lineHeight: 0.9 }}>5</div><div style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: "#6b7482", marginTop: 14 }}>Product lines</div></div>
-          <div style={{ padding: "44px clamp(20px,4vw,48px)" }}><div style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(40px,5vw,60px)", fontWeight: 500, color: "#a9812f", lineHeight: 0.9, fontStyle: "italic" }}>FN</div><div style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: "#6b7482", marginTop: 14 }}>Market leader</div></div>
-        </div>
-      </div>
-
-      {/* MISSION */}
-      <div style={{ padding: "clamp(80px,12vw,160px) clamp(20px,5vw,60px)", background: "#f3efe6" }}>
-        <div style={{ maxWidth: 1000, margin: "0 auto" }}>
-          <div data-reveal style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: "#9a7526", marginBottom: 40 }}>Our mission</div>
-          <p data-reveal style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 400, fontSize: "clamp(26px,3.6vw,44px)", lineHeight: 1.34, margin: 0, color: "#1a2536" }}>To provide agents with superior service, personalized sales support and tailored business solutions that <span style={{ fontStyle: "italic", color: "#a9812f" }}>build and develop long-term relationships</span>.</p>
-        </div>
-      </div>
-
-      {/* WHY */}
-      <div id="why" style={{ padding: "clamp(60px,8vw,110px) clamp(20px,5vw,60px)", background: "#ece7db" }}>
-        <div style={{ maxWidth: 1300, margin: "0 auto" }}>
-          <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 24, flexWrap: "wrap", marginBottom: 44 }}>
-            <h2 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(30px,4.4vw,56px)", margin: 0, color: "#12294a", lineHeight: 1.05, maxWidth: 640 }}>What we offer.</h2>
-            <span style={{ fontSize: 14, color: "#6b7482", maxWidth: 280, fontWeight: 400 }}>Four disciplines, one team behind every case you write.</span>
-          </div>
-          <div data-reveal className={styles.offerGrid}>
-            {OFFERINGS.map((o) => (
-              <div key={o.n} className={styles.offerCard}>
-                <div className={styles.offerImgWrap}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={o.img} alt={o.title} className={styles.offerImg} />
+      {/* STATS — drawn hairlines + count-up, /g structure */}
+      <div data-reveal style={{ padding: "clamp(48px,6vw,72px) clamp(20px,5vw,60px)", background: "#f3efe6" }}>
+        <div style={{ maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(170px,1fr))", gap: "28px clamp(24px,4vw,64px)" }}>
+          {[
+            { num: 50, suffix: "+", label: "Years of expertise" },
+            { num: 30, suffix: "+", label: "Top-rated carriers" },
+            { num: 5, suffix: "", label: "Product lines" },
+            { num: null, text: "FN", label: "Market leader" },
+          ].map((s, i) => (
+            <div key={s.label}>
+              <GrowLine color={GOLD} delay={i * 0.12} />
+              <div style={{ paddingTop: 20 }}>
+                <div style={{ fontFamily: serif, fontSize: "clamp(36px,4vw,54px)", fontWeight: 500, color: s.num === null ? GOLD : NAVY, lineHeight: 1, fontStyle: s.num === null ? "italic" : "normal" }}>
+                  {s.num !== null ? <CountUp to={s.num} suffix={s.suffix} /> : s.text}
                 </div>
-                <div style={{ padding: "22px 24px 26px" }}>
-                  <div style={{ fontFamily: "var(--font-bodoni), serif", fontStyle: "italic", fontSize: 22, color: "#a9812f", marginBottom: 6 }}>{o.n}</div>
-                  <h3 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: 21, margin: "0 0 10px", color: "#12294a", lineHeight: 1.2 }}>{o.title}</h3>
-                  <p style={{ fontSize: 14, lineHeight: 1.62, color: "#5c6675", fontWeight: 400, margin: 0 }}>{o.desc}</p>
-                </div>
+                <div style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: MUTED, marginTop: 12 }}>{s.label}</div>
               </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* MISSION — two-column band, /g structure */}
+      <div style={{ padding: "clamp(70px,10vw,140px) clamp(20px,5vw,60px)", background: "#ece7db", borderTop: "1px solid rgba(18,41,74,0.12)", borderBottom: "1px solid rgba(18,41,74,0.12)" }}>
+        <div style={{ maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,90px)" }}>
+          <div data-reveal>
+            <div style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: GOLD_DIM, marginBottom: 26 }}>Our mission</div>
+            <p style={{ fontFamily: serif, fontWeight: 400, fontSize: "clamp(22px,2.4vw,30px)", lineHeight: 1.42, margin: 0, color: "#1a2536" }}>To provide agents with superior service, personalized sales support and tailored business solutions that <span style={{ fontStyle: "italic", color: GOLD }}>build long-term relationships</span>.</p>
+          </div>
+          <div data-reveal>
+            <div style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: GOLD_DIM, marginBottom: 26 }}>Our approach</div>
+            <p style={{ fontSize: 16, lineHeight: 1.75, color: BODY, fontWeight: 400, margin: 0 }}>Open architecture, individualized attention and an exceptional standard of quality. From case design to policy delivery, one dedicated team follows every application — so you can stay in front of your clients, not behind paperwork.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* WHAT WE OFFER — /g photo cards with numbered hairline */}
+      <div id="why" style={{ padding: "clamp(64px,9vw,130px) clamp(20px,5vw,60px)", background: "#f3efe6" }}>
+        <div style={{ maxWidth: 1300, margin: "0 auto" }}>
+          <div data-reveal style={{ marginBottom: "clamp(40px,5vw,64px)", maxWidth: 640 }}>
+            <div style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: GOLD_DIM, marginBottom: 22 }}>What we offer</div>
+            <h2 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(30px,4.4vw,56px)", margin: 0, color: NAVY, lineHeight: 1.05 }}>Everything behind the case you write.</h2>
+          </div>
+          <div className={styles.solGrid}>
+            {OFFERINGS.map((o, i) => (
+              <motion.a
+                key={o.n}
+                href="#contact"
+                className={styles.solCard}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.9, delay: i * 0.08, ease: EASE }}
+              >
+                <div className={styles.solImgWrap}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={o.img} alt={o.title} className={styles.solImg} data-photo-slot={`offer-${o.n}`} />
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                  <span style={{ fontSize: 11, letterSpacing: "0.2em", color: GOLD }}>{o.n}</span>
+                  <span style={{ flex: 1, height: 1, background: "rgba(18,41,74,0.14)" }} />
+                </div>
+                <h3 style={{ fontFamily: serif, fontWeight: 500, fontSize: 22, margin: "0 0 10px", color: NAVY, lineHeight: 1.2 }}>{o.title}</h3>
+                <p style={{ fontSize: 14, lineHeight: 1.62, color: "#5c6675", fontWeight: 400, margin: "0 0 14px" }}>{o.blurb}</p>
+                <span className={styles.solMore} style={{ fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", color: NAVY }}>Learn more →</span>
+              </motion.a>
             ))}
           </div>
         </div>
       </div>
 
-      {/* FOREIGN NATIONAL */}
-      <div id="foreign" style={{ position: "relative", padding: "clamp(90px,13vw,180px) clamp(20px,5vw,60px)", background: "#f3efe6", overflow: "hidden" }}>
+      {/* FOREIGN NATIONAL — the globe stays */}
+      <div id="foreign" style={{ position: "relative", padding: "clamp(90px,13vw,180px) clamp(20px,5vw,60px)", background: "#ece7db", borderTop: "1px solid rgba(18,41,74,0.12)", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: "50%", right: "clamp(-90px,-5vw,-50px)", transform: "translateY(-50%)", width: "clamp(260px,30vw,420px)", height: "clamp(260px,30vw,420px)", borderRadius: "50%", overflow: "hidden", background: "radial-gradient(circle at 38% 30%, #16304f, #081221 74%)", boxShadow: "0 30px 80px rgba(12,28,51,0.28)" }}>
           <canvas ref={globeCanvas} style={{ width: "100%", height: "100%", display: "block" }} />
         </div>
         <div style={{ position: "relative", maxWidth: 1100, margin: "0 auto" }}>
-          <div data-reveal style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: "#9a7526", marginBottom: 34 }}>Signature specialty</div>
-          <h2 data-reveal style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(34px,6vw,76px)", lineHeight: 1.04, margin: "0 0 40px", color: "#12294a", maxWidth: 760 }}>We place the cases <span style={{ fontStyle: "italic", color: "#a9812f" }}>others turn away</span>.</h2>
+          <div data-reveal style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: GOLD_DIM, marginBottom: 34 }}>Signature specialty</div>
+          <h2 data-reveal style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(34px,6vw,76px)", lineHeight: 1.04, margin: "0 0 40px", color: NAVY, maxWidth: 760 }}>We place the cases <span style={{ fontStyle: "italic", color: GOLD }}>others turn away</span>.</h2>
           <div data-reveal style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: "clamp(28px,3vw,48px)", alignItems: "start", maxWidth: 720 }}>
-            <p style={{ fontSize: "clamp(16px,1.5vw,19px)", lineHeight: 1.7, color: "#4a5568", fontWeight: 400, margin: 0 }}>With over 50 years of experience, we are an industry leader in the foreign national market. We help agents devise customized sales strategies and wealth-management solutions for their foreign national clients.</p>
-            <p style={{ fontSize: "clamp(16px,1.5vw,19px)", lineHeight: 1.7, color: "#4a5568", fontWeight: 400, margin: 0 }}>Our open-architecture approach offers a variety of products and services to best suit your clients&apos; needs — while adhering to all carrier, state and federal guidelines. <a href="#contact" className={styles.lnk} style={{ color: "#a9812f" }}>Speak with a specialist</a>.</p>
+            <p style={{ fontSize: "clamp(16px,1.5vw,19px)", lineHeight: 1.7, color: BODY, fontWeight: 400, margin: 0 }}>With over 50 years of experience, we are an industry leader in the foreign national market. We help agents devise customized sales strategies and wealth-management solutions for their foreign national clients.</p>
+            <p style={{ fontSize: "clamp(16px,1.5vw,19px)", lineHeight: 1.7, color: BODY, fontWeight: 400, margin: 0 }}>Our open-architecture approach offers a variety of products and services to best suit your clients&apos; needs — while adhering to all carrier, state and federal guidelines. <a href="#contact" className={styles.lnk} style={{ color: GOLD }}>Partner with us</a>.</p>
           </div>
         </div>
       </div>
 
-      {/* PRODUCTS */}
-      <div id="products" style={{ padding: "clamp(60px,8vw,110px) clamp(20px,5vw,60px)", background: "#ece7db" }}>
+      {/* PRODUCTS — display serif for names only, sans numerals */}
+      <div id="products" style={{ padding: "clamp(60px,8vw,110px) clamp(20px,5vw,60px)", background: "#f3efe6" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
           <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: 16 }}>
-            <h2 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(30px,4.4vw,56px)", margin: 0, color: "#12294a" }}>Products</h2>
-            <span style={{ fontSize: 13, letterSpacing: "0.16em", textTransform: "uppercase", color: "#9a7526" }}>Backed by 30+ carriers</span>
+            <h2 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(30px,4.4vw,56px)", margin: 0, color: NAVY }}>Products</h2>
+            <span style={{ fontSize: 13, letterSpacing: "0.16em", textTransform: "uppercase", color: GOLD_DIM }}>Backed by 30+ carriers</span>
           </div>
           <div data-reveal style={{ borderTop: "1px solid rgba(18,41,74,0.18)" }}>
             {PRODUCTS.map((p) => (
               <a key={p.n} href="#contact" className={styles.prod} style={{ display: "grid", gridTemplateColumns: "60px 1fr auto", gap: "clamp(14px,3vw,40px)", alignItems: "center", padding: "34px 4px", borderBottom: "1px solid rgba(18,41,74,0.14)" }}>
-                <span style={{ fontFamily: "var(--font-bodoni), serif", fontStyle: "italic", color: "#a9812f", fontSize: 18 }}>{p.n}</span>
-                <span style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(24px,3vw,38px)", color: "#12294a" }}>{p.name}</span>
-                <span style={{ fontSize: 14, color: "#6b7482", textAlign: "right" }}>{p.desc}</span>
+                <span style={{ fontSize: 11, letterSpacing: "0.2em", color: GOLD }}>{p.n}</span>
+                <span style={{ fontFamily: serif, fontSize: "clamp(24px,3vw,38px)", color: NAVY }}>{p.name}</span>
+                <span style={{ fontSize: 14, color: MUTED, textAlign: "right" }}>{p.desc}</span>
               </a>
             ))}
           </div>
         </div>
       </div>
 
+      {/* PULL QUOTE — quiet manifesto band */}
+      <div style={{ padding: "clamp(70px,10vw,140px) clamp(20px,5vw,60px)", background: "#f3efe6", textAlign: "center", borderTop: "1px solid rgba(18,41,74,0.1)" }}>
+        <div style={{ maxWidth: 840, margin: "0 auto" }}>
+          <GrowLine color={GOLD} origin="center" style={{ width: 44, margin: "0 auto 36px" }} />
+          <p data-reveal style={{ fontFamily: serif, fontWeight: 400, fontStyle: "italic", fontSize: "clamp(24px,3.2vw,40px)", lineHeight: 1.4, margin: 0, color: NAVY }}>Individualized attention and an exceptional standard of quality — behind every case you write.</p>
+          <div data-reveal style={{ fontSize: 11.5, letterSpacing: "0.28em", textTransform: "uppercase", color: MUTED, marginTop: 32 }}>The Brandon standard</div>
+        </div>
+      </div>
+
       {/* CARRIERS MARQUEE */}
       <div data-reveal style={{ padding: "clamp(56px,7vw,90px) clamp(20px,5vw,60px)", background: "#f3efe6", borderTop: "1px solid rgba(18,41,74,0.1)" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
-          <div style={{ fontSize: 12, letterSpacing: "0.24em", textTransform: "uppercase", color: "#6b7482", marginBottom: 34 }}>Our carriers — a leading Tellus / Crump firm</div>
+          <div style={{ fontSize: 12, letterSpacing: "0.24em", textTransform: "uppercase", color: MUTED, marginBottom: 34 }}>Our carriers — a leading Tellus / Crump firm</div>
           <div style={{ position: "relative", overflow: "hidden", WebkitMaskImage: "linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)", maskImage: "linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)" }}>
-            <div className={styles.marquee} style={{ display: "flex", width: "max-content", alignItems: "center", columnGap: "clamp(30px,4vw,64px)", fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(19px,2vw,28px)", color: "#8b93a2", whiteSpace: "nowrap" }}>
+            <div className={styles.marquee} style={{ display: "flex", width: "max-content", alignItems: "center", columnGap: "clamp(30px,4vw,64px)", fontFamily: serif, fontSize: "clamp(19px,2vw,28px)", color: "#8b93a2", whiteSpace: "nowrap" }}>
               {[0, 1].map((rep) => (
                 <span key={rep} style={{ display: "flex", alignItems: "center", columnGap: "clamp(30px,4vw,64px)" }}>
                   {CARRIERS.map((c) => (
                     <span key={c} style={{ display: "flex", alignItems: "center", columnGap: "clamp(30px,4vw,64px)" }}>
-                      <span>{c}</span><span style={{ color: "#a9812f" }}>·</span>
+                      <span>{c}</span><span style={{ color: GOLD }}>·</span>
                     </span>
                   ))}
                 </span>
@@ -396,15 +336,17 @@ export default function ConceptD() {
       <div id="contact" style={{ position: "relative", padding: "clamp(90px,13vw,180px) clamp(20px,5vw,60px)", background: "#ece7db" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,90px)", alignItems: "center" }}>
           <div data-reveal>
-            <div style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: "#9a7526", marginBottom: 30 }}>Get started</div>
-            <h2 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(38px,5.5vw,72px)", lineHeight: 1.02, margin: "0 0 28px", color: "#12294a" }}>Let&apos;s write more business, together.</h2>
-            <p style={{ fontSize: 17, lineHeight: 1.66, color: "#4a5568", fontWeight: 400, margin: 0, maxWidth: 440 }}>Tell us about your case or your book of business. A brokerage director responds within one business day.</p>
+            <div style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: GOLD_DIM, marginBottom: 30 }}>Contact</div>
+            <h2 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(38px,5.5vw,72px)", lineHeight: 1.02, margin: "0 0 28px", color: NAVY }}>Let&apos;s write more business, together.</h2>
+            <p style={{ fontSize: 17, lineHeight: 1.66, color: BODY, fontWeight: 400, margin: 0, maxWidth: 440 }}>Tell us about your case or your book of business. A brokerage director responds within one business day.</p>
           </div>
           <div data-reveal style={{ borderTop: "1px solid rgba(169,129,47,0.5)" }}>
-            <a href="tel:+13054447401" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "26px 0", borderBottom: "1px solid rgba(18,41,74,0.14)" }}><span style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: "#6b7482" }}>Phone</span><span style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(20px,2.4vw,28px)", color: "#12294a" }}>305-444-7401</span></a>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "26px 0", borderBottom: "1px solid rgba(18,41,74,0.14)" }}><span style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: "#6b7482" }}>Toll-Free</span><span style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(20px,2.4vw,28px)", color: "#12294a" }}>1-888-776-4678</span></div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "26px 0", borderBottom: "1px solid rgba(18,41,74,0.14)" }}><span style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: "#6b7482" }}>Office</span><span style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(17px,1.8vw,22px)", color: "#12294a", textAlign: "right" }}>75 Valencia Ave, Suite 200<br />Coral Gables, FL 33134</span></div>
-            <a href="#contact" className={styles.cta} style={{ display: "inline-block", marginTop: 34, padding: "16px 38px", border: "1px solid #12294a", color: "#12294a", fontSize: 14, letterSpacing: "0.08em", textTransform: "uppercase" }}>Partner with us</a>
+            <a href="tel:+13054447401" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "26px 0", borderBottom: "1px solid rgba(18,41,74,0.14)" }}><span style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: MUTED }}>Phone</span><span style={{ fontFamily: serif, fontSize: "clamp(20px,2.4vw,28px)", color: NAVY }}>305-444-7401</span></a>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "26px 0", borderBottom: "1px solid rgba(18,41,74,0.14)" }}><span style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: MUTED }}>Toll-Free</span><span style={{ fontFamily: serif, fontSize: "clamp(20px,2.4vw,28px)", color: NAVY }}>1-888-776-4678</span></div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "26px 0", borderBottom: "1px solid rgba(18,41,74,0.14)" }}><span style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: MUTED }}>Office</span><span style={{ fontFamily: serif, fontSize: "clamp(17px,1.8vw,22px)", color: NAVY, textAlign: "right" }}>75 Valencia Ave, Suite 200<br />Coral Gables, FL 33134</span></div>
+            <Magnetic>
+              <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", marginTop: 34, padding: "16px 38px", border: "1px solid #12294a", color: "#12294a", fontSize: 14, letterSpacing: "0.08em", textTransform: "uppercase" }}>Partner with us</a>
+            </Magnetic>
           </div>
         </div>
       </div>

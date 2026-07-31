@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
 import { OFFERINGS } from "@/lib/offerings";
-import { ScrollProgress, WordsReveal, FadeIn, CountUp, ParallaxImg, GrowLine, Magnetic, EASE } from "@/components/motion";
+import { ScrollProgress, WordsReveal, FadeIn, CountUp, ParallaxImg, GrowLine, Magnetic, ctaFillFromCursor, EASE } from "@/components/motion";
 import styles from "./page.module.css";
 
 const NAV_LINKS = [
@@ -50,7 +50,7 @@ export default function ConceptG() {
           {NAV_LINKS.map((l) => (
             <a key={l.href} href={l.href} className={styles.nl}>{l.label}</a>
           ))}
-          <a href="#contact" className={styles.cta} style={{ padding: "11px 24px", fontSize: 12.5, letterSpacing: "0.1em", textTransform: "uppercase" }}>Contact</a>
+          <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ padding: "11px 24px", fontSize: 12.5, letterSpacing: "0.1em", textTransform: "uppercase" }}>Partner with us</a>
         </div>
         <MobileMenu
           links={NAV_LINKS}
@@ -73,8 +73,9 @@ export default function ConceptG() {
             <WordsReveal
               delay={0.25}
               segments={[
-                { text: "Five decades of placing business," },
-                { text: "seamlessly.", style: { fontStyle: "italic", color: BRONZE } },
+                { text: "The quiet partner behind" },
+                { text: "extraordinary", style: { fontStyle: "italic", color: BRONZE } },
+                { text: "cases." },
               ]}
             />
           </h1>
@@ -84,7 +85,7 @@ export default function ConceptG() {
             </FadeIn>
             <FadeIn delay={1} style={{ display: "flex", gap: 22, alignItems: "center", flexWrap: "wrap" }}>
               <Magnetic>
-                <a href="#contact" className={styles.cta} style={{ display: "inline-block", padding: "16px 34px", fontSize: 13, letterSpacing: "0.08em", textTransform: "uppercase" }}>Partner with us</a>
+                <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "16px 34px", fontSize: 13, letterSpacing: "0.08em", textTransform: "uppercase" }}>Partner with us</a>
               </Magnetic>
               <a href="#solutions" className={styles.lnk} style={{ fontSize: 14, color: NAVY }}>Our solutions</a>
             </FadeIn>
@@ -98,7 +99,8 @@ export default function ConceptG() {
           <ParallaxImg
             src="/images/miami-aerial-day.jpg"
             alt="Coral Gables, Florida"
-            range={46}
+            range={32}
+            photoSlot="hero"
             style={{ height: "clamp(280px,48vh,540px)" }}
             imgStyle={{ filter: "saturate(0.6) contrast(0.95) brightness(1.02)" }}
           />
@@ -152,15 +154,17 @@ export default function ConceptG() {
               >
                 <div className={styles.solImgWrap}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={o.img} alt={o.title} className={styles.solImg} />
+                  <img src={o.img} alt={o.title} className={styles.solImg} data-photo-slot={`offer-${o.n}`} />
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
                   <span style={{ fontSize: 11, letterSpacing: "0.2em", color: BRONZE }}>{o.n}</span>
                   <span style={{ flex: 1, height: 1, background: "rgba(20,38,63,0.14)" }} />
                 </div>
-                <h3 style={{ fontFamily: serif, fontWeight: 500, fontSize: 24, margin: "0 0 10px", color: NAVY, lineHeight: 1.15 }}>{o.title}</h3>
-                <p style={{ fontSize: 13.5, lineHeight: 1.66, color: MUTED, fontWeight: 400, margin: "0 0 16px", display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{o.desc}</p>
-                <span className={styles.solMore} style={{ fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", color: NAVY }}>Learn more →</span>
+                <div className={styles.solBody}>
+                  <h3 style={{ fontFamily: serif, fontWeight: 500, fontSize: 24, margin: "0 0 10px", color: NAVY, lineHeight: 1.15 }}>{o.title}</h3>
+                  <p style={{ fontSize: 13.5, lineHeight: 1.66, color: MUTED, fontWeight: 400, margin: "0 0 16px" }}>{o.blurb}</p>
+                  <span className={styles.solMore} style={{ fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", color: NAVY }}>Learn more →</span>
+                </div>
               </motion.a>
             ))}
           </div>
@@ -186,14 +190,14 @@ export default function ConceptG() {
         <div style={{ maxWidth: 1240, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,90px)", alignItems: "center" }}>
           <div data-reveal style={{ height: "clamp(300px,42vw,520px)", overflow: "hidden" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/globe-gold.jpg" alt="Foreign national market" style={{ width: "100%", height: "100%", objectFit: "cover", filter: "saturate(0.7)" }} />
+            <img src="/images/globe-gold.jpg" alt="Foreign national market" data-photo-slot="foreign-national" style={{ width: "100%", height: "100%", objectFit: "cover", filter: "saturate(0.7)" }} />
           </div>
           <div data-reveal>
             <div style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: BRONZE, marginBottom: 24 }}>Signature specialty</div>
-            <h2 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(30px,4vw,52px)", lineHeight: 1.08, margin: "0 0 26px", color: NAVY }}>The foreign national market, <span style={{ fontStyle: "italic", color: BRONZE }}>mastered</span>.</h2>
+            <h2 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(30px,4vw,52px)", lineHeight: 1.08, margin: "0 0 26px", color: NAVY }}>We place the cases <span style={{ fontStyle: "italic", color: BRONZE }}>others turn away</span>.</h2>
             <p style={{ fontSize: 16, lineHeight: 1.75, color: MUTED, fontWeight: 400, margin: "0 0 18px" }}>With over 50 years of experience, we are an industry leader in the foreign national market. We help agents devise customized sales strategies and wealth-management solutions for their foreign national clients.</p>
             <p style={{ fontSize: 16, lineHeight: 1.75, color: MUTED, fontWeight: 400, margin: "0 0 30px" }}>A variety of products and services to best suit your clients&apos; needs — while adhering to all carrier, state and federal guidelines.</p>
-            <a href="#contact" className={styles.lnk} style={{ fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase", color: NAVY }}>Speak with a specialist</a>
+            <a href="#contact" className={styles.lnk} style={{ fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase", color: NAVY }}>Partner with us</a>
           </div>
         </div>
       </div>
@@ -205,7 +209,8 @@ export default function ConceptG() {
             <h2 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(32px,4.6vw,58px)", margin: 0, color: NAVY }}>Products</h2>
             <span style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: MUTED }}>Backed by 30+ carriers</span>
           </div>
-          <div data-reveal style={{ borderTop: "1px solid rgba(20,38,63,0.2)" }}>
+          <GrowLine color="rgba(20,38,63,0.35)" />
+          <div data-reveal>
             {PRODUCTS.map((p) => (
               <a key={p.n} href="#contact" className={styles.prod} style={{ display: "grid", gridTemplateColumns: "52px 1fr auto", gap: "clamp(14px,3vw,40px)", alignItems: "center", padding: "30px 4px", borderBottom: HAIR }}>
                 <span style={{ fontSize: 12, letterSpacing: "0.1em", color: BRONZE }}>{p.n}</span>
@@ -242,7 +247,7 @@ export default function ConceptG() {
       <div id="contact" style={{ padding: "clamp(80px,11vw,150px) clamp(20px,5vw,60px)", background: NAVY }}>
         <div style={{ maxWidth: 1240, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,90px)", alignItems: "center" }}>
           <div data-reveal>
-            <div style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: "#c8ab6e", marginBottom: 26 }}>Get started</div>
+            <div style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: "#c8ab6e", marginBottom: 26 }}>Contact</div>
             <h2 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(34px,5vw,64px)", lineHeight: 1.05, margin: "0 0 24px", color: "#fdfdfb" }}>Let&apos;s write more business, together.</h2>
             <p style={{ fontSize: 16, lineHeight: 1.7, color: "#aab7c9", fontWeight: 400, margin: 0, maxWidth: 440 }}>Tell us about your case or your book of business. A brokerage director responds within one business day.</p>
           </div>

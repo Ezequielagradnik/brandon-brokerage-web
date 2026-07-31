@@ -103,12 +103,12 @@ export default function Home() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/images/miami-palms-sunset.jpg" alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(12,9,6,0.35), rgba(12,9,6,0.6))" }} />
-              <div style={{ position: "absolute", bottom: 16, left: 16, right: 16, fontFamily: "var(--font-fraunces), serif", fontStyle: "italic", fontSize: 21, color: "#fdfaf4", lineHeight: 1.2 }}>seamless execution.</div>
+              <div style={{ position: "absolute", bottom: 16, left: 16, right: 16, fontFamily: "var(--font-cormorant), serif", fontStyle: "italic", fontSize: 21, color: "#fdfaf4", lineHeight: 1.2 }}>seamless execution.</div>
             </div>
             <div style={{ padding: "20px 18px" }}>
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "#a87f4a", marginBottom: 8 }}>06 — Photo Luxe</div>
-              <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 500, fontSize: 19, margin: "0 0 8px", color: "#191613" }}>Photography does the talking.</h2>
-              <p style={{ fontSize: 13, color: "#544c40", fontWeight: 500, lineHeight: 1.55, margin: "0 0 14px" }}>Full-bleed Miami photography, cream &amp; bronze, Fraunces serif — private-bank calm, boutique-hotel warmth.</p>
+              <h2 style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 600, fontSize: 19, margin: "0 0 8px", color: "#191613" }}>Photography does the talking.</h2>
+              <p style={{ fontSize: 13, color: "#544c40", fontWeight: 500, lineHeight: 1.55, margin: "0 0 14px" }}>Full-bleed Miami photography, cream &amp; bronze, Cormorant serif — private-bank calm, boutique-hotel warmth.</p>
               <span style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "#a87f4a" }}>Open homepage →</span>
             </div>
           </Link>
@@ -119,7 +119,7 @@ export default function Home() {
                 <span style={{ width: 26, height: 1, background: "#9d7c3a" }} />
                 <span style={{ fontSize: 8.5, letterSpacing: "0.28em", textTransform: "uppercase", color: "#5a6779" }}>Coral Gables · Florida</span>
               </div>
-              <div style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 500, fontSize: 27, lineHeight: 1.05, color: "#14263f" }}>Five decades of placing business, <span style={{ fontStyle: "italic", color: "#9d7c3a" }}>seamlessly</span>.</div>
+              <div style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 500, fontSize: 27, lineHeight: 1.05, color: "#14263f" }}>The quiet partner behind <span style={{ fontStyle: "italic", color: "#9d7c3a" }}>extraordinary</span> cases.</div>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/images/miami-aerial-day.jpg" alt="" style={{ position: "absolute", left: 22, right: 22, bottom: 0, width: "calc(100% - 44px)", height: 44, objectFit: "cover", filter: "saturate(0.6)" }} />
             </div>
@@ -166,6 +166,10 @@ export default function Home() {
             </div>
           </Link>
 
+        </div>
+
+        <div style={{ marginTop: "clamp(28px,3vw,40px)", fontSize: 13.5, color: "#9aa6b8" }}>
+          La 08 tiene una variante clara para comparar contra la 07: <Link href="/h-light" style={{ color: "#e2c072", fontWeight: 700 }}>abrir /h-light →</Link>
         </div>
 
         <div style={{ marginTop: "clamp(40px,5vw,64px)", paddingTop: 28, borderTop: "1px solid rgba(255,255,255,0.1)", fontSize: 13, color: "#6f7d92" }}>Brandon Brokerage Group · 75 Valencia Avenue, Suite 200, Coral Gables, FL · 305-444-7401</div>

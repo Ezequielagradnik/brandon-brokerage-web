@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
 import { OFFERINGS } from "@/lib/offerings";
+import { Tilt, GrowLine } from "@/components/motion";
 import styles from "./page.module.css";
 
 const NAV_LINKS = [
@@ -103,37 +104,45 @@ export default function ConceptA() {
           <div className={styles.heroCards}>
             <div className={`${styles.floatCard} ${styles.heroPhoto}`} style={{ borderRadius: 16, overflow: "hidden", boxShadow: "0 30px 70px rgba(15,23,42,0.16)", animationDelay: "0s" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/miami-aerial-day.jpg" alt="Miami skyline" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <img src="/images/miami-aerial-day.jpg" alt="Miami skyline" data-photo-slot="hero" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg,rgba(14,28,51,0.04),rgba(14,28,51,0.22))" }} />
             </div>
 
-            <div className={`${styles.card} ${styles.floatCard} ${styles.heroCardBL}`} style={{ padding: "20px 22px", animationDelay: "0.18s" }}>
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: "#8a94a6", marginBottom: 12 }}>Book of business</div>
-              <div style={{ display: "flex", gap: 22 }}>
-                <div>
-                  <div style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: 26, color: "#0e1c33" }}>50<span style={{ color: "#d97706" }}>+</span></div>
-                  <div style={{ fontSize: 11.5, color: "#6b7688" }}>Years</div>
+            <div className={`${styles.floatCard} ${styles.heroCardBL}`} style={{ animationDelay: "0.18s" }}>
+              <Tilt max={2}>
+                <div className={styles.card} style={{ padding: "20px 22px" }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: "#8a94a6", marginBottom: 12 }}>Book of business</div>
+                  <div style={{ display: "flex", gap: 22 }}>
+                    <div>
+                      <div style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: 26, color: "#0e1c33" }}>50<span style={{ color: "#d97706" }}>+</span></div>
+                      <div style={{ fontSize: 11.5, color: "#6b7688" }}>Years</div>
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: 26, color: "#0e1c33" }}>30<span style={{ color: "#d97706" }}>+</span></div>
+                      <div style={{ fontSize: 11.5, color: "#6b7688" }}>Carriers</div>
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 16, display: "flex", alignItems: "flex-end", gap: 5, height: 40 }}>
+                    {[38, 58, 46, 70, 52, 84, 64].map((h, i) => (
+                      <div key={i} style={{ flex: 1, height: `${h}%`, borderRadius: 3, background: i === 5 ? "#d97706" : "#e7ecf3" }} />
+                    ))}
+                  </div>
                 </div>
-                <div>
-                  <div style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: 26, color: "#0e1c33" }}>30<span style={{ color: "#d97706" }}>+</span></div>
-                  <div style={{ fontSize: 11.5, color: "#6b7688" }}>Carriers</div>
-                </div>
-              </div>
-              <div style={{ marginTop: 16, display: "flex", alignItems: "flex-end", gap: 5, height: 40 }}>
-                {[38, 58, 46, 70, 52, 84, 64].map((h, i) => (
-                  <div key={i} style={{ flex: 1, height: `${h}%`, borderRadius: 3, background: i === 5 ? "#d97706" : "#e7ecf3" }} />
-                ))}
-              </div>
+              </Tilt>
             </div>
 
-            <div className={`${styles.card} ${styles.floatCard} ${styles.heroCardTR}`} style={{ padding: "13px 16px", display: "flex", alignItems: "center", gap: 10, animationDelay: "0.34s" }}>
-              <div style={{ width: 30, height: 30, borderRadius: "50%", background: "#e7f6ee", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <svg width="16" height="16" viewBox="0 0 26 26" fill="none" stroke="#1a8a4c" strokeWidth="2.2"><path d="M6 14l5 5 9-11" /></svg>
-              </div>
-              <div>
-                <div style={{ fontWeight: 700, fontSize: 12.5, color: "#0e1c33" }}>Case approved</div>
-                <div style={{ fontSize: 11, color: "#8a94a6" }}>Tellus / Crump network</div>
-              </div>
+            <div className={`${styles.floatCard} ${styles.heroCardTR}`} style={{ animationDelay: "0.34s" }}>
+              <Tilt max={2}>
+                <div className={styles.card} style={{ padding: "13px 16px", display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ width: 30, height: 30, borderRadius: "50%", background: "#e7f6ee", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <svg width="16" height="16" viewBox="0 0 26 26" fill="none" stroke="#1a8a4c" strokeWidth="2.2"><path d="M6 14l5 5 9-11" /></svg>
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 12.5, color: "#0e1c33" }}>Case approved</div>
+                    <div style={{ fontSize: 11, color: "#8a94a6" }}>Tellus / Crump network</div>
+                  </div>
+                </div>
+              </Tilt>
             </div>
           </div>
         </div>
@@ -155,18 +164,20 @@ export default function ConceptA() {
           <div data-reveal style={{ maxWidth: 640, marginBottom: 44 }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: "#d97706", letterSpacing: "0.04em", marginBottom: 14 }}>WHAT WE OFFER</div>
             <h2 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: "clamp(28px,3.4vw,42px)", margin: 0, color: "#0e1c33", lineHeight: 1.15, letterSpacing: "-0.01em" }}>Everything an agent needs, from one desk.</h2>
+            <GrowLine color="#d97706" height={2} style={{ width: 64, marginTop: 18 }} />
           </div>
           <div data-reveal className={styles.offerGrid}>
             {OFFERINGS.map((o) => (
               <div key={o.n} className={`${styles.card} ${styles.offerCard}`}>
                 <div className={styles.offerImgWrap}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={o.img} alt={o.title} className={styles.offerImg} />
+                  <img src={o.img} alt={o.title} className={styles.offerImg} data-photo-slot={`offer-${o.n}`} />
                   <span className={styles.offerNum}>{o.n}</span>
                 </div>
                 <div style={{ padding: "22px 24px 26px" }}>
                   <h3 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 700, fontSize: 18, margin: "0 0 10px", color: "#0e1c33", lineHeight: 1.25 }}>{o.title}</h3>
-                  <p style={{ fontSize: 14, lineHeight: 1.6, color: "#5c6579", margin: 0 }}>{o.desc}</p>
+                  <p style={{ fontSize: 14, lineHeight: 1.6, color: "#5c6579", margin: "0 0 14px" }}>{o.blurb}</p>
+                  <a href="#contact" style={{ fontSize: 13, fontWeight: 700, color: "#d97706" }}>Learn more →</a>
                 </div>
               </div>
             ))}
@@ -184,7 +195,7 @@ export default function ConceptA() {
           <h2 data-reveal style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: "clamp(28px,4.4vw,52px)", lineHeight: 1.14, margin: "0 0 32px", color: "#fff", maxWidth: 780, letterSpacing: "-0.01em" }}>We place the cases others turn away.</h2>
           <div data-reveal style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: "clamp(28px,4vw,60px)" }}>
             <p style={{ fontSize: 16, lineHeight: 1.7, color: "#c3cddc", margin: 0 }}>With over 50 years of experience, we are an industry leader in the foreign national market. We help agents devise customized sales strategies and wealth-management solutions for their foreign national clients.</p>
-            <p style={{ fontSize: 16, lineHeight: 1.7, color: "#c3cddc", margin: 0 }}>Our open-architecture approach offers a variety of products and services to best suit your clients&apos; needs — while adhering to all carrier, state and federal guidelines. <a href="#contact" style={{ color: "#f0b053", fontWeight: 600 }}>Speak with a specialist →</a></p>
+            <p style={{ fontSize: 16, lineHeight: 1.7, color: "#c3cddc", margin: 0 }}>Our open-architecture approach offers a variety of products and services to best suit your clients&apos; needs — while adhering to all carrier, state and federal guidelines. <a href="#contact" style={{ color: "#f0b053", fontWeight: 600 }}>Partner with us →</a></p>
           </div>
         </div>
       </div>
@@ -196,6 +207,7 @@ export default function ConceptA() {
             <div>
               <div style={{ fontSize: 13, fontWeight: 700, color: "#d97706", letterSpacing: "0.04em", marginBottom: 12 }}>PRODUCTS</div>
               <h2 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: "clamp(26px,3.4vw,40px)", margin: 0, color: "#0e1c33", letterSpacing: "-0.01em" }}>Five lines, one relationship.</h2>
+              <GrowLine color="#d97706" height={2} style={{ width: 64, marginTop: 18 }} />
             </div>
             <span style={{ fontSize: 13.5, fontWeight: 700, color: "#8a94a6" }}>Backed by 30+ carriers</span>
           </div>
@@ -241,7 +253,7 @@ export default function ConceptA() {
       <div id="contact" style={{ padding: "clamp(70px,10vw,120px) clamp(20px,5vw,60px)", background: "#12294a" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,90px)", alignItems: "center" }}>
           <div data-reveal>
-            <div style={{ fontSize: 13, fontWeight: 700, color: "#f0b053", letterSpacing: "0.04em", marginBottom: 22 }}>GET STARTED</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: "#f0b053", letterSpacing: "0.04em", marginBottom: 22 }}>CONTACT</div>
             <h2 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: "clamp(30px,4.4vw,50px)", lineHeight: 1.12, margin: "0 0 22px", color: "#fff", letterSpacing: "-0.01em" }}>Let&apos;s write more business, together.</h2>
             <p style={{ fontSize: 16.5, lineHeight: 1.6, color: "#c3cddc", margin: 0, maxWidth: 440 }}>Tell us about your case or your book of business. A brokerage director responds within one business day.</p>
           </div>
@@ -284,7 +296,7 @@ export default function ConceptA() {
             </div>
 
             <div>
-              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "#f0b053", marginBottom: 16 }}>Get started</div>
+              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "#f0b053", marginBottom: 16 }}>Partner with us</div>
               <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#8fa0bd", margin: "0 0 16px" }}>A brokerage director responds within one business day.</p>
               <a href="#contact" className={`${styles.cta} ${styles.ctaPrimary}`} style={{ display: "inline-block", padding: "11px 22px", borderRadius: 8, fontSize: 13.5 }}>Partner with us</a>
             </div>

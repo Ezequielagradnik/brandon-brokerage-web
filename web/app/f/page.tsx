@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import MobileMenu from "../../components/MobileMenu";
 import { OFFERINGS } from "../../lib/offerings";
 import { useHeroReveal, useScrollReveal } from "../../hooks/useReveals";
+import { ParallaxImg } from "../../components/motion";
 import styles from "./page.module.css";
 
 const NAV_LINKS = [
@@ -120,23 +121,23 @@ export default function ConceptF() {
               <div className={styles.offerMedia}>
                 <div className={styles.offerImgWrap}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={o.img} alt={o.title} className={styles.offerImg} />
+                  <img src={o.img} alt={o.title} className={styles.offerImg} data-photo-slot={`offer-${o.n}`} />
                 </div>
               </div>
               <div>
                 <div className={styles.serif} style={{ fontStyle: "italic", fontSize: 20, color: "#c9a86e", marginBottom: 14 }}>{o.n}</div>
                 <h3 className={styles.serif} style={{ fontWeight: 500, fontSize: "clamp(24px,2.4vw,32px)", lineHeight: 1.2, margin: "0 0 18px", color: "#191613" }}>{o.title}</h3>
-                <p style={{ fontSize: 15.5, lineHeight: 1.75, color: "#544c40", margin: 0, fontWeight: 500 }}>{o.desc}</p>
+                <p style={{ fontSize: 15.5, lineHeight: 1.75, color: "#544c40", margin: "0 0 16px", fontWeight: 500 }}>{o.blurb}</p>
+                <a href="#contact" style={{ fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase", color: "#a87f4a", fontWeight: 700, borderBottom: "1px solid rgba(168,127,74,0.4)", paddingBottom: 3 }}>Learn more →</a>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* FOREIGN NATIONAL — full-bleed night photograph */}
+      {/* FOREIGN NATIONAL — full-bleed night photograph with deep parallax */}
       <div id="foreign" style={{ position: "relative", padding: "clamp(90px,13vw,170px) clamp(20px,5vw,60px)", overflow: "hidden" }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/miami-night.jpg" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+        <ParallaxImg src="/images/miami-night.jpg" alt="" range={60} settle={false} photoSlot="foreign-national" style={{ position: "absolute", inset: 0 }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(10,8,6,0.72), rgba(10,8,6,0.55) 50%, rgba(10,8,6,0.75))" }} />
         <div style={{ position: "relative", maxWidth: 1200, margin: "0 auto" }}>
           <div data-reveal style={{ fontSize: 12, letterSpacing: "0.24em", textTransform: "uppercase", color: "#e0bd7f", fontWeight: 700, marginBottom: 26 }}>Signature Specialty</div>
@@ -145,7 +146,7 @@ export default function ConceptF() {
           </h2>
           <div data-reveal style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: "clamp(28px,4vw,64px)", borderTop: "1px solid rgba(224,189,127,0.35)", paddingTop: 36 }}>
             <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(253,250,244,0.88)", margin: 0, fontWeight: 500 }}>With over 50 years of experience, we are an industry leader in the foreign national market. We help agents devise customized sales strategies and wealth-management solutions for their foreign national clients.</p>
-            <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(253,250,244,0.88)", margin: 0, fontWeight: 500 }}>Our open-architecture approach offers a variety of products and services to best suit your clients&apos; needs — while adhering to all carrier, state and federal guidelines. <a href="#contact" style={{ color: "#e0bd7f", borderBottom: "1px solid rgba(224,189,127,0.5)" }}>Speak with a specialist →</a></p>
+            <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(253,250,244,0.88)", margin: 0, fontWeight: 500 }}>Our open-architecture approach offers a variety of products and services to best suit your clients&apos; needs — while adhering to all carrier, state and federal guidelines. <a href="#contact" style={{ color: "#e0bd7f", borderBottom: "1px solid rgba(224,189,127,0.5)" }}>Partner with us →</a></p>
           </div>
         </div>
       </div>
@@ -198,7 +199,7 @@ export default function ConceptF() {
         <div style={{ position: "absolute", top: "-40%", right: "-10%", width: 620, height: 620, borderRadius: "50%", background: "radial-gradient(circle, rgba(201,168,110,0.14), transparent 68%)", pointerEvents: "none" }} />
         <div style={{ position: "relative", maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,90px)", alignItems: "center" }}>
           <div data-reveal>
-            <div style={{ fontSize: 12, letterSpacing: "0.24em", textTransform: "uppercase", color: "#e0bd7f", fontWeight: 700, marginBottom: 24 }}>Get Started</div>
+            <div style={{ fontSize: 12, letterSpacing: "0.24em", textTransform: "uppercase", color: "#e0bd7f", fontWeight: 700, marginBottom: 24 }}>Contact</div>
             <h2 className={styles.serif} style={{ fontWeight: 500, fontSize: "clamp(30px,4.4vw,54px)", lineHeight: 1.12, margin: "0 0 24px", color: "#fdfaf4" }}>Let&apos;s write more business, <em style={{ fontStyle: "italic", color: "#e0bd7f" }}>together</em>.</h2>
             <p style={{ fontSize: 16, lineHeight: 1.7, color: "rgba(253,250,244,0.72)", margin: 0, maxWidth: 460, fontWeight: 500 }}>Tell us about your case or your book of business. A brokerage director responds within one business day.</p>
           </div>
@@ -250,7 +251,7 @@ export default function ConceptF() {
             </div>
 
             <div>
-              <div style={{ fontSize: 11.5, letterSpacing: "0.18em", textTransform: "uppercase", color: "#a87f4a", fontWeight: 700, marginBottom: 16 }}>Get started</div>
+              <div style={{ fontSize: 11.5, letterSpacing: "0.18em", textTransform: "uppercase", color: "#a87f4a", fontWeight: 700, marginBottom: 16 }}>Partner with us</div>
               <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#877c69", margin: "0 0 16px", fontWeight: 500 }}>A brokerage director responds within one business day.</p>
               <a href="#contact" className={`${styles.cta} ${styles.ctaBronze}`} style={{ display: "inline-block", padding: "12px 24px", fontSize: 11.5 }}>Partner With Us</a>
             </div>

@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import * as THREE from "three";
 import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
+import { useGlobe, BLUE_GLOBE } from "@/hooks/useGlobe";
 import MobileMenu from "@/components/MobileMenu";
 import { OFFERINGS } from "@/lib/offerings";
 import styles from "./page.module.css";
@@ -24,128 +24,16 @@ const PRODUCTS = [
 
 const CARRIERS = ["Lincoln", "John Hancock", "AIG", "Nationwide", "Principal", "MassMutual", "Mutual of Omaha", "Protective", "Prudential", "Pacific Life", "Transamerica", "Symetra", "Global Atlantic", "Allianz"];
 
-// Electric-blue particle network: drifting nodes joined by lines whenever
-// they come close — a living "global placement network" behind the hero.
-function useNetwork(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    let w = canvas.clientWidth, h = canvas.clientHeight;
-    let renderer: THREE.WebGLRenderer;
-    try {
-      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-    } catch {
-      return;
-    }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(w, h, false);
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 100);
-    camera.position.z = 6;
-
-    const group = new THREE.Group();
-    scene.add(group);
-
-    // Nodes drifting inside a wide flat box
-    const COUNT = 130;
-    const BX = 6.4, BY = 3.4, BZ = 2.2;
-    const pos = new Float32Array(COUNT * 3);
-    const vel = new Float32Array(COUNT * 3);
-    for (let i = 0; i < COUNT; i++) {
-      pos[i * 3] = (Math.random() * 2 - 1) * BX;
-      pos[i * 3 + 1] = (Math.random() * 2 - 1) * BY;
-      pos[i * 3 + 2] = (Math.random() * 2 - 1) * BZ;
-      vel[i * 3] = (Math.random() * 2 - 1) * 0.004;
-      vel[i * 3 + 1] = (Math.random() * 2 - 1) * 0.004;
-      vel[i * 3 + 2] = (Math.random() * 2 - 1) * 0.004;
-    }
-    const pGeo = new THREE.BufferGeometry();
-    pGeo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-    const points = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x5c8dff, size: 0.055, transparent: true, opacity: 0.95 }));
-    group.add(points);
-
-    // Line buffer, rebuilt per frame from close pairs
-    const MAX_SEG = 2600;
-    const lPos = new Float32Array(MAX_SEG * 6);
-    const lGeo = new THREE.BufferGeometry();
-    const lAttr = new THREE.BufferAttribute(lPos, 3);
-    lAttr.setUsage(THREE.DynamicDrawUsage);
-    lGeo.setAttribute("position", lAttr);
-    const lines = new THREE.LineSegments(lGeo, new THREE.LineBasicMaterial({ color: 0x2563eb, transparent: true, opacity: 0.24 }));
-    group.add(lines);
-
-    const THRESH = 1.55;
-
-    let tx = 0, ty = 0, alive = true, raf = 0;
-    const onMove = (e: PointerEvent) => {
-      tx = (e.clientY / window.innerHeight - 0.5) * 0.22;
-      ty = (e.clientX / window.innerWidth - 0.5) * 0.35;
-    };
-    window.addEventListener("pointermove", onMove);
-    const onResize = () => {
-      w = canvas.clientWidth; h = canvas.clientHeight;
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h; camera.updateProjectionMatrix();
-    };
-    window.addEventListener("resize", onResize);
-
-    const tick = () => {
-      if (!alive) return;
-      // drift + bounce
-      for (let i = 0; i < COUNT; i++) {
-        for (let k = 0; k < 3; k++) {
-          const idx = i * 3 + k;
-          pos[idx] += vel[idx];
-          const lim = k === 0 ? BX : k === 1 ? BY : BZ;
-          if (pos[idx] > lim || pos[idx] < -lim) vel[idx] *= -1;
-        }
-      }
-      pGeo.attributes.position.needsUpdate = true;
-
-      // connect close pairs
-      let seg = 0;
-      for (let i = 0; i < COUNT && seg < MAX_SEG; i++) {
-        for (let j = i + 1; j < COUNT && seg < MAX_SEG; j++) {
-          const dx = pos[i * 3] - pos[j * 3];
-          const dy = pos[i * 3 + 1] - pos[j * 3 + 1];
-          const dz = pos[i * 3 + 2] - pos[j * 3 + 2];
-          if (dx * dx + dy * dy + dz * dz < THRESH * THRESH) {
-            lPos.set([pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2], pos[j * 3], pos[j * 3 + 1], pos[j * 3 + 2]], seg * 6);
-            seg++;
-          }
-        }
-      }
-      lGeo.setDrawRange(0, seg * 2);
-      lAttr.needsUpdate = true;
-
-      group.rotation.y += (ty - group.rotation.y) * 0.03;
-      group.rotation.x += (tx - group.rotation.x) * 0.03;
-      renderer.render(scene, camera);
-      raf = requestAnimationFrame(tick);
-    };
-    tick();
-
-    return () => {
-      alive = false;
-      cancelAnimationFrame(raf);
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("resize", onResize);
-      renderer.dispose();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-}
-
 export default function ConceptE() {
   const pageRef = useRef<HTMLDivElement>(null);
-  const netCanvas = useRef<HTMLCanvasElement>(null);
+  const globeCanvas = useRef<HTMLCanvasElement>(null);
   const heroKicker = useRef<HTMLDivElement>(null);
   const heroTitle = useRef<HTMLHeadingElement>(null);
   const heroSub = useRef<HTMLParagraphElement>(null);
   const heroCta = useRef<HTMLDivElement>(null);
   const [scrolled, setScrolled] = useState(false);
 
-  useNetwork(netCanvas);
+  useGlobe(globeCanvas, BLUE_GLOBE);
   useHeroReveal([heroKicker, heroTitle, heroSub, heroCta]);
   useScrollReveal(pageRef);
 
@@ -182,9 +70,11 @@ export default function ConceptE() {
         />
       </div>
 
-      {/* HERO — particle network */}
+      {/* HERO — wireframe globe with flight arcs (the foreign-national network) */}
       <div id="top" style={{ position: "relative", minHeight: "92vh", display: "flex", alignItems: "center", padding: "clamp(90px,10vw,140px) clamp(20px,5vw,60px) clamp(70px,8vw,110px)", background: "radial-gradient(130% 100% at 50% 0%, #0a1226 0%, #05070d 62%)", overflow: "hidden" }}>
-        <canvas ref={netCanvas} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block", opacity: 0.85 }} />
+        <div style={{ position: "absolute", top: "50%", right: "clamp(-180px,-9vw,-80px)", transform: "translateY(-50%)", width: "clamp(360px,46vw,680px)", height: "clamp(360px,46vw,680px)", borderRadius: "50%", overflow: "hidden", background: "radial-gradient(circle at 40% 30%, #0b1c3c, #04070f 75%)", boxShadow: "0 0 140px rgba(37,99,235,0.22)" }}>
+          <canvas ref={globeCanvas} style={{ width: "100%", height: "100%", display: "block" }} />
+        </div>
         <div className={styles.gridOverlay} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(5,7,13,0.25), transparent 30%, transparent 68%, #05070d)" }} />
         <div style={{ position: "relative", maxWidth: 1300, margin: "0 auto", width: "100%" }}>
@@ -248,12 +138,13 @@ export default function ConceptE() {
               <div key={o.n} className={styles.offerCard}>
                 <div className={styles.offerImgWrap}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={o.img} alt={o.title} className={styles.offerImg} />
+                  <img src={o.img} alt={o.title} className={styles.offerImg} data-photo-slot={`offer-${o.n}`} />
                   <span className={styles.offerNum}>{o.n}</span>
                 </div>
                 <div style={{ padding: "20px 20px 24px" }}>
                   <h3 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 700, fontSize: 17.5, margin: "0 0 10px", color: "#fff", lineHeight: 1.25 }}>{o.title}</h3>
-                  <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#8b99b5", margin: 0 }}>{o.desc}</p>
+                  <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#8b99b5", margin: "0 0 12px" }}>{o.blurb}</p>
+                  <a href="#contact" className={styles.mono} style={{ fontSize: 11.5, letterSpacing: "0.1em", textTransform: "uppercase", color: "#5c8dff" }}>Learn more →</a>
                 </div>
               </div>
             ))}
@@ -271,7 +162,7 @@ export default function ConceptE() {
           </h2>
           <div data-reveal style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: "clamp(28px,4vw,64px)", borderTop: "1px solid #1b2842", paddingTop: 34 }}>
             <p style={{ fontSize: 16, lineHeight: 1.7, color: "#9fb0cc", margin: 0 }}>With over 50 years of experience, we are an industry leader in the foreign national market. We help agents devise customized sales strategies and wealth-management solutions for their foreign national clients.</p>
-            <p style={{ fontSize: 16, lineHeight: 1.7, color: "#9fb0cc", margin: 0 }}>Our open-architecture approach offers a variety of products and services to best suit your clients&apos; needs — while adhering to all carrier, state and federal guidelines. <a href="#contact" style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 14 }}>Speak with a specialist →</a></p>
+            <p style={{ fontSize: 16, lineHeight: 1.7, color: "#9fb0cc", margin: 0 }}>Our open-architecture approach offers a variety of products and services to best suit your clients&apos; needs — while adhering to all carrier, state and federal guidelines. <a href="#contact" style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 14 }}>Partner with us →</a></p>
           </div>
         </div>
       </div>
@@ -323,7 +214,7 @@ export default function ConceptE() {
       <div id="contact" style={{ position: "relative", padding: "clamp(76px,10vw,130px) clamp(20px,5vw,60px)", background: "radial-gradient(110% 120% at 20% 0%, #10254d 0%, #070b14 60%)", overflow: "hidden", borderTop: "1px solid #10192c" }}>
         <div style={{ position: "relative", maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,90px)", alignItems: "center" }}>
           <div data-reveal>
-            <div className={styles.tag} style={{ marginBottom: 24 }}>Get Started</div>
+            <div className={styles.tag} style={{ marginBottom: 24 }}>Contact</div>
             <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(30px,4.6vw,58px)", lineHeight: 1.05, margin: "0 0 24px", color: "#fff", letterSpacing: "-0.02em" }}>Let&apos;s write more business, together.</h2>
             <p style={{ fontSize: 16.5, lineHeight: 1.6, color: "#9fb0cc", margin: 0, maxWidth: 460 }}>Tell us about your case or your book of business. A brokerage director responds within one business day.</p>
           </div>
@@ -366,7 +257,7 @@ export default function ConceptE() {
             </div>
 
             <div>
-              <div className={styles.tag} style={{ marginBottom: 16 }}>Get started</div>
+              <div className={styles.tag} style={{ marginBottom: 16 }}>Partner with us</div>
               <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#6b7c9c", margin: "0 0 16px" }}>A brokerage director responds within one business day.</p>
               <a href="#contact" className={`${styles.cta} ${styles.ctaBlue}`} style={{ display: "inline-block", padding: "11px 22px", borderRadius: 4, fontSize: 12, fontFamily: "var(--font-plex-mono), monospace", letterSpacing: "0.06em", textTransform: "uppercase" }}>Partner With Us</a>
             </div>

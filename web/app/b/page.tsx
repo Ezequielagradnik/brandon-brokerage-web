@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
 import Guilloche from "@/components/Guilloche";
@@ -48,6 +49,7 @@ function Seal() {
 
 export default function ConceptB() {
   const pageRef = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
   const heroKicker = useRef<HTMLDivElement>(null);
   const heroTitle = useRef<HTMLHeadingElement>(null);
   const heroSub = useRef<HTMLParagraphElement>(null);
@@ -80,9 +82,16 @@ export default function ConceptB() {
         />
       </div>
 
-      {/* HERO */}
+      {/* HERO — the guilloche wipes in like engraved lines being drawn */}
       <div id="top" style={{ position: "relative", padding: "clamp(60px,9vw,120px) clamp(20px,5vw,60px)", overflow: "hidden" }}>
-        <Guilloche opacity={0.16} />
+        <motion.div
+          style={{ position: "absolute", inset: 0 }}
+          initial={reduce ? false : { clipPath: "inset(0 100% 0 0)", opacity: 0.4 }}
+          animate={{ clipPath: "inset(0 0% 0 0)", opacity: 1 }}
+          transition={{ duration: 2.4, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Guilloche opacity={0.16} />
+        </motion.div>
         <div style={{ position: "relative", maxWidth: 1100, margin: "0 auto", textAlign: "center" }}>
           <div ref={heroKicker} className={styles.mono} style={{ fontSize: 12, letterSpacing: "0.22em", color: "#4a5c4f", marginBottom: 28 }}>
             EST. 1970S · CORAL GABLES, FLORIDA · No. 000050
@@ -129,7 +138,7 @@ export default function ConceptB() {
           <div data-reveal className={styles.articlesLayout}>
             <div className={`${styles.frame} ${styles.photoFrame} ${styles.articlesPhoto}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/handshake-moody.jpg" alt="Advisor and client shaking hands" />
+              <img src="/images/handshake-moody.jpg" alt="Advisor and client shaking hands" data-photo-slot="firm" />
             </div>
             <div>
               {OFFERINGS.map((o, i) => (
@@ -137,7 +146,8 @@ export default function ConceptB() {
                   <div className={styles.mono} style={{ fontSize: 13, color: "#a67c3d", paddingTop: 4 }}>{o.n}</div>
                   <div>
                     <h3 style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 500, fontSize: 19, margin: "0 0 8px", color: "#1f3d2f" }}>{o.title}</h3>
-                    <p style={{ fontSize: 14, lineHeight: 1.6, color: "#3f5245", margin: 0 }}>{o.desc}</p>
+                    <p style={{ fontSize: 14, lineHeight: 1.6, color: "#3f5245", margin: "0 0 10px" }}>{o.blurb}</p>
+                    <a href="#contact" className={styles.mono} style={{ fontSize: 11.5, letterSpacing: "0.08em", textTransform: "uppercase", color: "#a67c3d", borderBottom: "1px solid #a67c3d66", paddingBottom: 2 }}>Learn more →</a>
                   </div>
                 </div>
               ))}
@@ -156,7 +166,7 @@ export default function ConceptB() {
           <h2 data-reveal style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 500, fontStyle: "italic", fontSize: "clamp(28px,4.4vw,50px)", lineHeight: 1.2, margin: "0 0 34px", color: "#f5efe0" }}>We place the cases others turn away.</h2>
           <div data-reveal style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 32, textAlign: "left", maxWidth: 800, margin: "0 auto" }}>
             <p style={{ fontSize: 15.5, lineHeight: 1.75, color: "#d3e0d6", margin: 0 }}>With over 50 years of experience, we are an industry leader in the foreign national market — devising customized sales strategies and wealth-management solutions.</p>
-            <p style={{ fontSize: 15.5, lineHeight: 1.75, color: "#d3e0d6", margin: 0 }}>Our open-architecture approach suits your clients&apos; needs while adhering to all carrier, state and federal guidelines. <a href="#contact" style={{ color: "#c8a76a" }}>Speak with a specialist →</a></p>
+            <p style={{ fontSize: 15.5, lineHeight: 1.75, color: "#d3e0d6", margin: 0 }}>Our open-architecture approach suits your clients&apos; needs while adhering to all carrier, state and federal guidelines. <a href="#contact" style={{ color: "#c8a76a" }}>Partner with us →</a></p>
           </div>
         </div>
       </div>
@@ -196,7 +206,7 @@ export default function ConceptB() {
       <div id="contact" style={{ position: "relative", padding: "clamp(70px,10vw,120px) clamp(20px,5vw,60px)", background: "#1f3d2f", color: "#f5efe0", overflow: "hidden" }}>
         <Guilloche color="#f5efe0" opacity={0.08} />
         <div style={{ position: "relative", maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
-          <div className={styles.mono} style={{ fontSize: 12, letterSpacing: "0.18em", color: "#c8a76a", marginBottom: 22 }}>GET STARTED</div>
+          <div className={styles.mono} style={{ fontSize: 12, letterSpacing: "0.18em", color: "#c8a76a", marginBottom: 22 }}>CONTACT</div>
           <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 500, fontStyle: "italic", fontSize: "clamp(28px,4.4vw,46px)", lineHeight: 1.16, margin: "0 0 40px", color: "#f5efe0" }}>Let&apos;s write more business, together.</h2>
           <div data-reveal style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "clamp(30px,5vw,70px)", marginBottom: 44 }}>
             <div>

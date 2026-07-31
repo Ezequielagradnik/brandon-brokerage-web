@@ -28,6 +28,7 @@
 .cta {
   position: relative;
   overflow: hidden;
+  isolation: isolate;
   transition: color 0.3s;
   background: #14263f;
   color: #fdfdfb !important;
@@ -37,12 +38,12 @@
   position: absolute;
   inset: 0;
   background: #9d7c3a;
-  transform: translateY(101%);
-  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  clip-path: circle(0px at var(--mx, 50%) var(--my, 50%));
+  transition: clip-path 0.55s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: -1;
 }
 .cta:hover::after {
-  transform: translateY(0);
+  clip-path: circle(160% at var(--mx, 50%) var(--my, 50%));
 }
 
 .ctaGhost {
@@ -121,11 +122,17 @@
   object-fit: cover;
   display: block;
   filter: saturate(0.65) contrast(0.96);
-  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.5s ease;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
 }
 .solCard:hover .solImg {
-  transform: scale(1.05);
+  transform: scale(1.03);
   filter: saturate(0.9) contrast(1);
+}
+.solBody {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.solCard:hover .solBody {
+  transform: translateY(-6px);
 }
 .solCard:hover .solMore {
   color: #9d7c3a;
