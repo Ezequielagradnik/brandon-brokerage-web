@@ -1,9 +1,11 @@
 "use client";
 
 import { useRef } from "react";
-import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
+import { motion } from "framer-motion";
+import { useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
 import { OFFERINGS } from "@/lib/offerings";
+import { ScrollProgress, WordsReveal, FadeIn, CountUp, ParallaxImg, GrowLine, Magnetic, EASE } from "@/components/motion";
 import styles from "./page.module.css";
 
 const NAV_LINKS = [
@@ -31,18 +33,14 @@ const HAIR = "1px solid rgba(20,38,63,0.12)";
 
 export default function ConceptG() {
   const pageRef = useRef<HTMLDivElement>(null);
-  const heroKicker = useRef<HTMLDivElement>(null);
-  const heroTitle = useRef<HTMLHeadingElement>(null);
-  const heroSub = useRef<HTMLParagraphElement>(null);
-  const heroCta = useRef<HTMLDivElement>(null);
 
-  useHeroReveal([heroKicker, heroTitle, heroSub, heroCta]);
   useScrollReveal(pageRef);
 
   const serif = "var(--font-cormorant), serif";
 
   return (
     <div ref={pageRef} className={styles.page}>
+      <ScrollProgress color={BRONZE} />
 
       {/* HEADER */}
       <div className={styles.headerBar} style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 60, padding: "18px clamp(20px,5vw,60px)" }}>
@@ -67,28 +65,43 @@ export default function ConceptG() {
       {/* HERO — quiet, white, bblatam-style */}
       <div id="top" style={{ padding: "clamp(150px,20vh,220px) clamp(20px,5vw,60px) clamp(56px,7vw,90px)", background: "#fdfdfb" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-          <div ref={heroKicker} style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 30 }}>
-            <span style={{ width: 40, height: 1, background: BRONZE }} />
+          <FadeIn delay={0.1} style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 30 }}>
+            <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.3, ease: EASE }} style={{ width: 40, height: 1, background: BRONZE, transformOrigin: "0 50%" }} />
             <span style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: MUTED }}>Life brokerage · Coral Gables, Florida</span>
-          </div>
-          <h1 ref={heroTitle} style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(44px,7vw,96px)", lineHeight: 1.02, margin: "0 0 34px", color: NAVY, letterSpacing: "-0.01em", maxWidth: 980 }}>Five decades of placing business, <span style={{ fontStyle: "italic", color: BRONZE }}>seamlessly</span>.</h1>
+          </FadeIn>
+          <h1 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(44px,7vw,96px)", lineHeight: 1.06, margin: "0 0 34px", color: NAVY, letterSpacing: "-0.01em", maxWidth: 980 }}>
+            <WordsReveal
+              delay={0.25}
+              segments={[
+                { text: "Five decades of placing business," },
+                { text: "seamlessly.", style: { fontStyle: "italic", color: BRONZE } },
+              ]}
+            />
+          </h1>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 32, flexWrap: "wrap" }}>
-            <p ref={heroSub} style={{ fontSize: "clamp(16px,1.4vw,19px)", lineHeight: 1.7, color: MUTED, fontWeight: 400, maxWidth: 560, margin: 0 }}>Brandon Brokerage Group partners with producers and financial advisors to deliver customized business solutions — advanced sales support, full case management and access to 30+ top-rated carriers.</p>
-            <div ref={heroCta} style={{ display: "flex", gap: 22, alignItems: "center", flexWrap: "wrap" }}>
-              <a href="#contact" className={styles.cta} style={{ padding: "16px 34px", fontSize: 13, letterSpacing: "0.08em", textTransform: "uppercase" }}>Partner with us</a>
+            <FadeIn delay={0.85}>
+              <p style={{ fontSize: "clamp(16px,1.4vw,19px)", lineHeight: 1.7, color: MUTED, fontWeight: 400, maxWidth: 560, margin: 0 }}>Brandon Brokerage Group partners with producers and financial advisors to deliver customized business solutions — advanced sales support, full case management and access to 30+ top-rated carriers.</p>
+            </FadeIn>
+            <FadeIn delay={1} style={{ display: "flex", gap: 22, alignItems: "center", flexWrap: "wrap" }}>
+              <Magnetic>
+                <a href="#contact" className={styles.cta} style={{ display: "inline-block", padding: "16px 34px", fontSize: 13, letterSpacing: "0.08em", textTransform: "uppercase" }}>Partner with us</a>
+              </Magnetic>
               <a href="#solutions" className={styles.lnk} style={{ fontSize: 14, color: NAVY }}>Our solutions</a>
-            </div>
+            </FadeIn>
           </div>
         </div>
       </div>
 
-      {/* HERO IMAGE — full width, gallery-matted */}
+      {/* HERO IMAGE — full width, gallery-matted, parallax */}
       <div data-reveal style={{ padding: "0 clamp(20px,5vw,60px)" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto", padding: "clamp(10px,1.3vw,16px)", border: "1px solid rgba(20,38,63,0.16)", background: "#fff" }}>
-          <div style={{ height: "clamp(280px,48vh,540px)", overflow: "hidden" }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/miami-aerial-day.jpg" alt="Coral Gables, Florida" style={{ width: "100%", height: "100%", objectFit: "cover", filter: "saturate(0.6) contrast(0.95) brightness(1.02)" }} />
-          </div>
+          <ParallaxImg
+            src="/images/miami-aerial-day.jpg"
+            alt="Coral Gables, Florida"
+            range={46}
+            style={{ height: "clamp(280px,48vh,540px)" }}
+            imgStyle={{ filter: "saturate(0.6) contrast(0.95) brightness(1.02)" }}
+          />
         </div>
         <div style={{ maxWidth: 1240, margin: "0 auto", display: "flex", justifyContent: "space-between", gap: 12, padding: "12px 2px 0", flexWrap: "wrap" }}>
           <span style={{ fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: MUTED }}>Coral Gables, Florida</span>
@@ -96,13 +109,23 @@ export default function ConceptG() {
         </div>
       </div>
 
-      {/* STATS — hairline row */}
+      {/* STATS — hairline row, drawn lines + count-up */}
       <div data-reveal style={{ padding: "clamp(48px,6vw,72px) clamp(20px,5vw,60px)" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(170px,1fr))", gap: "28px clamp(24px,4vw,64px)" }}>
-          {[["50+", "Years of expertise"], ["30+", "Top-rated carriers"], ["5", "Product lines"], ["Nationwide", "Tellus / Crump firm"]].map(([v, l]) => (
-            <div key={l} style={{ borderTop: `1px solid ${BRONZE}`, paddingTop: 20 }}>
-              <div style={{ fontFamily: serif, fontSize: "clamp(32px,3.4vw,46px)", fontWeight: 500, color: NAVY, lineHeight: 1 }}>{v}</div>
-              <div style={{ fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase", color: MUTED, marginTop: 12 }}>{l}</div>
+          {[
+            { num: 50, suffix: "+", label: "Years of expertise" },
+            { num: 30, suffix: "+", label: "Top-rated carriers" },
+            { num: 5, suffix: "", label: "Product lines" },
+            { num: null, text: "Nationwide", label: "Tellus / Crump firm" },
+          ].map((s, i) => (
+            <div key={s.label}>
+              <GrowLine color={BRONZE} delay={i * 0.12} />
+              <div style={{ paddingTop: 20 }}>
+                <div style={{ fontFamily: serif, fontSize: "clamp(32px,3.4vw,46px)", fontWeight: 500, color: NAVY, lineHeight: 1 }}>
+                  {s.num !== null ? <CountUp to={s.num} suffix={s.suffix} /> : s.text}
+                </div>
+                <div style={{ fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase", color: MUTED, marginTop: 12 }}>{s.label}</div>
+              </div>
             </div>
           ))}
         </div>
@@ -115,9 +138,18 @@ export default function ConceptG() {
             <div style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: BRONZE, marginBottom: 22 }}>Solutions</div>
             <h2 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(32px,4.6vw,58px)", lineHeight: 1.08, margin: 0, color: NAVY }}>Everything behind the case you write.</h2>
           </div>
-          <div data-reveal className={styles.solGrid}>
-            {OFFERINGS.map((o) => (
-              <a key={o.n} href="#contact" className={styles.solCard}>
+          <div className={styles.solGrid}>
+            {OFFERINGS.map((o, i) => (
+              <motion.a
+                key={o.n}
+                href="#contact"
+                className={styles.solCard}
+                initial={{ opacity: 0, y: 56 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.9, delay: i * 0.12, ease: EASE }}
+                whileHover={{ y: -10 }}
+              >
                 <div className={styles.solImgWrap}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={o.img} alt={o.title} className={styles.solImg} />
@@ -129,7 +161,7 @@ export default function ConceptG() {
                 <h3 style={{ fontFamily: serif, fontWeight: 500, fontSize: 24, margin: "0 0 10px", color: NAVY, lineHeight: 1.15 }}>{o.title}</h3>
                 <p style={{ fontSize: 13.5, lineHeight: 1.66, color: MUTED, fontWeight: 400, margin: "0 0 16px", display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{o.desc}</p>
                 <span className={styles.solMore} style={{ fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", color: NAVY }}>Learn more →</span>
-              </a>
+              </motion.a>
             ))}
           </div>
         </div>

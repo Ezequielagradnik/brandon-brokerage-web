@@ -107,14 +107,6 @@
   padding-left: 16px;
 }
 
-.kenburns {
-  animation: hKenburns 26s ease-in-out infinite alternate;
-}
-@keyframes hKenburns {
-  from { transform: scale(1) translateY(0); }
-  to { transform: scale(1.08) translateY(-2%); }
-}
-
 .marquee {
   animation: hMarquee 46s linear infinite;
 }

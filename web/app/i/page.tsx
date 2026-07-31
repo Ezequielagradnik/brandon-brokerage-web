@@ -1,9 +1,11 @@
 "use client";
 
 import { useRef } from "react";
-import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
+import { motion } from "framer-motion";
+import { useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
 import { OFFERINGS } from "@/lib/offerings";
+import { ScrollProgress, MaskReveal, FadeIn, CountUp, ParallaxImg, ClipReveal, GrowLine, Magnetic } from "@/components/motion";
 import styles from "./page.module.css";
 
 const NAV_LINKS = [
@@ -30,12 +32,7 @@ const HAIR = "1px solid rgba(26,24,20,0.16)";
 
 export default function ConceptI() {
   const pageRef = useRef<HTMLDivElement>(null);
-  const heroKicker = useRef<HTMLDivElement>(null);
-  const heroTitle = useRef<HTMLHeadingElement>(null);
-  const heroSub = useRef<HTMLParagraphElement>(null);
-  const heroCta = useRef<HTMLDivElement>(null);
 
-  useHeroReveal([heroKicker, heroTitle, heroSub, heroCta]);
   useScrollReveal(pageRef);
 
   const serif = "var(--font-cormorant), serif";
@@ -43,6 +40,7 @@ export default function ConceptI() {
 
   return (
     <div ref={pageRef} className={styles.page}>
+      <ScrollProgress color={INK} />
 
       {/* HEADER */}
       <div className={styles.headerBar} style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 60, padding: "18px clamp(20px,5vw,60px)" }}>
@@ -67,31 +65,40 @@ export default function ConceptI() {
       {/* HERO — oversized editorial masthead */}
       <div id="top" style={{ padding: "clamp(140px,18vh,200px) clamp(20px,5vw,60px) 0" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-          <div ref={heroKicker} style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12, borderBottom: `1px solid ${INK}`, paddingBottom: 18, marginBottom: "clamp(30px,4vw,52px)" }}>
-            <span style={label}>Brandon Brokerage Group</span>
-            <span style={label}>Coral Gables, Florida</span>
-            <span style={label}>Since the 1970s</span>
+          <div style={{ marginBottom: "clamp(30px,4vw,52px)" }}>
+            <FadeIn delay={0.1} y={14} style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12, paddingBottom: 18 }}>
+              <span style={label}>Brandon Brokerage Group</span>
+              <span style={label}>Coral Gables, Florida</span>
+              <span style={label}>Since the 1970s</span>
+            </FadeIn>
+            <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.4, delay: 0.2, ease: [0.2, 0.7, 0.2, 1] }} style={{ height: 1, background: INK, transformOrigin: "0 50%" }} />
           </div>
           <div className={styles.mastGrid} style={{ paddingBottom: "clamp(40px,6vw,80px)" }}>
             <div className={styles.mastText}>
-              <h1 ref={heroTitle} style={{ fontFamily: serif, fontWeight: 400, fontSize: "clamp(50px,8.2vw,124px)", lineHeight: 0.98, margin: "0 0 clamp(34px,4.5vw,60px)", color: INK, letterSpacing: "-0.015em" }}>
-                Seamless<br /><span style={{ fontStyle: "italic", marginLeft: "clamp(30px,8vw,150px)" }}>execution,</span><br />since the &rsquo;70s.
+              <h1 style={{ fontFamily: serif, fontWeight: 400, fontSize: "clamp(50px,8.2vw,124px)", lineHeight: 0.98, margin: "0 0 clamp(34px,4.5vw,60px)", color: INK, letterSpacing: "-0.015em" }}>
+                <MaskReveal delay={0.35}>Seamless</MaskReveal>
+                <MaskReveal delay={0.5}><span style={{ fontStyle: "italic", marginLeft: "clamp(30px,8vw,150px)" }}>execution,</span></MaskReveal>
+                <MaskReveal delay={0.65}>since the &rsquo;70s.</MaskReveal>
               </h1>
-              <p ref={heroSub} style={{ maxWidth: 460, fontSize: 16, lineHeight: 1.75, color: MUTED, fontWeight: 400, margin: "0 0 30px" }}>We partner with producers and financial advisors to deliver customized business solutions — advanced sales support, full case management and 30+ top-rated carriers behind every case.</p>
-              <div ref={heroCta} style={{ display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap" }}>
-                <a href="#contact" className={styles.cta} style={{ padding: "15px 34px", fontSize: 12.5, letterSpacing: "0.1em", textTransform: "uppercase" }}>Partner with us</a>
+              <FadeIn delay={1.15}>
+                <p style={{ maxWidth: 460, fontSize: 16, lineHeight: 1.75, color: MUTED, fontWeight: 400, margin: "0 0 30px" }}>We partner with producers and financial advisors to deliver customized business solutions — advanced sales support, full case management and 30+ top-rated carriers behind every case.</p>
+              </FadeIn>
+              <FadeIn delay={1.35} style={{ display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap" }}>
+                <Magnetic>
+                  <a href="#contact" className={styles.cta} style={{ display: "inline-block", padding: "15px 34px", fontSize: 12.5, letterSpacing: "0.1em", textTransform: "uppercase" }}>Partner with us</a>
+                </Magnetic>
                 <a href="#firm" className={styles.lnk} style={{ fontSize: 13, letterSpacing: "0.06em", color: INK }}>The firm, in brief</a>
-              </div>
+              </FadeIn>
             </div>
             <div className={styles.mastFig}>
-              <div style={{ height: "clamp(340px,42vw,560px)", overflow: "hidden" }}>
+              <ClipReveal delay={0.75} style={{ height: "clamp(340px,42vw,560px)" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/images/miami-palms-day.jpg" alt="Coral Gables, Florida" className={styles.bw} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 10, padding: "12px 2px 0", flexWrap: "wrap" }}>
+              </ClipReveal>
+              <FadeIn delay={1.5} y={10} style={{ display: "flex", justifyContent: "space-between", gap: 10, padding: "12px 2px 0", flexWrap: "wrap" }}>
                 <span style={label}>Fig. 01</span>
                 <span style={label}>Coral Gables, FL</span>
-              </div>
+              </FadeIn>
             </div>
           </div>
         </div>
@@ -100,10 +107,13 @@ export default function ConceptI() {
       {/* HERO IMAGE — b&w full width with caption */}
       <div data-reveal style={{ padding: "0 clamp(20px,5vw,60px)" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-          <div style={{ height: "clamp(300px,52vh,600px)", overflow: "hidden" }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/handshake-moody.jpg" alt="A firm handshake" className={styles.bw} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          </div>
+          <ParallaxImg
+            src="/images/handshake-moody.jpg"
+            alt="A firm handshake"
+            range={54}
+            style={{ height: "clamp(300px,52vh,600px)" }}
+            imgClassName={styles.bw}
+          />
           <div style={{ display: "flex", justifyContent: "space-between", gap: 12, padding: "14px 2px 0", flexWrap: "wrap" }}>
             <span style={label}>Fig. 02 — The partnership</span>
             <span style={label}>50+ years · 30+ carriers · 5 product lines</span>
@@ -114,10 +124,20 @@ export default function ConceptI() {
       {/* STATS — editorial ledger row */}
       <div data-reveal style={{ padding: "clamp(56px,7vw,90px) clamp(20px,5vw,60px) 0" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: "28px clamp(24px,4vw,64px)" }}>
-          {[["50+", "Years of expertise"], ["30+", "Top-rated carriers"], ["5", "Product lines"], ["1", "Business-day response"]].map(([v, l]) => (
-            <div key={l} style={{ borderTop: `1px solid ${INK}`, paddingTop: 18 }}>
-              <div style={{ fontFamily: serif, fontSize: "clamp(38px,4.4vw,64px)", fontWeight: 400, color: INK, lineHeight: 1, letterSpacing: "-0.01em" }}>{v}</div>
-              <div style={{ ...label, marginTop: 12 }}>{l}</div>
+          {[
+            { num: 50, suffix: "+", label: "Years of expertise" },
+            { num: 30, suffix: "+", label: "Top-rated carriers" },
+            { num: 5, suffix: "", label: "Product lines" },
+            { num: 1, suffix: "", label: "Business-day response" },
+          ].map((s, i) => (
+            <div key={s.label}>
+              <GrowLine color={INK} delay={i * 0.12} />
+              <div style={{ paddingTop: 18 }}>
+                <div style={{ fontFamily: serif, fontSize: "clamp(38px,4.4vw,64px)", fontWeight: 400, color: INK, lineHeight: 1, letterSpacing: "-0.01em" }}>
+                  <CountUp to={s.num} suffix={s.suffix} />
+                </div>
+                <div style={{ ...label, marginTop: 12 }}>{s.label}</div>
+              </div>
             </div>
           ))}
         </div>
@@ -141,9 +161,8 @@ export default function ConceptI() {
           <div style={{ display: "grid", gap: "clamp(60px,8vw,110px)" }}>
             {OFFERINGS.map((o, i) => (
               <div key={o.n} data-reveal className={styles.offRow}>
-                <div className={i % 2 === 0 ? styles.offImgA : styles.offImgB} style={{ height: "clamp(240px,34vw,420px)", overflow: "hidden" }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={o.img} alt={o.title} className={styles.bw} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <div className={i % 2 === 0 ? styles.offImgA : styles.offImgB}>
+                  <ParallaxImg src={o.img} alt={o.title} range={34} style={{ height: "clamp(240px,34vw,420px)" }} imgClassName={styles.bw} />
                 </div>
                 <div className={i % 2 === 0 ? styles.offTextA : styles.offTextB}>
                   <div style={{ fontFamily: serif, fontStyle: "italic", fontSize: 20, color: MUTED, marginBottom: 14 }}>({o.n})</div>
@@ -180,11 +199,18 @@ export default function ConceptI() {
           </div>
           <div data-reveal>
             {PRODUCTS.map((p) => (
-              <a key={p.n} href="#contact" className={styles.prod} style={{ display: "grid", gridTemplateColumns: "clamp(64px,8vw,110px) 1fr auto", gap: "clamp(14px,3vw,40px)", alignItems: "baseline", padding: "26px 2px", borderBottom: HAIR }}>
+              <motion.a
+                key={p.n}
+                href="#contact"
+                className={styles.prod}
+                whileHover={{ x: 14 }}
+                transition={{ type: "spring", stiffness: 300, damping: 24 }}
+                style={{ display: "grid", gridTemplateColumns: "clamp(64px,8vw,110px) 1fr auto", gap: "clamp(14px,3vw,40px)", alignItems: "baseline", padding: "26px 2px", borderBottom: HAIR }}
+              >
                 <span style={{ fontFamily: serif, fontStyle: "italic", color: MUTED, fontSize: 17 }}>{p.n}</span>
                 <span style={{ fontFamily: serif, fontSize: "clamp(26px,3.6vw,48px)", fontWeight: 400, color: INK, letterSpacing: "-0.01em" }}>{p.name}</span>
                 <span style={{ fontSize: 13, color: MUTED, textAlign: "right" }}>{p.desc}</span>
-              </a>
+              </motion.a>
             ))}
           </div>
           <div data-reveal style={{ marginTop: 44, display: "flex", flexWrap: "wrap", gap: "10px clamp(20px,2.6vw,36px)" }}>
@@ -199,7 +225,9 @@ export default function ConceptI() {
       {/* CONTACT — oversized sign-off */}
       <div id="contact" style={{ padding: "0 clamp(20px,5vw,60px) clamp(80px,11vw,150px)" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", borderTop: `1px solid ${INK}`, paddingTop: "clamp(44px,6vw,80px)" }}>
-          <h2 data-reveal style={{ fontFamily: serif, fontWeight: 400, fontSize: "clamp(44px,8vw,120px)", lineHeight: 1, margin: "0 0 clamp(36px,5vw,60px)", color: INK, letterSpacing: "-0.015em" }}>Let&rsquo;s write more <span style={{ fontStyle: "italic" }}>business.</span></h2>
+          <h2 style={{ fontFamily: serif, fontWeight: 400, fontSize: "clamp(44px,8vw,120px)", lineHeight: 1.04, margin: "0 0 clamp(36px,5vw,60px)", color: INK, letterSpacing: "-0.015em" }}>
+            <MaskReveal inView duration={1.2}>Let&rsquo;s write more <span style={{ fontStyle: "italic" }}>business.</span></MaskReveal>
+          </h2>
           <div data-reveal style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: "clamp(24px,4vw,56px)", alignItems: "start" }}>
             <div>
               <div style={{ ...label, marginBottom: 14 }}>Telephone</div>

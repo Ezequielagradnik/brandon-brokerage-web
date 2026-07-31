@@ -1,9 +1,11 @@
 "use client";
 
 import { useRef } from "react";
-import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
+import { motion } from "framer-motion";
+import { useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
 import { OFFERINGS } from "@/lib/offerings";
+import { ScrollProgress, WordsReveal, FadeIn, CountUp, Magnetic, EASE } from "@/components/motion";
 import styles from "./page.module.css";
 
 const NAV_LINKS = [
@@ -35,18 +37,14 @@ const HAIR = "1px solid rgba(195,161,95,0.22)";
 
 export default function ConceptH() {
   const pageRef = useRef<HTMLDivElement>(null);
-  const heroKicker = useRef<HTMLDivElement>(null);
-  const heroTitle = useRef<HTMLHeadingElement>(null);
-  const heroSub = useRef<HTMLParagraphElement>(null);
-  const heroCta = useRef<HTMLDivElement>(null);
 
-  useHeroReveal([heroKicker, heroTitle, heroSub, heroCta]);
   useScrollReveal(pageRef);
 
   const serif = "var(--font-cormorant), serif";
 
   return (
     <div ref={pageRef} className={styles.page}>
+      <ScrollProgress color={GOLD} />
 
       {/* HEADER */}
       <div className={styles.headerBar} style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 60, padding: "18px clamp(20px,5vw,60px)" }}>
@@ -71,31 +69,60 @@ export default function ConceptH() {
       {/* HERO — centered, moody Miami night */}
       <div id="top" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "140px clamp(20px,5vw,60px) 100px", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/miami-night.jpg" alt="" className={styles.kenburns} style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.5 }} />
+          <motion.img
+            src="/images/miami-night.jpg"
+            alt=""
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            initial={{ opacity: 0, scale: 1.14 }}
+            animate={{ opacity: 0.5, scale: [1.14, 1] }}
+            transition={{ opacity: { duration: 1.6 }, scale: { duration: 26, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" } }}
+          />
           <div style={{ position: "absolute", inset: 0, background: "radial-gradient(120% 90% at 50% 30%, rgba(11,20,32,0.2), rgba(11,20,32,0.94) 78%)" }} />
         </div>
         <div style={{ position: "relative", zIndex: 2, textAlign: "center", maxWidth: 900 }}>
-          <div ref={heroKicker} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 26, marginBottom: 36 }}>
-            <svg width="82" height="82" viewBox="0 0 82 82" aria-hidden="true">
-              <circle cx="41" cy="41" r="39.5" fill="none" stroke={GOLD} strokeWidth="1" opacity="0.75" />
-              <circle cx="41" cy="41" r="33" fill="none" stroke={GOLD} strokeWidth="0.6" opacity="0.55" />
-              <text x="41" y="52" textAnchor="middle" fontFamily="var(--font-cormorant), serif" fontStyle="italic" fontSize="34" fill={GOLD_BRIGHT}>B</text>
-              <text x="41" y="12.5" textAnchor="middle" fontSize="7" fill={GOLD}>◆</text>
-              <text x="41" y="76.5" textAnchor="middle" fontSize="7" fill={GOLD}>◆</text>
-            </svg>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 26, marginBottom: 36 }}>
+            <motion.svg
+              width="82" height="82" viewBox="0 0 82 82" aria-hidden="true"
+              initial={{ opacity: 0, rotate: -18, scale: 0.9 }}
+              animate={{ opacity: 1, rotate: 0, scale: 1 }}
+              transition={{ duration: 1.2, ease: EASE }}
+            >
+              <motion.circle cx="41" cy="41" r="39.5" fill="none" stroke={GOLD} strokeWidth="1" opacity="0.75" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.8, delay: 0.2, ease: "easeInOut" }} />
+              <motion.circle cx="41" cy="41" r="33" fill="none" stroke={GOLD} strokeWidth="0.6" opacity="0.55" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.8, delay: 0.5, ease: "easeInOut" }} />
+              <motion.text x="41" y="52" textAnchor="middle" fontFamily="var(--font-cormorant), serif" fontStyle="italic" fontSize="34" fill={GOLD_BRIGHT} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.9, delay: 1.1 }}>B</motion.text>
+              <motion.text x="41" y="12.5" textAnchor="middle" fontSize="7" fill={GOLD} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 1.5 }}>◆</motion.text>
+              <motion.text x="41" y="76.5" textAnchor="middle" fontSize="7" fill={GOLD} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 1.5 }}>◆</motion.text>
+            </motion.svg>
             <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-              <span style={{ width: 44, height: 1, background: GOLD }} />
-              <span style={{ fontSize: 11.5, letterSpacing: "0.42em", textTransform: "uppercase", color: GOLD_BRIGHT }}>Est. the 1970s · Coral Gables</span>
-              <span style={{ width: 44, height: 1, background: GOLD }} />
+              <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.1, delay: 0.5, ease: EASE }} style={{ width: 44, height: 1, background: GOLD, transformOrigin: "100% 50%" }} />
+              <motion.span
+                initial={{ opacity: 0, letterSpacing: "0.7em" }}
+                animate={{ opacity: 1, letterSpacing: "0.42em" }}
+                transition={{ duration: 1.5, delay: 0.4, ease: EASE }}
+                style={{ fontSize: 11.5, textTransform: "uppercase", color: GOLD_BRIGHT }}
+              >Est. the 1970s · Coral Gables</motion.span>
+              <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.1, delay: 0.5, ease: EASE }} style={{ width: 44, height: 1, background: GOLD, transformOrigin: "0 50%" }} />
             </div>
           </div>
-          <h1 ref={heroTitle} style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(42px,6.6vw,92px)", lineHeight: 1.04, margin: "0 0 32px", color: CHAMPAGNE, letterSpacing: "0.005em" }}>The quiet partner behind <span style={{ fontStyle: "italic", color: GOLD_BRIGHT }}>extraordinary</span> cases.</h1>
-          <p ref={heroSub} style={{ fontSize: "clamp(16px,1.4vw,19px)", lineHeight: 1.75, color: MUTED, fontWeight: 400, maxWidth: 620, margin: "0 auto 44px" }}>Advanced sales support, full case management and 30+ top-rated carriers — placed at the service of producers and financial advisors for over fifty years.</p>
-          <div ref={heroCta} style={{ display: "flex", gap: 26, alignItems: "center", justifyContent: "center", flexWrap: "wrap" }}>
-            <a href="#contact" className={styles.cta} style={{ padding: "17px 40px", fontSize: 13, letterSpacing: "0.14em", textTransform: "uppercase" }}>Partner with us</a>
+          <h1 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(42px,6.6vw,92px)", lineHeight: 1.08, margin: "0 0 32px", color: CHAMPAGNE, letterSpacing: "0.005em" }}>
+            <WordsReveal
+              delay={0.6}
+              segments={[
+                { text: "The quiet partner behind" },
+                { text: "extraordinary", style: { fontStyle: "italic", color: GOLD_BRIGHT } },
+                { text: "cases." },
+              ]}
+            />
+          </h1>
+          <FadeIn delay={1.25}>
+            <p style={{ fontSize: "clamp(16px,1.4vw,19px)", lineHeight: 1.75, color: MUTED, fontWeight: 400, maxWidth: 620, margin: "0 auto 44px" }}>Advanced sales support, full case management and 30+ top-rated carriers — placed at the service of producers and financial advisors for over fifty years.</p>
+          </FadeIn>
+          <FadeIn delay={1.45} style={{ display: "flex", gap: 26, alignItems: "center", justifyContent: "center", flexWrap: "wrap" }}>
+            <Magnetic>
+              <a href="#contact" className={styles.cta} style={{ display: "inline-block", padding: "17px 40px", fontSize: 13, letterSpacing: "0.14em", textTransform: "uppercase" }}>Partner with us</a>
+            </Magnetic>
             <a href="#firm" className={styles.lnk} style={{ fontSize: 13, letterSpacing: "0.1em", textTransform: "uppercase", color: MUTED }}>Discover the firm</a>
-          </div>
+          </FadeIn>
         </div>
         <div style={{ position: "absolute", bottom: 34, left: "50%", transform: "translateX(-50%)", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
           <span style={{ width: 1, height: 44, background: `linear-gradient(${GOLD},transparent)` }} />
@@ -105,10 +132,17 @@ export default function ConceptH() {
       {/* STATS — centered hairline band */}
       <div data-reveal style={{ borderTop: HAIR, borderBottom: HAIR, background: BG2 }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(170px,1fr))" }}>
-          {[["50+", "Years of expertise"], ["30+", "Top-rated carriers"], ["5", "Product lines"], ["FN", "Market leadership"]].map(([v, l], i) => (
-            <div key={l} style={{ padding: "42px clamp(16px,3vw,40px)", textAlign: "center", borderRight: i < 3 ? "1px solid rgba(195,161,95,0.14)" : "none" }}>
-              <div style={{ fontFamily: serif, fontSize: "clamp(36px,4vw,54px)", fontWeight: 500, color: GOLD_BRIGHT, lineHeight: 1 }}>{v}</div>
-              <div style={{ fontSize: 11.5, letterSpacing: "0.2em", textTransform: "uppercase", color: MUTED, marginTop: 14 }}>{l}</div>
+          {[
+            { num: 50, suffix: "+", label: "Years of expertise" },
+            { num: 30, suffix: "+", label: "Top-rated carriers" },
+            { num: 5, suffix: "", label: "Product lines" },
+            { num: null, text: "FN", label: "Market leadership" },
+          ].map((s, i) => (
+            <div key={s.label} style={{ padding: "42px clamp(16px,3vw,40px)", textAlign: "center", borderRight: i < 3 ? "1px solid rgba(195,161,95,0.14)" : "none" }}>
+              <div style={{ fontFamily: serif, fontSize: "clamp(36px,4vw,54px)", fontWeight: 500, color: GOLD_BRIGHT, lineHeight: 1 }}>
+                {s.num !== null ? <CountUp to={s.num} suffix={s.suffix} /> : s.text}
+              </div>
+              <div style={{ fontSize: 11.5, letterSpacing: "0.2em", textTransform: "uppercase", color: MUTED, marginTop: 14 }}>{s.label}</div>
             </div>
           ))}
         </div>
@@ -206,10 +240,21 @@ export default function ConceptH() {
           <h2 data-reveal style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(36px,5.4vw,68px)", lineHeight: 1.05, margin: "0 0 26px", color: CHAMPAGNE }}>Let&apos;s write more business, <span style={{ fontStyle: "italic", color: GOLD_BRIGHT }}>together</span>.</h2>
           <p data-reveal style={{ fontSize: 16, lineHeight: 1.75, color: MUTED, fontWeight: 400, margin: "0 auto 44px", maxWidth: 480 }}>Tell us about your case or your book of business. A brokerage director responds within one business day.</p>
           <div data-reveal style={{ position: "relative", display: "inline-block", border: HAIR, padding: "clamp(32px,4vw,48px) clamp(28px,6vw,72px)" }}>
-            <span style={{ position: "absolute", top: -1, left: -1, width: 20, height: 20, borderTop: `2px solid ${GOLD}`, borderLeft: `2px solid ${GOLD}` }} />
-            <span style={{ position: "absolute", top: -1, right: -1, width: 20, height: 20, borderTop: `2px solid ${GOLD}`, borderRight: `2px solid ${GOLD}` }} />
-            <span style={{ position: "absolute", bottom: -1, left: -1, width: 20, height: 20, borderBottom: `2px solid ${GOLD}`, borderLeft: `2px solid ${GOLD}` }} />
-            <span style={{ position: "absolute", bottom: -1, right: -1, width: 20, height: 20, borderBottom: `2px solid ${GOLD}`, borderRight: `2px solid ${GOLD}` }} />
+            {([
+              { top: -1, left: -1, borderTop: `2px solid ${GOLD}`, borderLeft: `2px solid ${GOLD}` },
+              { top: -1, right: -1, borderTop: `2px solid ${GOLD}`, borderRight: `2px solid ${GOLD}` },
+              { bottom: -1, left: -1, borderBottom: `2px solid ${GOLD}`, borderLeft: `2px solid ${GOLD}` },
+              { bottom: -1, right: -1, borderBottom: `2px solid ${GOLD}`, borderRight: `2px solid ${GOLD}` },
+            ] as const).map((corner, i) => (
+              <motion.span
+                key={i}
+                style={{ position: "absolute", width: 20, height: 20, ...corner }}
+                initial={{ opacity: 0, scale: 0 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{ type: "spring", stiffness: 260, damping: 18, delay: 0.4 + i * 0.12 }}
+              />
+            ))}
             <a href="tel:+13054447401" style={{ display: "block", fontFamily: serif, fontSize: "clamp(26px,3.4vw,40px)", color: GOLD_BRIGHT, marginBottom: 14 }}>305-444-7401</a>
             <div style={{ fontSize: 13, letterSpacing: "0.08em", color: MUTED, lineHeight: 1.8 }}>Toll-free 1-888-776-4678<br />75 Valencia Avenue, Suite 200 · Coral Gables, FL 33134</div>
             <a href="#contact" className={styles.cta} style={{ display: "inline-block", marginTop: 30, padding: "15px 36px", fontSize: 12.5, letterSpacing: "0.14em", textTransform: "uppercase" }}>Partner with us</a>
