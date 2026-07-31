@@ -72,14 +72,26 @@ export default function ConceptI() {
             <span style={label}>Coral Gables, Florida</span>
             <span style={label}>Since the 1970s</span>
           </div>
-          <h1 ref={heroTitle} style={{ fontFamily: serif, fontWeight: 400, fontSize: "clamp(52px,9.4vw,142px)", lineHeight: 0.98, margin: "0 0 clamp(30px,4vw,52px)", color: INK, letterSpacing: "-0.015em" }}>
-            Seamless<br /><span style={{ fontStyle: "italic", marginLeft: "clamp(30px,10vw,180px)" }}>execution,</span><br />since the &rsquo;70s.
-          </h1>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(12,minmax(0,1fr))", gap: "clamp(16px,2.4vw,36px)", alignItems: "end", paddingBottom: "clamp(40px,6vw,80px)" }}>
-            <p ref={heroSub} style={{ gridColumn: "span 12", maxWidth: 460, fontSize: 16, lineHeight: 1.75, color: MUTED, fontWeight: 400, margin: 0 }}>We partner with producers and financial advisors to deliver customized business solutions — advanced sales support, full case management and 30+ top-rated carriers behind every case.</p>
-            <div ref={heroCta} style={{ gridColumn: "span 12", display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap", marginTop: 8 }}>
-              <a href="#contact" className={styles.cta} style={{ padding: "15px 34px", fontSize: 12.5, letterSpacing: "0.1em", textTransform: "uppercase" }}>Partner with us</a>
-              <a href="#firm" className={styles.lnk} style={{ fontSize: 13, letterSpacing: "0.06em", color: INK }}>The firm, in brief</a>
+          <div className={styles.mastGrid} style={{ paddingBottom: "clamp(40px,6vw,80px)" }}>
+            <div className={styles.mastText}>
+              <h1 ref={heroTitle} style={{ fontFamily: serif, fontWeight: 400, fontSize: "clamp(50px,8.2vw,124px)", lineHeight: 0.98, margin: "0 0 clamp(34px,4.5vw,60px)", color: INK, letterSpacing: "-0.015em" }}>
+                Seamless<br /><span style={{ fontStyle: "italic", marginLeft: "clamp(30px,8vw,150px)" }}>execution,</span><br />since the &rsquo;70s.
+              </h1>
+              <p ref={heroSub} style={{ maxWidth: 460, fontSize: 16, lineHeight: 1.75, color: MUTED, fontWeight: 400, margin: "0 0 30px" }}>We partner with producers and financial advisors to deliver customized business solutions — advanced sales support, full case management and 30+ top-rated carriers behind every case.</p>
+              <div ref={heroCta} style={{ display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap" }}>
+                <a href="#contact" className={styles.cta} style={{ padding: "15px 34px", fontSize: 12.5, letterSpacing: "0.1em", textTransform: "uppercase" }}>Partner with us</a>
+                <a href="#firm" className={styles.lnk} style={{ fontSize: 13, letterSpacing: "0.06em", color: INK }}>The firm, in brief</a>
+              </div>
+            </div>
+            <div className={styles.mastFig}>
+              <div style={{ height: "clamp(340px,42vw,560px)", overflow: "hidden" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/miami-palms-day.jpg" alt="Coral Gables, Florida" className={styles.bw} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 10, padding: "12px 2px 0", flexWrap: "wrap" }}>
+                <span style={label}>Fig. 01</span>
+                <span style={label}>Coral Gables, FL</span>
+              </div>
             </div>
           </div>
         </div>
@@ -93,9 +105,21 @@ export default function ConceptI() {
             <img src="/images/handshake-moody.jpg" alt="A firm handshake" className={styles.bw} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", gap: 12, padding: "14px 2px 0", flexWrap: "wrap" }}>
-            <span style={label}>Fig. 01 — The partnership</span>
+            <span style={label}>Fig. 02 — The partnership</span>
             <span style={label}>50+ years · 30+ carriers · 5 product lines</span>
           </div>
+        </div>
+      </div>
+
+      {/* STATS — editorial ledger row */}
+      <div data-reveal style={{ padding: "clamp(56px,7vw,90px) clamp(20px,5vw,60px) 0" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: "28px clamp(24px,4vw,64px)" }}>
+          {[["50+", "Years of expertise"], ["30+", "Top-rated carriers"], ["5", "Product lines"], ["1", "Business-day response"]].map(([v, l]) => (
+            <div key={l} style={{ borderTop: `1px solid ${INK}`, paddingTop: 18 }}>
+              <div style={{ fontFamily: serif, fontSize: "clamp(38px,4.4vw,64px)", fontWeight: 400, color: INK, lineHeight: 1, letterSpacing: "-0.01em" }}>{v}</div>
+              <div style={{ ...label, marginTop: 12 }}>{l}</div>
+            </div>
+          ))}
         </div>
       </div>
 

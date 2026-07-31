@@ -109,6 +109,33 @@
   filter: grayscale(0.15) contrast(1);
 }
 
+/* Masthead — headline left, tall figure right */
+.mastGrid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(16px, 2.4vw, 36px);
+  align-items: end;
+}
+.mastText {
+  grid-column: 1 / span 8;
+}
+.mastFig {
+  grid-column: 9 / span 4;
+}
+
+@media (max-width: 860px) {
+  .mastGrid {
+    grid-template-columns: 1fr;
+  }
+  .mastText,
+  .mastFig {
+    grid-column: 1 / -1;
+  }
+  .mastFig {
+    max-width: 420px;
+  }
+}
+
 /* Editorial offer layout — alternating asymmetric rows */
 .offRow {
   display: grid;

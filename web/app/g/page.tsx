@@ -82,11 +82,17 @@ export default function ConceptG() {
         </div>
       </div>
 
-      {/* HERO IMAGE — full width, muted */}
+      {/* HERO IMAGE — full width, gallery-matted */}
       <div data-reveal style={{ padding: "0 clamp(20px,5vw,60px)" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto", height: "clamp(280px,48vh,540px)", overflow: "hidden" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/miami-aerial-day.jpg" alt="Coral Gables, Florida" style={{ width: "100%", height: "100%", objectFit: "cover", filter: "saturate(0.6) contrast(0.95) brightness(1.02)" }} />
+        <div style={{ maxWidth: 1240, margin: "0 auto", padding: "clamp(10px,1.3vw,16px)", border: "1px solid rgba(20,38,63,0.16)", background: "#fff" }}>
+          <div style={{ height: "clamp(280px,48vh,540px)", overflow: "hidden" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/miami-aerial-day.jpg" alt="Coral Gables, Florida" style={{ width: "100%", height: "100%", objectFit: "cover", filter: "saturate(0.6) contrast(0.95) brightness(1.02)" }} />
+          </div>
+        </div>
+        <div style={{ maxWidth: 1240, margin: "0 auto", display: "flex", justifyContent: "space-between", gap: 12, padding: "12px 2px 0", flexWrap: "wrap" }}>
+          <span style={{ fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: MUTED }}>Coral Gables, Florida</span>
+          <span style={{ fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: MUTED }}>Serving agents nationwide</span>
         </div>
       </div>
 
@@ -115,6 +121,10 @@ export default function ConceptG() {
                 <div className={styles.solImgWrap}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={o.img} alt={o.title} className={styles.solImg} />
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                  <span style={{ fontSize: 11, letterSpacing: "0.2em", color: BRONZE }}>{o.n}</span>
+                  <span style={{ flex: 1, height: 1, background: "rgba(20,38,63,0.14)" }} />
                 </div>
                 <h3 style={{ fontFamily: serif, fontWeight: 500, fontSize: 24, margin: "0 0 10px", color: NAVY, lineHeight: 1.15 }}>{o.title}</h3>
                 <p style={{ fontSize: 13.5, lineHeight: 1.66, color: MUTED, fontWeight: 400, margin: "0 0 16px", display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{o.desc}</p>
@@ -172,6 +182,15 @@ export default function ConceptG() {
               </a>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* PULL QUOTE — quiet manifesto band */}
+      <div style={{ padding: "clamp(80px,11vw,150px) clamp(20px,5vw,60px)", background: "#fdfdfb", textAlign: "center" }}>
+        <div style={{ maxWidth: 840, margin: "0 auto" }}>
+          <div data-reveal style={{ width: 44, height: 1, background: BRONZE, margin: "0 auto 36px" }} />
+          <p data-reveal style={{ fontFamily: serif, fontWeight: 400, fontStyle: "italic", fontSize: "clamp(24px,3.2vw,40px)", lineHeight: 1.4, margin: 0, color: NAVY }}>Individualized attention and an exceptional standard of quality — behind every case you write.</p>
+          <div data-reveal style={{ fontSize: 11.5, letterSpacing: "0.28em", textTransform: "uppercase", color: MUTED, marginTop: 32 }}>The Brandon standard</div>
         </div>
       </div>
 

@@ -76,10 +76,19 @@ export default function ConceptH() {
           <div style={{ position: "absolute", inset: 0, background: "radial-gradient(120% 90% at 50% 30%, rgba(11,20,32,0.2), rgba(11,20,32,0.94) 78%)" }} />
         </div>
         <div style={{ position: "relative", zIndex: 2, textAlign: "center", maxWidth: 900 }}>
-          <div ref={heroKicker} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 18, marginBottom: 36 }}>
-            <span style={{ width: 44, height: 1, background: GOLD }} />
-            <span style={{ fontSize: 11.5, letterSpacing: "0.42em", textTransform: "uppercase", color: GOLD_BRIGHT }}>Est. the 1970s · Coral Gables</span>
-            <span style={{ width: 44, height: 1, background: GOLD }} />
+          <div ref={heroKicker} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 26, marginBottom: 36 }}>
+            <svg width="82" height="82" viewBox="0 0 82 82" aria-hidden="true">
+              <circle cx="41" cy="41" r="39.5" fill="none" stroke={GOLD} strokeWidth="1" opacity="0.75" />
+              <circle cx="41" cy="41" r="33" fill="none" stroke={GOLD} strokeWidth="0.6" opacity="0.55" />
+              <text x="41" y="52" textAnchor="middle" fontFamily="var(--font-cormorant), serif" fontStyle="italic" fontSize="34" fill={GOLD_BRIGHT}>B</text>
+              <text x="41" y="12.5" textAnchor="middle" fontSize="7" fill={GOLD}>◆</text>
+              <text x="41" y="76.5" textAnchor="middle" fontSize="7" fill={GOLD}>◆</text>
+            </svg>
+            <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+              <span style={{ width: 44, height: 1, background: GOLD }} />
+              <span style={{ fontSize: 11.5, letterSpacing: "0.42em", textTransform: "uppercase", color: GOLD_BRIGHT }}>Est. the 1970s · Coral Gables</span>
+              <span style={{ width: 44, height: 1, background: GOLD }} />
+            </div>
           </div>
           <h1 ref={heroTitle} style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(42px,6.6vw,92px)", lineHeight: 1.04, margin: "0 0 32px", color: CHAMPAGNE, letterSpacing: "0.005em" }}>The quiet partner behind <span style={{ fontStyle: "italic", color: GOLD_BRIGHT }}>extraordinary</span> cases.</h1>
           <p ref={heroSub} style={{ fontSize: "clamp(16px,1.4vw,19px)", lineHeight: 1.75, color: MUTED, fontWeight: 400, maxWidth: 620, margin: "0 auto 44px" }}>Advanced sales support, full case management and 30+ top-rated carriers — placed at the service of producers and financial advisors for over fifty years.</p>
@@ -108,6 +117,11 @@ export default function ConceptH() {
       {/* MISSION — centered manifesto */}
       <div style={{ padding: "clamp(90px,13vw,170px) clamp(20px,5vw,60px)", textAlign: "center" }}>
         <div style={{ maxWidth: 860, margin: "0 auto" }}>
+          <div data-reveal style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 34 }}>
+            <span style={{ width: 60, height: 1, background: "rgba(195,161,95,0.4)" }} />
+            <span style={{ color: GOLD, fontSize: 9 }}>◆</span>
+            <span style={{ width: 60, height: 1, background: "rgba(195,161,95,0.4)" }} />
+          </div>
           <div data-reveal style={{ fontSize: 11.5, letterSpacing: "0.42em", textTransform: "uppercase", color: GOLD, marginBottom: 38 }}>Our mission</div>
           <p data-reveal style={{ fontFamily: serif, fontWeight: 400, fontSize: "clamp(26px,3.4vw,42px)", lineHeight: 1.4, margin: 0, color: CHAMPAGNE }}>Superior service, personalized sales support and tailored business solutions — devoted to <span style={{ fontStyle: "italic", color: GOLD_BRIGHT }}>long-term relationships</span>.</p>
         </div>
@@ -191,7 +205,11 @@ export default function ConceptH() {
           <div data-reveal style={{ fontSize: 11.5, letterSpacing: "0.42em", textTransform: "uppercase", color: GOLD, marginBottom: 32 }}>Private inquiry</div>
           <h2 data-reveal style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(36px,5.4vw,68px)", lineHeight: 1.05, margin: "0 0 26px", color: CHAMPAGNE }}>Let&apos;s write more business, <span style={{ fontStyle: "italic", color: GOLD_BRIGHT }}>together</span>.</h2>
           <p data-reveal style={{ fontSize: 16, lineHeight: 1.75, color: MUTED, fontWeight: 400, margin: "0 auto 44px", maxWidth: 480 }}>Tell us about your case or your book of business. A brokerage director responds within one business day.</p>
-          <div data-reveal style={{ display: "inline-block", border: HAIR, padding: "clamp(32px,4vw,48px) clamp(28px,6vw,72px)" }}>
+          <div data-reveal style={{ position: "relative", display: "inline-block", border: HAIR, padding: "clamp(32px,4vw,48px) clamp(28px,6vw,72px)" }}>
+            <span style={{ position: "absolute", top: -1, left: -1, width: 20, height: 20, borderTop: `2px solid ${GOLD}`, borderLeft: `2px solid ${GOLD}` }} />
+            <span style={{ position: "absolute", top: -1, right: -1, width: 20, height: 20, borderTop: `2px solid ${GOLD}`, borderRight: `2px solid ${GOLD}` }} />
+            <span style={{ position: "absolute", bottom: -1, left: -1, width: 20, height: 20, borderBottom: `2px solid ${GOLD}`, borderLeft: `2px solid ${GOLD}` }} />
+            <span style={{ position: "absolute", bottom: -1, right: -1, width: 20, height: 20, borderBottom: `2px solid ${GOLD}`, borderRight: `2px solid ${GOLD}` }} />
             <a href="tel:+13054447401" style={{ display: "block", fontFamily: serif, fontSize: "clamp(26px,3.4vw,40px)", color: GOLD_BRIGHT, marginBottom: 14 }}>305-444-7401</a>
             <div style={{ fontSize: 13, letterSpacing: "0.08em", color: MUTED, lineHeight: 1.8 }}>Toll-free 1-888-776-4678<br />75 Valencia Avenue, Suite 200 · Coral Gables, FL 33134</div>
             <a href="#contact" className={styles.cta} style={{ display: "inline-block", marginTop: 30, padding: "15px 36px", fontSize: 12.5, letterSpacing: "0.14em", textTransform: "uppercase" }}>Partner with us</a>
