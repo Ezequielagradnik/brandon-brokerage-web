@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Archivo, Manrope, Fraunces, IBM_Plex_Mono, Bodoni_Moda } from "next/font/google";
+import { Archivo, Manrope, Fraunces, IBM_Plex_Mono, Bodoni_Moda, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -28,6 +28,13 @@ const fraunces = Fraunces({
   style: ["normal", "italic"],
 });
 
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+});
+
 const plexMono = IBM_Plex_Mono({
   variable: "--font-plex-mono",
   subsets: ["latin"],
@@ -45,7 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${archivo.variable} ${manrope.variable} ${fraunces.variable} ${plexMono.variable} ${bodoniModa.variable}`}>
+    <html lang="en" className={`${archivo.variable} ${manrope.variable} ${fraunces.variable} ${plexMono.variable} ${bodoniModa.variable} ${cormorant.variable}`}>
       <body>{children}</body>
     </html>
   );

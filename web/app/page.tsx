@@ -11,9 +11,9 @@ export default function Home() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 52 }} />
           </div>
-          <div style={{ fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase", color: "#7a8aa8", marginBottom: 14, fontWeight: 700 }}>Website redesign · Six directions</div>
+          <div style={{ fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase", color: "#7a8aa8", marginBottom: 14, fontWeight: 700 }}>Website redesign · Nine directions</div>
           <h1 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 800, fontSize: "clamp(30px,4.6vw,52px)", lineHeight: 1.08, margin: "0 0 18px", color: "#fff", letterSpacing: "-0.01em" }}>Pick a <span style={{ color: "#e2c072" }}>direction</span>.</h1>
-          <p style={{ fontSize: "clamp(15px,1.2vw,17px)", color: "#9aa6b8", fontWeight: 500, margin: "0 auto", lineHeight: 1.6 }}>Six genuinely different design languages — grounded in how real insurance brokerages and modern B2B financial firms present themselves — sharing the same real homepage copy. Open any one to see the full, scrollable homepage.</p>
+          <p style={{ fontSize: "clamp(15px,1.2vw,17px)", color: "#9aa6b8", fontWeight: 500, margin: "0 auto", lineHeight: 1.6 }}>Nine genuinely different design languages — grounded in how real insurance brokerages and modern B2B financial firms present themselves — sharing the same real homepage copy. Concepts 07–09 explore a boutique register: quieter, more elegant, more sophisticated. Open any one to see the full, scrollable homepage.</p>
         </div>
 
         <div className={styles.grid}>
@@ -110,6 +110,59 @@ export default function Home() {
               <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 500, fontSize: 19, margin: "0 0 8px", color: "#191613" }}>Photography does the talking.</h2>
               <p style={{ fontSize: 13, color: "#544c40", fontWeight: 500, lineHeight: 1.55, margin: "0 0 14px" }}>Full-bleed Miami photography, cream &amp; bronze, Fraunces serif — private-bank calm, boutique-hotel warmth.</p>
               <span style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "#a87f4a" }}>Open homepage →</span>
+            </div>
+          </Link>
+
+          <Link href="/g" className={styles.card} style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, overflow: "hidden", background: "#fdfdfb" }}>
+            <div style={{ position: "relative", height: 190, background: "#fdfdfb", padding: "26px 22px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+                <span style={{ width: 26, height: 1, background: "#9d7c3a" }} />
+                <span style={{ fontSize: 8.5, letterSpacing: "0.28em", textTransform: "uppercase", color: "#5a6779" }}>Coral Gables · Florida</span>
+              </div>
+              <div style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 500, fontSize: 27, lineHeight: 1.05, color: "#14263f" }}>Five decades of placing business, <span style={{ fontStyle: "italic", color: "#9d7c3a" }}>seamlessly</span>.</div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/miami-aerial-day.jpg" alt="" style={{ position: "absolute", left: 22, right: 22, bottom: 0, width: "calc(100% - 44px)", height: 44, objectFit: "cover", filter: "saturate(0.6)" }} />
+            </div>
+            <div style={{ padding: "20px 18px", borderTop: "1px solid rgba(20,38,63,0.1)" }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "#9d7c3a", marginBottom: 8 }}>07 — Boutique Latam</div>
+              <h2 style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 600, fontSize: 20, margin: "0 0 8px", color: "#14263f" }}>White space, quiet confidence.</h2>
+              <p style={{ fontSize: 13, color: "#5c6675", fontWeight: 400, lineHeight: 1.55, margin: "0 0 14px" }}>Modeled on bblatam.com — white &amp; navy, muted photo cards, hairline rules, generous air. Understated wealth-advisory calm.</p>
+              <span style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "#14263f" }}>Open homepage →</span>
+            </div>
+          </Link>
+
+          <Link href="/h" className={styles.card} style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, overflow: "hidden", background: "#0b1420" }}>
+            <div style={{ position: "relative", height: 190, background: "#0b1420", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "0 24px", overflow: "hidden" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/miami-night.jpg" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.32 }} />
+              <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+                <span style={{ width: 22, height: 1, background: "#c3a15f" }} />
+                <span style={{ fontSize: 8.5, letterSpacing: "0.34em", textTransform: "uppercase", color: "#e0c489" }}>Est. the 1970s</span>
+                <span style={{ width: 22, height: 1, background: "#c3a15f" }} />
+              </div>
+              <div style={{ position: "relative", fontFamily: "var(--font-cormorant), serif", fontWeight: 500, fontSize: 25, lineHeight: 1.1, color: "#e9dfc8" }}>The quiet partner behind <span style={{ fontStyle: "italic", color: "#e0c489" }}>extraordinary</span> cases.</div>
+            </div>
+            <div style={{ padding: "20px 18px", borderTop: "1px solid rgba(195,161,95,0.25)" }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "#c3a15f", marginBottom: 8 }}>08 — Private Reserve</div>
+              <h2 style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 600, fontSize: 20, margin: "0 0 8px", color: "#e9dfc8" }}>Dark, hushed, members-only.</h2>
+              <p style={{ fontSize: 13, color: "#9aa5b4", fontWeight: 400, lineHeight: 1.55, margin: "0 0 14px" }}>Deep navy &amp; champagne, roman numerals, moody Miami nightscapes — the register of a private bank after hours.</p>
+              <span style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "#e0c489" }}>Open homepage →</span>
+            </div>
+          </Link>
+
+          <Link href="/i" className={styles.card} style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, overflow: "hidden", background: "#f7f4ee" }}>
+            <div style={{ position: "relative", height: 190, background: "#f7f4ee", padding: "22px 22px 0" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid #1a1814", paddingBottom: 8, marginBottom: 14 }}>
+                <span style={{ fontSize: 8, letterSpacing: "0.24em", textTransform: "uppercase", color: "#6a6357" }}>Brandon Brokerage</span>
+                <span style={{ fontSize: 8, letterSpacing: "0.24em", textTransform: "uppercase", color: "#6a6357" }}>Since the 1970s</span>
+              </div>
+              <div style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 400, fontSize: 38, lineHeight: 0.98, color: "#1a1814", letterSpacing: "-0.015em" }}>Seamless<br /><span style={{ fontStyle: "italic", marginLeft: 34 }}>execution,</span><br />since the &rsquo;70s.</div>
+            </div>
+            <div style={{ padding: "20px 18px", borderTop: "1px solid rgba(26,24,20,0.16)" }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "#6a6357", marginBottom: 8 }}>09 — Maison Editorial</div>
+              <h2 style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 600, fontSize: 20, margin: "0 0 8px", color: "#1a1814" }}>Paper, ink, oversized type.</h2>
+              <p style={{ fontSize: 13, color: "#6a6357", fontWeight: 400, lineHeight: 1.55, margin: "0 0 14px" }}>Warm paper &amp; near-black ink, giant Cormorant masthead, black &amp; white photography, numbered chapters — a fashion-maison lookbook.</p>
+              <span style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "#1a1814" }}>Open homepage →</span>
             </div>
           </Link>
 
