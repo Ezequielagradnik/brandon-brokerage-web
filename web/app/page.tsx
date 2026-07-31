@@ -7,7 +7,7 @@ export default function Home() {
       <div style={{ maxWidth: 1440, margin: "0 auto" }}>
 
         <div style={{ textAlign: "center", margin: "0 auto clamp(40px,5vw,64px)", maxWidth: 760 }}>
-          <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 16, padding: "20px 40px", display: "inline-flex", marginBottom: 32 }}>
+          <div style={{ background: "#fff", borderRadius: 16, padding: "20px 40px", display: "inline-flex", marginBottom: 32, boxShadow: "0 10px 40px rgba(0,0,0,0.35)" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 52 }} />
           </div>
