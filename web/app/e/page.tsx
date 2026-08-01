@@ -1,11 +1,73 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
 import { OFFERINGS } from "@/lib/offerings";
 import GlobeArcs, { BLUE_ARCS } from "@/components/GlobeArcs";
+import { GrowLine } from "@/components/motion";
 import styles from "./page.module.css";
+
+// ————— Signature scroll moment: the blueprint assembles along a spine —————
+const E_CATS = ["SPECIALTY", "SUPPORT", "OPERATIONS", "NETWORK"];
+
+// mono label that types itself in when it appears
+function TypeMono({ text, delay = 0, color = "#5c8dff" }: { text: string; delay?: number; color?: string }) {
+  const reduce = useReducedMotion();
+  return (
+    <span aria-label={text} style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 12, letterSpacing: "0.14em", color, display: "inline-block" }}>
+      {text.split("").map((ch, i) => (
+        <motion.span
+          key={i}
+          aria-hidden="true"
+          initial={reduce ? false : { opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, amount: 0.9 }}
+          transition={{ duration: 0.02, delay: delay + i * 0.05 }}
+          style={{ whiteSpace: "pre" }}
+        >
+          {ch}
+        </motion.span>
+      ))}
+    </span>
+  );
+}
+
+function SpineNode({ i }: { i: number }) {
+  const o = OFFERINGS[i];
+  const left = i % 2 === 0;
+  const reduce = useReducedMotion();
+  const content = (
+    <motion.div
+      initial={reduce ? false : { opacity: 0, x: left ? -22 : 22 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, amount: 0.5 }}
+      transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+      style={{ textAlign: left ? "right" : "left" }}
+    >
+      <div style={{ marginBottom: 10 }}><TypeMono text={`[0${i + 1}] ${E_CATS[i]}`} delay={0.25} /></div>
+      <h3 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(20px,2.2vw,30px)", margin: "0 0 10px", color: "#fff", letterSpacing: "-0.01em", lineHeight: 1.15 }}>{o.title}</h3>
+      <p style={{ fontSize: 14, lineHeight: 1.6, color: "#8b99b5", margin: 0, maxWidth: 380, marginLeft: left ? "auto" : 0 }}>{o.blurb}</p>
+    </motion.div>
+  );
+  return (
+    <div className={styles.spineRow}>
+      <div className={styles.spineCellL}>{left && content}</div>
+      <div className={styles.spineCellC}>
+        <motion.span
+          initial={reduce ? false : { scale: 0 }}
+          whileInView={{ scale: 1 }}
+          viewport={{ once: true, amount: 0.9 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.1 }}
+          style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 9, height: 9, background: "#05070d", border: "2px solid #3b82f6", borderRadius: "50%", zIndex: 2 }}
+        />
+        <GrowLine color="#2563eb" origin={left ? "left" : "left"} style={{ position: "absolute", top: "50%", [left ? "right" : "left"]: "50%", width: "clamp(30px,4vw,70px)", transformOrigin: left ? "100% 50%" : "0 50%" }} />
+      </div>
+      <div className={styles.spineCellR}>{!left && content}</div>
+    </div>
+  );
+}
 
 const NAV_LINKS = [
   { href: "#why", label: "Firm" },
@@ -26,6 +88,7 @@ const CARRIERS = ["Lincoln", "John Hancock", "AIG", "Nationwide", "Principal", "
 
 export default function ConceptE() {
   const pageRef = useRef<HTMLDivElement>(null);
+  const spineRef = useRef<HTMLDivElement>(null);
   const heroKicker = useRef<HTMLDivElement>(null);
   const heroTitle = useRef<HTMLHeadingElement>(null);
   const heroSub = useRef<HTMLParagraphElement>(null);
@@ -33,6 +96,10 @@ export default function ConceptE() {
   const [scrolled, setScrolled] = useState(false);
 
   useHeroReveal([heroKicker, heroTitle, heroSub, heroCta]);
+
+  // the spine draws with scroll (soft scrub, no snap)
+  const { scrollYProgress: spineRaw } = useScroll({ target: spineRef, offset: ["start 0.75", "end 0.55"] });
+  const spineScale = useSpring(spineRaw, { stiffness: 90, damping: 28, mass: 0.4 });
   useScrollReveal(pageRef);
 
   useEffect(() => {
@@ -121,31 +188,28 @@ export default function ConceptE() {
         </div>
       </div>
 
-      {/* WHAT WE OFFER */}
-      <div id="why" style={{ padding: "clamp(64px,8vw,110px) clamp(20px,5vw,60px)", background: "#070b14", borderTop: "1px solid #10192c" }}>
+      {/* WHAT WE OFFER — signature scroll moment: the blueprint assembles */}
+      <div id="why" ref={spineRef} style={{ padding: "clamp(64px,8vw,110px) clamp(20px,5vw,60px) 0", background: "#070b14", borderTop: "1px solid #10192c" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
-          <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: 44 }}>
+          <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: "clamp(44px,6vw,80px)" }}>
             <div>
               <div className={styles.tag} style={{ marginBottom: 14 }}>What We Offer</div>
-              <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(28px,3.6vw,44px)", margin: 0, color: "#fff", letterSpacing: "-0.01em" }}>Everything an agent needs, from one desk.</h2>
+              <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(28px,3.6vw,44px)", margin: 0, color: "#fff", letterSpacing: "-0.01em" }}>The blueprint, assembled.</h2>
             </div>
             <span className={styles.mono} style={{ fontSize: 11.5, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6b7c9c" }}>Four disciplines / one team</span>
           </div>
-          <div data-reveal className={styles.offerGrid}>
-            {OFFERINGS.map((o) => (
-              <div key={o.n} className={styles.offerCard}>
-                <div className={styles.offerImgWrap}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={o.img} alt={o.title} className={styles.offerImg} data-photo-slot={`offer-${o.n}`} />
-                  <span className={styles.offerNum}>{o.n}</span>
-                </div>
-                <div style={{ padding: "20px 20px 24px" }}>
-                  <h3 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 700, fontSize: 17.5, margin: "0 0 10px", color: "#fff", lineHeight: 1.25 }}>{o.title}</h3>
-                  <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#8b99b5", margin: "0 0 12px" }}>{o.blurb}</p>
-                  <a href="#contact" className={styles.mono} style={{ fontSize: 11.5, letterSpacing: "0.1em", textTransform: "uppercase", color: "#5c8dff" }}>Learn more →</a>
-                </div>
-              </div>
+
+          <div className={styles.spineWrap}>
+            {/* the spine draws itself with scroll */}
+            <motion.div className={styles.spineLine} style={{ scaleY: spineScale }} aria-hidden="true" />
+            {OFFERINGS.map((_, i) => (
+              <SpineNode key={i} i={i} />
             ))}
+            {/* terminal: the spine connects to the global network */}
+            <div className={styles.spineEnd}>
+              <span style={{ width: 11, height: 11, background: "#3b82f6", borderRadius: "50%", boxShadow: "0 0 18px rgba(59,130,246,0.8)" }} />
+              <a href="#foreign" className={styles.mono} style={{ fontSize: 11.5, letterSpacing: "0.18em", textTransform: "uppercase", color: "#5c8dff", marginTop: 14 }}>↓ Foreign national network</a>
+            </div>
           </div>
         </div>
       </div>

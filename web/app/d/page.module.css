@@ -116,6 +116,46 @@
   }
 }
 
+/* Signature scroll moment: the silk curtain reveals each pillar */
+.silkSection {
+  position: relative;
+  height: 400vh;
+  background: #f3efe6;
+}
+.silkPin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+.silkCurtain {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 70vw;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
+}
+.silkMobile {
+  display: none;
+}
+@media (max-width: 900px) {
+  .silkSection {
+    height: auto;
+  }
+  .silkPin {
+    display: none;
+  }
+  .silkMobile {
+    display: block;
+    padding: clamp(56px, 10vw, 90px) clamp(20px, 5vw, 60px);
+    max-width: 760px;
+    margin: 0 auto;
+  }
+}
+
 /* What We Offer — /g-style photo cards, ivory palette */
 .solGrid {
   display: grid;

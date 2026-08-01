@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
@@ -34,6 +34,35 @@ export default function ConceptI() {
   const pageRef = useRef<HTMLDivElement>(null);
 
   useScrollReveal(pageRef);
+
+  // ————— Signature scroll moment: the chapter index marks itself —————
+  const [activeCh, setActiveCh] = useState(0);
+  const chapterRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const indexItemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [indY, setIndY] = useState(0);
+
+  useEffect(() => {
+    const els = chapterRefs.current.filter((el): el is HTMLDivElement => Boolean(el));
+    if (!els.length) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = els.indexOf(entry.target as HTMLDivElement);
+            if (idx >= 0) setActiveCh(idx);
+          }
+        });
+      },
+      { rootMargin: "-42% 0px -42% 0px" }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const el = indexItemRefs.current[activeCh];
+    if (el) setIndY(el.offsetTop + el.offsetHeight / 2);
+  }, [activeCh]);
 
   const serif = "var(--font-cormorant), serif";
   const label: React.CSSProperties = { fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: MUTED };
@@ -147,32 +176,65 @@ export default function ConceptI() {
       {/* MISSION — indented editorial pull quote */}
       <div style={{ padding: "clamp(90px,13vw,170px) clamp(20px,5vw,60px)" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(12,minmax(0,1fr))", gap: "clamp(16px,2.4vw,36px)" }}>
-          <div data-reveal style={{ gridColumn: "1 / span 2", ...label, paddingTop: 10, position: "sticky", top: 110, alignSelf: "start" }}>No. 01<br />Mission</div>
+          <div data-reveal style={{ gridColumn: "1 / span 2", ...label, paddingTop: 10 }}>No. 01<br />Mission</div>
           <p data-reveal style={{ gridColumn: "4 / span 9", fontFamily: serif, fontWeight: 400, fontSize: "clamp(26px,3.6vw,46px)", lineHeight: 1.32, margin: 0, color: INK }}>To provide agents with superior service, personalized sales support and tailored business solutions that build <span style={{ fontStyle: "italic" }}>long-term relationships</span>.</p>
         </div>
       </div>
 
-      {/* THE FIRM — alternating asymmetric photo rows */}
+      {/* THE FIRM — signature scroll moment: the chapter index marks itself */}
       <div id="firm" style={{ padding: "0 clamp(20px,5vw,60px) clamp(60px,8vw,110px)" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <div data-reveal style={{ borderTop: `1px solid ${INK}`, paddingTop: 18, marginBottom: "clamp(44px,6vw,80px)", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-            <span style={label}>No. 02 — What we offer</span>
+            <span style={label}>No. 02 — Chapitres</span>
             <span style={label}>Four disciplines, one team</span>
           </div>
-          <div style={{ display: "grid", gap: "clamp(60px,8vw,110px)" }}>
-            {OFFERINGS.map((o, i) => (
-              <div key={o.n} data-reveal className={styles.offRow}>
-                <div className={i % 2 === 0 ? styles.offImgA : styles.offImgB}>
-                  <ParallaxImg src={o.img} alt={o.title} range={28} photoSlot={`offer-${o.n}`} style={{ height: "clamp(240px,34vw,420px)" }} imgClassName={styles.bw} />
-                </div>
-                <div className={i % 2 === 0 ? styles.offTextA : styles.offTextB}>
-                  <div style={{ fontFamily: serif, fontStyle: "italic", fontSize: 20, color: MUTED, marginBottom: 14 }}>({o.n})</div>
-                  <h3 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(26px,2.8vw,38px)", margin: "0 0 16px", color: INK, lineHeight: 1.12 }}>{o.title}</h3>
-                  <p style={{ fontSize: 14.5, lineHeight: 1.75, color: MUTED, fontWeight: 400, margin: "0 0 16px" }}>{o.blurb}</p>
+
+          <div className={styles.tocGrid}>
+            {/* sticky table of contents — marks itself as you read */}
+            <div className={styles.tocLeft}>
+              <div style={{ position: "relative", paddingLeft: 58 }}>
+                <motion.span
+                  aria-hidden="true"
+                  animate={{ top: indY }}
+                  transition={{ type: "spring", stiffness: 200, damping: 26 }}
+                  style={{ position: "absolute", left: 0, top: 0, width: 40, height: 1, background: INK }}
+                />
+                {OFFERINGS.map((o, i) => (
+                  <div
+                    key={o.n}
+                    ref={(el) => { indexItemRefs.current[i] = el; }}
+                    style={{ padding: "16px 0", cursor: "pointer" }}
+                    onClick={() => chapterRefs.current[i]?.scrollIntoView({ behavior: "smooth", block: "center" })}
+                  >
+                    <div style={{
+                      fontFamily: serif,
+                      fontWeight: 500,
+                      fontSize: "clamp(24px,2.4vw,38px)",
+                      lineHeight: 1.1,
+                      transition: "color 0.5s ease, -webkit-text-stroke-color 0.5s ease",
+                      color: activeCh === i ? INK : "transparent",
+                      WebkitTextStroke: activeCh === i ? "0px" : "1px rgba(26,24,20,0.3)",
+                    }}>
+                      Chapitre 0{i + 1}
+                    </div>
+                    <div style={{ ...label, fontSize: 10, marginTop: 6, color: activeCh === i ? INK : "rgba(26,24,20,0.35)", transition: "color 0.5s ease" }}>{o.title}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* chapters */}
+            <div style={{ display: "grid", gap: "clamp(70px,9vw,130px)" }}>
+              {OFFERINGS.map((o, i) => (
+                <div key={o.n} ref={(el) => { chapterRefs.current[i] = el; }} data-reveal>
+                  <ParallaxImg src={o.img} alt={o.title} range={28} photoSlot={`offer-${o.n}`} style={{ height: "clamp(260px,36vw,460px)", marginBottom: 26 }} imgClassName={styles.bw} />
+                  <div style={{ fontFamily: serif, fontStyle: "italic", fontSize: 20, color: MUTED, marginBottom: 12 }}>(Chapitre 0{i + 1})</div>
+                  <h3 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(26px,2.8vw,38px)", margin: "0 0 14px", color: INK, lineHeight: 1.12 }}>{o.title}</h3>
+                  <p style={{ fontSize: 14.5, lineHeight: 1.75, color: MUTED, fontWeight: 400, margin: "0 0 16px", maxWidth: 560 }}>{o.blurb}</p>
                   <a href="#contact" className={styles.lnk} style={{ fontSize: 11.5, letterSpacing: "0.24em", textTransform: "uppercase", color: INK }}>Learn more</a>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -180,7 +242,7 @@ export default function ConceptI() {
       {/* FOREIGN NATIONAL — ink band, inverse */}
       <div id="foreign" style={{ padding: "clamp(90px,13vw,170px) clamp(20px,5vw,60px)", background: INK }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(12,minmax(0,1fr))", gap: "clamp(16px,2.4vw,36px)" }}>
-          <div data-reveal style={{ gridColumn: "1 / span 2", fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: "#948c7c", paddingTop: 12, position: "sticky", top: 110, alignSelf: "start" }}>No. 03<br />Specialty</div>
+          <div data-reveal style={{ gridColumn: "1 / span 2", fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: "#948c7c", paddingTop: 12 }}>No. 03<br />Specialty</div>
           <div style={{ gridColumn: "4 / span 9" }}>
             <h2 data-reveal style={{ fontFamily: serif, fontWeight: 400, fontSize: "clamp(34px,5.4vw,74px)", lineHeight: 1.04, margin: "0 0 34px", color: PAPER }}>The foreign national market — <span style={{ fontStyle: "italic" }}>we place the cases others turn away.</span></h2>
             <div data-reveal style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: "clamp(24px,3vw,44px)", maxWidth: 760 }}>

@@ -1,12 +1,99 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
 import Guilloche from "@/components/Guilloche";
 import { OFFERINGS } from "@/lib/offerings";
 import styles from "./page.module.css";
+
+// ————— Signature scroll moment: the certificate engraves itself —————
+const ROMAN = ["I", "II", "III", "IV"];
+
+// ornamental guilloche waves, drawn live with scroll
+const CERT_WAVES = [
+  "M20 70 Q 120 30, 220 70 T 420 70 T 620 70 T 820 70",
+  "M20 88 Q 120 128, 220 88 T 420 88 T 620 88 T 820 88",
+  "M20 430 Q 120 390, 220 430 T 420 430 T 620 430 T 820 430",
+  "M20 448 Q 120 488, 220 448 T 420 448 T 620 448 T 820 448",
+  "M20 79 Q 120 55, 220 79 T 420 79 T 620 79 T 820 79",
+  "M20 439 Q 120 415, 220 439 T 420 439 T 620 439 T 820 439",
+];
+
+function seg(p: number, a: number, b: number) {
+  return Math.min(1, Math.max(0, (p - a) / (b - a)));
+}
+
+function CertWave({ progress, d, i, reduce }: { progress: MotionValue<number>; d: string; i: number; reduce: boolean }) {
+  const len = useTransform(progress, (p) => (reduce ? 1 : seg(p, 0.02 + i * 0.03, 0.28 + i * 0.03)));
+  return <motion.path d={d} stroke="#a67c3d" strokeWidth="1" fill="none" opacity="0.5" style={{ pathLength: len }} />;
+}
+
+function CertArticle({ progress, i, reduce }: { progress: MotionValue<number>; i: number; reduce: boolean }) {
+  const o = OFFERINGS[i];
+  const clip = useTransform(progress, (p) => {
+    const t = reduce ? 1 : seg(p, 0.64 + i * 0.08, 0.76 + i * 0.08);
+    return `inset(0 ${(1 - t) * 100}% 0 0)`;
+  });
+  const op = useTransform(progress, (p) => (reduce ? 1 : seg(p, 0.64 + i * 0.08, 0.7 + i * 0.08)));
+  return (
+    <motion.div style={{ clipPath: clip, opacity: op, borderTop: "1px solid #1f3d2f2e", padding: "13px 0", display: "grid", gridTemplateColumns: "clamp(150px,20vw,210px) 1fr", gap: 16, alignItems: "baseline" }}>
+      <span className={styles.mono} style={{ fontSize: 11, letterSpacing: "0.12em", color: "#a67c3d", textTransform: "uppercase" }}>Article {ROMAN[i]}</span>
+      <span>
+        <span style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 500, fontSize: "clamp(15px,1.4vw,18px)", color: "#1f3d2f" }}>{o.title}</span>
+        <span style={{ display: "block", fontSize: 12.5, lineHeight: 1.5, color: "#3f5245", marginTop: 3 }}>{o.blurb}</span>
+      </span>
+    </motion.div>
+  );
+}
+
+function CertScene({ progress, reduce }: { progress: MotionValue<number>; reduce: boolean }) {
+  const frameLen = useTransform(progress, (p) => (reduce ? 1 : seg(p, 0.26, 0.44)));
+  const stampScale = useTransform(progress, (p) => (reduce ? 1 : 1.12 - 0.12 * seg(p, 0.42, 0.56)));
+  const stampBlur = useTransform(progress, (p) => (reduce ? "blur(0px)" : `blur(${6 * (1 - seg(p, 0.42, 0.56))}px)`));
+  const stampOp = useTransform(progress, (p) => (reduce ? 1 : seg(p, 0.42, 0.54)));
+  const sealY = useTransform(progress, (p) => (reduce ? 0 : -110 * (1 - seg(p, 0.54, 0.66))));
+  const sealScale = useTransform(progress, (p) => {
+    if (reduce) return 1;
+    const t = seg(p, 0.54, 0.7);
+    // drop + soft settle overshoot
+    return t < 0.75 ? 1.25 - 0.35 * (t / 0.75) : 0.9 + 0.1 * seg(p, 0.66, 0.7);
+  });
+  const sealOp = useTransform(progress, (p) => (reduce ? 1 : seg(p, 0.54, 0.6)));
+  const sealRot = useTransform(progress, (p) => (reduce ? 0 : -9 * (1 - seg(p, 0.54, 0.68))));
+
+  return (
+    <div style={{ position: "relative", width: "min(880px, 94vw)", padding: "clamp(40px,5vh,64px) clamp(24px,4vw,64px)", background: "#f8f3e4" }}>
+      {/* live-engraved ornaments + double frame */}
+      <svg viewBox="0 0 840 518" preserveAspectRatio="none" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} aria-hidden="true">
+        {CERT_WAVES.map((d, i) => (
+          <CertWave key={i} progress={progress} d={d} i={i} reduce={reduce} />
+        ))}
+        <motion.rect x="10" y="10" width="820" height="498" fill="none" stroke="#1f3d2f" strokeWidth="1.5" style={{ pathLength: frameLen }} />
+        <motion.rect x="20" y="20" width="800" height="478" fill="none" stroke="#a67c3d" strokeWidth="0.8" style={{ pathLength: frameLen }} />
+      </svg>
+
+      <div style={{ position: "relative", textAlign: "center" }}>
+        <motion.div style={{ scale: stampScale, filter: stampBlur, opacity: stampOp }}>
+          <div className={styles.mono} style={{ fontSize: 11, letterSpacing: "0.26em", color: "#4a5c4f", marginBottom: 12 }}>CERTIFICATE · EST. 1970S · No. 000050</div>
+          <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 500, fontSize: "clamp(24px,3.2vw,40px)", lineHeight: 1.15, margin: "0 0 6px", color: "#1f3d2f" }}>Four pillars behind every case.</h2>
+          <div className={styles.mono} style={{ fontSize: 10.5, letterSpacing: "0.2em", color: "#a67c3d" }}>BRANDON BROKERAGE GROUP · CORAL GABLES, FLORIDA</div>
+        </motion.div>
+
+        <div style={{ margin: "clamp(20px,3vh,34px) auto 0", maxWidth: 660, textAlign: "left" }}>
+          {OFFERINGS.map((_, i) => (
+            <CertArticle key={i} progress={progress} i={i} reduce={reduce} />
+          ))}
+        </div>
+      </div>
+
+      <motion.div style={{ position: "absolute", right: "clamp(14px,4vw,44px)", bottom: "clamp(10px,2vh,26px)", y: sealY, scale: sealScale, opacity: sealOp, rotate: sealRot, filter: "drop-shadow(0 10px 18px rgba(31,61,47,0.25))" }}>
+        <Seal />
+      </motion.div>
+    </div>
+  );
+}
 
 const NAV_LINKS = [
   { href: "#why", label: "Firm" },
@@ -49,7 +136,12 @@ function Seal() {
 
 export default function ConceptB() {
   const pageRef = useRef<HTMLDivElement>(null);
+  const certRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
+
+  // scrub for the engraving scene
+  const { scrollYProgress: certRaw } = useScroll({ target: certRef, offset: ["start start", "end end"] });
+  const certProgress = useSpring(certRaw, { stiffness: 90, damping: 28, mass: 0.4 });
   const heroKicker = useRef<HTMLDivElement>(null);
   const heroTitle = useRef<HTMLHeadingElement>(null);
   const heroSub = useRef<HTMLParagraphElement>(null);
@@ -128,31 +220,28 @@ export default function ConceptB() {
         </div>
       </div>
 
-      {/* WHY — IMAGE LEFT / LEDGER RIGHT */}
-      <div id="why" style={{ padding: "clamp(64px,8vw,110px) clamp(20px,5vw,60px)" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div data-reveal style={{ marginBottom: 44 }}>
+      {/* WHY — signature scroll moment: the certificate engraves itself */}
+      <div id="why" ref={certRef} className={styles.certSection}>
+        <div className={styles.certPin}>
+          <CertScene progress={certProgress} reduce={!!reduce} />
+          <div className={styles.mono} style={{ position: "absolute", right: "clamp(20px,5vw,60px)", bottom: 22, fontSize: 10.5, letterSpacing: "0.3em", color: "#4a5c4f99" }}>SCROLL TO ENGRAVE</div>
+        </div>
+
+        {/* mobile: plain ledger, no pin */}
+        <div className={styles.certMobile}>
+          <div data-reveal style={{ marginBottom: 32 }}>
             <div className={styles.mono} style={{ fontSize: 12, letterSpacing: "0.18em", color: "#a67c3d", marginBottom: 16 }}>ARTICLES OF SERVICE</div>
-            <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 500, fontSize: "clamp(26px,3.2vw,40px)", margin: 0, color: "#1f3d2f", maxWidth: 620 }}>Everything an agent needs, from one desk.</h2>
+            <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 500, fontSize: "clamp(26px,3.2vw,40px)", margin: 0, color: "#1f3d2f" }}>Four pillars behind every case.</h2>
           </div>
-          <div data-reveal className={styles.articlesLayout}>
-            <div className={`${styles.frame} ${styles.photoFrame} ${styles.articlesPhoto}`}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/handshake-moody.jpg" alt="Advisor and client shaking hands" data-photo-slot="firm" />
+          {OFFERINGS.map((o, i) => (
+            <div key={o.n} data-reveal style={{ display: "grid", gridTemplateColumns: "110px 1fr", gap: 16, padding: "20px 0", borderTop: "1px solid #1f3d2f2e" }}>
+              <div className={styles.mono} style={{ fontSize: 11, letterSpacing: "0.1em", color: "#a67c3d", textTransform: "uppercase" }}>Article {ROMAN[i]}</div>
+              <div>
+                <h3 style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 500, fontSize: 18, margin: "0 0 6px", color: "#1f3d2f" }}>{o.title}</h3>
+                <p style={{ fontSize: 13.5, lineHeight: 1.55, color: "#3f5245", margin: 0 }}>{o.blurb}</p>
+              </div>
             </div>
-            <div>
-              {OFFERINGS.map((o, i) => (
-                <div key={o.n} className={styles.ledgerRow} style={{ display: "grid", gridTemplateColumns: "54px 1fr", gap: 20, padding: "24px 12px", borderTop: "1px solid #1f3d2f2e", borderBottom: i === OFFERINGS.length - 1 ? "1px solid #1f3d2f2e" : undefined }}>
-                  <div className={styles.mono} style={{ fontSize: 13, color: "#a67c3d", paddingTop: 4 }}>{o.n}</div>
-                  <div>
-                    <h3 style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 500, fontSize: 19, margin: "0 0 8px", color: "#1f3d2f" }}>{o.title}</h3>
-                    <p style={{ fontSize: 14, lineHeight: 1.6, color: "#3f5245", margin: "0 0 10px" }}>{o.blurb}</p>
-                    <a href="#contact" className={styles.mono} style={{ fontSize: 11.5, letterSpacing: "0.08em", textTransform: "uppercase", color: "#a67c3d", borderBottom: "1px solid #a67c3d66", paddingBottom: 2 }}>Learn more →</a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 

@@ -171,6 +171,26 @@
   }
 }
 
+/* Signature scroll moment: sticky chapter index */
+.tocGrid {
+  display: grid;
+  grid-template-columns: minmax(250px, 360px) 1fr;
+  gap: clamp(40px, 6vw, 100px);
+  align-items: start;
+}
+.tocLeft {
+  position: sticky;
+  top: 120px;
+}
+@media (max-width: 900px) {
+  .tocGrid {
+    grid-template-columns: 1fr;
+  }
+  .tocLeft {
+    display: none;
+  }
+}
+
 .prod {
   transition: opacity 0.3s;
 }

@@ -240,3 +240,70 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Signature scroll moment: the blueprint assembles along a spine */
+.spineWrap {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(20px, 3vw, 40px) 0 0;
+}
+.spineLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(#2563eb, rgba(37, 99, 235, 0.35));
+  transform-origin: 50% 0;
+}
+.spineRow {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr clamp(60px, 8vw, 140px) 1fr;
+  align-items: center;
+  min-height: clamp(150px, 20vh, 210px);
+}
+.spineCellL,
+.spineCellR {
+  min-width: 0;
+}
+.spineCellC {
+  position: relative;
+  height: 100%;
+}
+.spineEnd {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(30px, 4vw, 56px) 0 clamp(56px, 7vw, 90px);
+}
+
+@media (max-width: 900px) {
+  .spineWrap {
+    padding-left: 22px;
+  }
+  .spineLine {
+    left: 0;
+  }
+  .spineRow {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    padding: 26px 0;
+  }
+  .spineCellC {
+    display: none;
+  }
+  .spineCellL > div,
+  .spineCellR > div {
+    text-align: left !important;
+  }
+  .spineCellL p,
+  .spineCellR p {
+    margin-left: 0 !important;
+  }
+  .spineEnd {
+    align-items: flex-start;
+  }
+}
