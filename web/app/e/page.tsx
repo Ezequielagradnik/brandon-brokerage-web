@@ -135,11 +135,8 @@ export default function ConceptE() {
         />
       </div>
 
-      {/* HERO — wireframe globe with flight arcs (the foreign-national network) */}
+      {/* HERO — blueprint grid, no globe (it belongs to Foreign National) */}
       <div id="top" style={{ position: "relative", minHeight: "92vh", display: "flex", alignItems: "center", padding: "clamp(90px,10vw,140px) clamp(20px,5vw,60px) clamp(70px,8vw,110px)", background: "radial-gradient(130% 100% at 50% 0%, #0a1226 0%, #05070d 62%)", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: "50%", right: "clamp(-180px,-9vw,-80px)", transform: "translateY(-50%)", width: "clamp(360px,46vw,680px)", height: "clamp(360px,46vw,680px)", borderRadius: "50%", overflow: "hidden", background: "radial-gradient(circle at 40% 30%, #0b1c3c, #04070f 75%)", boxShadow: "0 0 140px rgba(37,99,235,0.22)" }}>
-          <GlobeArcs palette={BLUE_ARCS} />
-        </div>
         <div className={styles.gridOverlay} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(5,7,13,0.25), transparent 30%, transparent 68%, #05070d)" }} />
         <div style={{ position: "relative", maxWidth: 1300, margin: "0 auto", width: "100%" }}>
@@ -214,17 +211,21 @@ export default function ConceptE() {
         </div>
       </div>
 
-      {/* FOREIGN NATIONAL */}
+      {/* FOREIGN NATIONAL — the globe lands here, where the spine points */}
       <div id="foreign" style={{ position: "relative", padding: "clamp(76px,10vw,130px) clamp(20px,5vw,60px)", background: "linear-gradient(180deg,#070b14,#0a1226)", overflow: "hidden", borderTop: "1px solid #10192c" }}>
-        <div style={{ position: "absolute", top: "-30%", right: "-12%", width: 560, height: 560, borderRadius: "50%", background: "radial-gradient(circle, rgba(37,99,235,0.16), transparent 68%)", pointerEvents: "none" }} />
-        <div style={{ position: "relative", maxWidth: 1200, margin: "0 auto" }}>
-          <div data-reveal className={styles.tag} style={{ marginBottom: 24 }}>Signature Specialty</div>
-          <h2 data-reveal style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(32px,5vw,72px)", lineHeight: 1.02, margin: "0 0 40px", color: "#fff", letterSpacing: "-0.02em", maxWidth: 900 }}>
-            We place the cases <span style={{ color: "#5c8dff" }}>others turn away</span>.
-          </h2>
-          <div data-reveal style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: "clamp(28px,4vw,64px)", borderTop: "1px solid #1b2842", paddingTop: 34 }}>
-            <p style={{ fontSize: 16, lineHeight: 1.7, color: "#9fb0cc", margin: 0 }}>With over 50 years of experience, we are an industry leader in the foreign national market. We help agents devise customized sales strategies and wealth-management solutions for their foreign national clients.</p>
-            <p style={{ fontSize: 16, lineHeight: 1.7, color: "#9fb0cc", margin: 0 }}>Our open-architecture approach offers a variety of products and services to best suit your clients&apos; needs — while adhering to all carrier, state and federal guidelines. <a href="#contact" style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 14 }}>Partner with us →</a></p>
+        <div style={{ position: "relative", maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))", gap: "clamp(40px,6vw,80px)", alignItems: "center" }}>
+          <div>
+            <div data-reveal className={styles.tag} style={{ marginBottom: 24 }}>Signature Specialty</div>
+            <h2 data-reveal style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(32px,5vw,72px)", lineHeight: 1.02, margin: "0 0 40px", color: "#fff", letterSpacing: "-0.02em" }}>
+              We place the cases <span style={{ color: "#5c8dff" }}>others turn away</span>.
+            </h2>
+            <div data-reveal style={{ display: "grid", gap: 24, borderTop: "1px solid #1b2842", paddingTop: 34 }}>
+              <p style={{ fontSize: 16, lineHeight: 1.7, color: "#9fb0cc", margin: 0 }}>With over 50 years of experience, we are an industry leader in the foreign national market. We help agents devise customized sales strategies and wealth-management solutions for their foreign national clients.</p>
+              <p style={{ fontSize: 16, lineHeight: 1.7, color: "#9fb0cc", margin: 0 }}>Our open-architecture approach offers a variety of products and services to best suit your clients&apos; needs — while adhering to all carrier, state and federal guidelines. <a href="#contact" style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 14 }}>Partner with us →</a></p>
+            </div>
+          </div>
+          <div data-reveal style={{ position: "relative", width: "min(100%, 520px)", margin: "0 auto", aspectRatio: "1 / 1", borderRadius: "50%", overflow: "hidden", background: "radial-gradient(circle at 40% 30%, #0b1c3c, #04070f 75%)", boxShadow: "0 0 140px rgba(37,99,235,0.22)" }}>
+            <GlobeArcs palette={BLUE_ARCS} />
           </div>
         </div>
       </div>

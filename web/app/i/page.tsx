@@ -106,7 +106,7 @@ export default function ConceptI() {
             <div className={styles.mastText}>
               <h1 style={{ fontFamily: serif, fontWeight: 400, fontSize: "clamp(50px,8.2vw,124px)", lineHeight: 0.98, margin: "0 0 clamp(34px,4.5vw,60px)", color: INK, letterSpacing: "-0.015em" }}>
                 <span style={{ display: "block" }}><LettersReveal text="Seamless" delay={0.3} /></span>
-                <span style={{ display: "block", fontStyle: "italic", marginLeft: "clamp(30px,8vw,150px)" }}><LettersReveal text="execution," delay={0.62} /></span>
+                <span style={{ display: "block", fontStyle: "italic" }}><LettersReveal text="execution," delay={0.62} /></span>
                 <span style={{ display: "block" }}><LettersReveal text="since the ’70s." delay={0.98} /></span>
               </h1>
               <FadeIn delay={1.15}>

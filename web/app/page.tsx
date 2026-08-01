@@ -103,7 +103,7 @@ export default function Home() {
                 <span style={{ fontSize: 8, letterSpacing: "0.24em", textTransform: "uppercase", color: "#6a6357" }}>Brandon Brokerage</span>
                 <span style={{ fontSize: 8, letterSpacing: "0.24em", textTransform: "uppercase", color: "#6a6357" }}>Since the 1970s</span>
               </div>
-              <div style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 400, fontSize: 38, lineHeight: 0.98, color: "#1a1814", letterSpacing: "-0.015em" }}>Seamless<br /><span style={{ fontStyle: "italic", marginLeft: 34 }}>execution,</span><br />since the &rsquo;70s.</div>
+              <div style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 400, fontSize: 38, lineHeight: 0.98, color: "#1a1814", letterSpacing: "-0.015em" }}>Seamless<br /><span style={{ fontStyle: "italic" }}>execution,</span><br />since the &rsquo;70s.</div>
             </div>
             <div style={{ padding: "20px 18px", borderTop: CARD_DIVIDER }}>
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: GOLD_DEEP, marginBottom: 8 }}>05 — Maison Editorial</div>

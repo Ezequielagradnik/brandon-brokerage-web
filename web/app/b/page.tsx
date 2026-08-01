@@ -64,7 +64,7 @@ function CertScene({ progress, reduce }: { progress: MotionValue<number>; reduce
   const sealRot = useTransform(progress, (p) => (reduce ? 0 : -9 * (1 - seg(p, 0.54, 0.68))));
 
   return (
-    <div style={{ position: "relative", width: "min(880px, 94vw)", padding: "clamp(40px,5vh,64px) clamp(24px,4vw,64px)", background: "#f8f3e4" }}>
+    <div style={{ position: "relative", width: "min(880px, 94vw)", padding: "clamp(40px,5vh,64px) clamp(24px,4vw,64px) clamp(92px,12vh,128px)", background: "#f8f3e4" }}>
       {/* live-engraved ornaments + double frame */}
       <svg viewBox="0 0 840 518" preserveAspectRatio="none" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} aria-hidden="true">
         {CERT_WAVES.map((d, i) => (
@@ -88,8 +88,10 @@ function CertScene({ progress, reduce }: { progress: MotionValue<number>; reduce
         </div>
       </div>
 
-      <motion.div style={{ position: "absolute", right: "clamp(14px,4vw,44px)", bottom: "clamp(10px,2vh,26px)", y: sealY, scale: sealScale, opacity: sealOp, rotate: sealRot, filter: "drop-shadow(0 10px 18px rgba(31,61,47,0.25))" }}>
-        <Seal />
+      <motion.div style={{ position: "absolute", right: "clamp(18px,4vw,52px)", bottom: 12, y: sealY, scale: sealScale, opacity: sealOp, rotate: sealRot, filter: "drop-shadow(0 10px 18px rgba(31,61,47,0.25))" }}>
+        <div style={{ transform: "scale(0.78)", transformOrigin: "bottom right" }}>
+          <Seal />
+        </div>
       </motion.div>
     </div>
   );
