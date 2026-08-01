@@ -139,7 +139,9 @@ const T = {
 
 // ————— Card deck (pinned, scroll-driven) —————
 const DECK_IMGS = ["/images/globe-gold.jpg", "/images/handshake-office.jpg", "/images/wwo-papers.jpg", "/images/miami-aerial-day.jpg"];
-const DECK_ACCENTS = ["#c2a15b", "#2e5e4e", "#35648e", "#b26a4a"];
+const DECK_ACCENTS = ["#c2a15b", "#3d7a64", "#4179ab", "#b26a4a"];
+// lighter tints for the mono label over the dark photo
+const DECK_ACCENTS_LIGHT = ["#e3c98f", "#8fd0b4", "#9cc4ec", "#e8a988"];
 // deck (stacked) state → fanned state
 const DECK_X_VW = [52, 31, 10, -11];
 const DECK_Y_PX = [10, -14, 18, -8];
@@ -164,7 +166,7 @@ function DeckCardInner({ i, card }: { i: number; card: DeckCardData }) {
       <img src={DECK_IMGS[i]} alt={card.title} data-photo-slot={`pillar-0${i + 1}`} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(16,24,40,0.1) 30%, rgba(16,24,40,0.88) 82%)" }} />
       <div style={{ position: "absolute", left: 20, right: 20, bottom: 20, zIndex: 2 }}>
-        <div style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 10.5, letterSpacing: "0.18em", textTransform: "uppercase", color: DECK_ACCENTS[i], marginBottom: 10 }}>0{i + 1} / {card.cat}</div>
+        <div style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 10.5, letterSpacing: "0.18em", textTransform: "uppercase", color: DECK_ACCENTS_LIGHT[i], marginBottom: 10 }}>0{i + 1} / {card.cat}</div>
         <div style={{ fontFamily: "var(--font-lora), serif", fontWeight: 500, fontSize: "clamp(19px,1.7vw,24px)", lineHeight: 1.15, color: "#fff", marginBottom: 8 }}>{card.title}</div>
         <p style={{ fontSize: 12.5, lineHeight: 1.55, color: "rgba(255,255,255,0.75)", margin: 0, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{card.desc}</p>
       </div>
