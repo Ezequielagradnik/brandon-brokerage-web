@@ -134,8 +134,9 @@ export default function GlobeArcs({ palette }: { palette: ArcPalette }) {
     try {
       renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     } catch {
-      setFailed(true);
-      return;
+      // defer: swap to the SVG fallback outside the effect's synchronous run
+      const id = setTimeout(() => setFailed(true), 0);
+      return () => clearTimeout(id);
     }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(w, h, false);
