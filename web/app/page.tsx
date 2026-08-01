@@ -97,12 +97,12 @@ export default function Home() {
           </Link>
 
           <Link href="/i" className={styles.card} style={{ border: CARD_BORDER, borderRadius: 12, overflow: "hidden", background: CARD_BG }}>
-            <div style={{ position: "relative", height: 190, background: "#f7f4ee", padding: "22px 22px 0" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid #1a1814", paddingBottom: 8, marginBottom: 14 }}>
+            <div style={{ position: "relative", height: 190, background: "#f7f4ee", padding: "20px 22px 0", overflow: "hidden" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 10, borderBottom: "1px solid #1a1814", paddingBottom: 8, marginBottom: 12 }}>
                 <span style={{ fontSize: 8, letterSpacing: "0.24em", textTransform: "uppercase", color: "#6a6357" }}>Brandon Brokerage</span>
-                <span style={{ fontSize: 8, letterSpacing: "0.24em", textTransform: "uppercase", color: "#6a6357" }}>Desde los años 70</span>
+                <span style={{ fontSize: 8, letterSpacing: "0.24em", textTransform: "uppercase", color: "#6a6357", whiteSpace: "nowrap" }}>Desde los años 70</span>
               </div>
-              <div style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 400, fontSize: 38, lineHeight: 0.98, color: "#1a1814", letterSpacing: "-0.015em" }}>Ejecución<br /><span style={{ fontStyle: "italic" }}>impecable,</span><br />desde los años 70.</div>
+              <div style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 400, fontSize: 29, lineHeight: 1.02, color: "#1a1814", letterSpacing: "-0.015em" }}>Ejecución<br /><span style={{ fontStyle: "italic" }}>impecable,</span><br />desde los<br />años 70.</div>
             </div>
             <div style={{ padding: "20px 18px", borderTop: CARD_DIVIDER }}>
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: GOLD_DEEP, marginBottom: 8 }}>05 — Maison Editorial</div>
