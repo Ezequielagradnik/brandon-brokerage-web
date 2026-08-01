@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
-import { OFFERINGS } from "@/lib/offerings";
 import { ScrollProgress, MaskReveal, FadeIn, CountUp, GrowLine, ParallaxImg, Magnetic, ctaFillFromCursor } from "@/components/motion";
 import styles from "./page.module.css";
 
@@ -32,15 +31,18 @@ const T = {
       { num: 5, suffix: "", label: "Product lines" },
       { num: null, text: "FN", label: "Foreign national leader" },
     ],
-    solKicker: "Solutions",
-    solTitle: "Everything behind the case you write.",
-    solutions: [
-      { title: "Solutions for Foreign National Clients", blurb: "An industry leader in the foreign national market, with customized strategies for your international clients." },
-      { title: "Advanced Sales Support", blurb: "Case design, sales concepts, carrier insight and point-of-sale support across every line we broker." },
-      { title: "Full Case Management", blurb: "A dedicated new-business team runs underwriting and paperwork from application to policy delivery." },
-      { title: "Quality Carriers & Products", blurb: "A leading Tellus/Crump firm with full access to 30+ top-rated carriers, nationwide." },
-    ],
-    solMore: "Learn more",
+    deck: {
+      eyebrow: "What we do · Brandon Brokerage",
+      lines: ["Four", "pillars", "behind", "every case."],
+      seeAll: "See all solutions",
+      hint: "SCROLL TO REVEAL",
+      cards: [
+        { cat: "Specialty", title: "Foreign National", desc: "Industry leadership placing international clients — within every guideline." },
+        { cat: "Support", title: "Advanced Sales Support", desc: "Case design, sales concepts and point-of-sale backup on every line." },
+        { cat: "Operations", title: "Full Case Management", desc: "Underwriting and paperwork, from application to policy delivery." },
+        { cat: "Network", title: "Carriers & Products", desc: "A leading Tellus/Crump firm with 30+ top-rated carriers nationwide." },
+      ],
+    },
     appKicker: "Our approach",
     appTitle: "A family of firms, one standard.",
     appItems: [
@@ -88,15 +90,18 @@ const T = {
       { num: 5, suffix: "", label: "Líneas de producto" },
       { num: null, text: "FN", label: "Líder en foreign nationals" },
     ],
-    solKicker: "Soluciones",
-    solTitle: "Todo lo que hay detrás de cada caso.",
-    solutions: [
-      { title: "Soluciones para Clientes Extranjeros", blurb: "Líderes en el mercado de foreign nationals, con estrategias a medida para sus clientes internacionales." },
-      { title: "Soporte Avanzado de Ventas", blurb: "Diseño de casos, conceptos de venta, conocimiento de aseguradoras y apoyo en el punto de venta." },
-      { title: "Gestión Integral de Casos", blurb: "Un equipo dedicado lleva el underwriting y la documentación desde la solicitud hasta la entrega de la póliza." },
-      { title: "Aseguradoras y Productos de Calidad", blurb: "Firma líder de Tellus/Crump con acceso a más de 30 aseguradoras de primer nivel en todo el país." },
-    ],
-    solMore: "Conocer más",
+    deck: {
+      eyebrow: "Qué hacemos · Brandon Brokerage",
+      lines: ["Cuatro", "pilares", "detrás de", "cada caso."],
+      seeAll: "Ver todas las soluciones",
+      hint: "SCROLLEÁ PARA REVELAR",
+      cards: [
+        { cat: "Especialidad", title: "Foreign National", desc: "Liderazgo colocando clientes internacionales, dentro de cada norma." },
+        { cat: "Soporte", title: "Soporte Avanzado de Ventas", desc: "Diseño de casos, conceptos de venta y apoyo en el punto de venta." },
+        { cat: "Operaciones", title: "Gestión Integral de Casos", desc: "Underwriting y documentación, de la solicitud a la entrega de la póliza." },
+        { cat: "Red", title: "Aseguradoras y Productos", desc: "Firma líder de Tellus/Crump con más de 30 aseguradoras top." },
+      ],
+    },
     appKicker: "Nuestro enfoque",
     appTitle: "Una familia de firmas, un mismo estándar.",
     appItems: [
@@ -132,13 +137,111 @@ const T = {
   },
 } as const;
 
+// ————— Card deck (pinned, scroll-driven) —————
+const DECK_IMGS = ["/images/globe-gold.jpg", "/images/handshake-office.jpg", "/images/wwo-papers.jpg", "/images/miami-aerial-day.jpg"];
+const DECK_ACCENTS = ["#c2a15b", "#2e5e4e", "#35648e", "#b26a4a"];
+// deck (stacked) state → fanned state
+const DECK_X_VW = [52, 31, 10, -11];
+const DECK_Y_PX = [10, -14, 18, -8];
+const DECK_ROT = [-6, -2, 3, 7];
+const FINAL_ROT = [-2, 1.5, -1, 2];
+const FINAL_LEFT = [4, 28, 52, 76];
+const DRIFT_DIR = [-1, 1, -1, 1];
+
+const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
+// fan completes at 82% of the pin; the last 18% is residual drift
+const fanAt = (p: number) => easeInOut(clamp01(p / 0.82));
+const driftAt = (p: number) => clamp01((p - 0.82) / 0.18);
+
+type DeckCardData = { cat: string; title: string; desc: string };
+
+function DeckCardInner({ i, card }: { i: number; card: DeckCardData }) {
+  return (
+    <>
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: DECK_ACCENTS[i], zIndex: 2 }} />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={DECK_IMGS[i]} alt={card.title} data-photo-slot={`pillar-0${i + 1}`} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(16,24,40,0.1) 30%, rgba(16,24,40,0.88) 82%)" }} />
+      <div style={{ position: "absolute", left: 20, right: 20, bottom: 20, zIndex: 2 }}>
+        <div style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 10.5, letterSpacing: "0.18em", textTransform: "uppercase", color: DECK_ACCENTS[i], marginBottom: 10 }}>0{i + 1} / {card.cat}</div>
+        <div style={{ fontFamily: "var(--font-lora), serif", fontWeight: 500, fontSize: "clamp(19px,1.7vw,24px)", lineHeight: 1.15, color: "#fff", marginBottom: 8 }}>{card.title}</div>
+        <p style={{ fontSize: 12.5, lineHeight: 1.55, color: "rgba(255,255,255,0.75)", margin: 0, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{card.desc}</p>
+      </div>
+    </>
+  );
+}
+
+function DeckCard({
+  i,
+  progress,
+  hovered,
+  setHovered,
+  card,
+}: {
+  i: number;
+  progress: MotionValue<number>;
+  hovered: number | null;
+  setHovered: (v: number | null) => void;
+  card: DeckCardData;
+}) {
+  const reduce = useReducedMotion();
+  const hover = useSpring(0, { stiffness: 260, damping: 26 });
+  useEffect(() => {
+    hover.set(hovered === i ? 1 : 0);
+  }, [hovered, i, hover]);
+
+  const x = useTransform(progress, (p) => (reduce ? "0vw" : `${DECK_X_VW[i] * (1 - fanAt(p))}vw`));
+  const y = useTransform(progress, (p) =>
+    reduce ? "-50%" : `calc(-50% + ${DECK_Y_PX[i] * (1 - fanAt(p)) + DRIFT_DIR[i] * 26 * driftAt(p)}px)`
+  );
+  const rotate = useTransform([progress, hover], (v) => {
+    const [p, h] = v as [number, number];
+    const base = reduce ? FINAL_ROT[i] : DECK_ROT[i] + (FINAL_ROT[i] - DECK_ROT[i]) * fanAt(p);
+    return base * (1 - h);
+  });
+  const scale = useTransform(hover, (h) => 1 + 0.03 * h);
+  const filter = useTransform(progress, (p) =>
+    reduce || i === 0 ? "brightness(1)" : `brightness(${1 - 0.16 * (1 - fanAt(p))})`
+  );
+
+  return (
+    <motion.div
+      className={`${styles.deckCard} ${hovered === i ? styles.deckCardHover : ""}`}
+      onPointerEnter={() => setHovered(i)}
+      onPointerLeave={() => setHovered(null)}
+      style={{
+        position: "absolute",
+        left: `${FINAL_LEFT[i]}%`,
+        top: "50%",
+        width: "clamp(220px,20vw,310px)",
+        aspectRatio: "3 / 4",
+        x,
+        y,
+        rotate,
+        scale,
+        filter,
+        zIndex: hovered === i ? 20 : 10 - i,
+      }}
+    >
+      <DeckCardInner i={i} card={card} />
+    </motion.div>
+  );
+}
+
 export default function ConceptG() {
   const pageRef = useRef<HTMLDivElement>(null);
+  const deckRef = useRef<HTMLDivElement>(null);
   const [lang, setLang] = useState<Lang>("en");
   const [scrolled, setScrolled] = useState(false);
+  const [deckHovered, setDeckHovered] = useState<number | null>(null);
   const t = T[lang];
 
   useScrollReveal(pageRef);
+
+  // Deck scrub: spring-smoothed scroll progress across the 300vh section
+  const { scrollYProgress: deckRaw } = useScroll({ target: deckRef, offset: ["start start", "end end"] });
+  const deckProgress = useSpring(deckRaw, { stiffness: 90, damping: 28, mass: 0.4 });
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -251,37 +354,38 @@ export default function ConceptG() {
         </div>
       </div>
 
-      {/* SOLUTIONS — photo-cards, the bblatam signature */}
-      <div id="solutions" style={{ padding: "clamp(64px,9vw,130px) clamp(20px,5vw,60px)", background: "#fff" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-          <div data-reveal style={{ marginBottom: "clamp(40px,5vw,64px)", maxWidth: 660 }}>
-            <div style={{ ...kicker, marginBottom: 20 }}>{t.solKicker}</div>
-            <h2 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(30px,4.2vw,52px)", lineHeight: 1.12, margin: 0, color: NAVY }}>{t.solTitle}</h2>
+      {/* SOLUTIONS — pinned card deck, scroll-driven */}
+      <div id="solutions" ref={deckRef} className={styles.deckSection}>
+        <div className={styles.deckPin} style={{ padding: "0 clamp(20px,5vw,60px)" }}>
+
+          {/* headline column (behind the cards) */}
+          <div style={{ position: "relative", zIndex: 1, maxWidth: 1240, margin: "0 auto", width: "100%" }}>
+            <div data-reveal style={{ fontSize: 12, letterSpacing: "0.24em", textTransform: "uppercase", color: GOLD_DEEP, fontWeight: 700, marginBottom: 26 }}>{t.deck.eyebrow}</div>
+            <h2 className={styles.deckHeadline} data-reveal>
+              {t.deck.lines.map((l) => (
+                <span key={l} style={{ display: "block" }}>{l}</span>
+              ))}
+            </h2>
+            <a data-reveal href="#contact" className={styles.lnk} style={{ display: "inline-block", marginTop: 34, fontSize: 13, letterSpacing: "0.1em", textTransform: "uppercase", color: NAVY, fontWeight: 700 }}>{t.deck.seeAll} →</a>
           </div>
-          <div className={styles.solGrid}>
-            {OFFERINGS.map((o, i) => (
-              <motion.a
-                key={o.n}
-                href="#contact"
-                className={styles.solCard}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.9, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <div className={styles.solImgWrap}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={o.img} alt={t.solutions[i].title} className={styles.solImg} data-photo-slot={`offer-${o.n}`} />
-                </div>
-                <span className={styles.solHair} aria-hidden="true" />
-                <div className={styles.solBody}>
-                  <h3 style={{ fontFamily: serif, fontWeight: 500, fontSize: 22, margin: "0 0 10px", color: NAVY, lineHeight: 1.2 }}>{t.solutions[i].title}</h3>
-                  <p style={{ fontSize: 13.5, lineHeight: 1.66, color: GRAY, fontWeight: 400, margin: "0 0 14px" }}>{t.solutions[i].blurb}</p>
-                  <span className={styles.solMore} style={{ fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", color: NAVY, fontWeight: 600 }}>{t.solMore} →</span>
-                </div>
-              </motion.a>
+
+          {/* the deck (desktop) */}
+          <div className={styles.deckCards}>
+            {t.deck.cards.map((c, i) => (
+              <DeckCard key={c.title} i={i} progress={deckProgress} hovered={deckHovered} setHovered={setDeckHovered} card={c} />
             ))}
           </div>
+
+          {/* mobile: plain column, no pin */}
+          <div className={styles.deckMobile}>
+            {t.deck.cards.map((c, i) => (
+              <div key={c.title} data-reveal className={styles.deckCard} style={{ position: "relative", aspectRatio: "3 / 4", width: "100%" }}>
+                <DeckCardInner i={i} card={c} />
+              </div>
+            ))}
+          </div>
+
+          <div style={{ position: "absolute", right: "clamp(20px,5vw,60px)", bottom: 26, fontFamily: "var(--font-plex-mono), monospace", fontSize: 10.5, letterSpacing: "0.3em", color: "rgba(20,34,74,0.5)" }}>{t.deck.hint}</div>
         </div>
       </div>
 
