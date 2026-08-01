@@ -106,6 +106,8 @@ export function LettersReveal({
 }
 
 // A block that rises out of an overflow mask — one editorial line at a time.
+// The in-view observer watches the (unclipped) mask container: the inner span
+// starts fully clipped, so observing it directly would never fire.
 export function MaskReveal({
   children,
   delay = 0,
@@ -120,15 +122,15 @@ export function MaskReveal({
   style?: CSSProperties;
 }) {
   const reduce = useReducedMotion();
-  const anim = { y: "0%" };
+  const ref = useRef<HTMLSpanElement>(null);
+  const seen = useInView(ref, { once: true, amount: 0.35 });
+  const visible = reduce || !inView || seen;
   return (
-    <span style={{ display: "block", overflow: "hidden", ...style }}>
+    <span ref={ref} style={{ display: "block", overflow: "hidden", ...style }}>
       <motion.span
         style={{ display: "block" }}
         initial={reduce ? false : { y: "112%" }}
-        {...(inView
-          ? { whileInView: anim, viewport: { once: true, amount: 0.4 } }
-          : { animate: anim })}
+        animate={visible ? { y: "0%" } : { y: "112%" }}
         transition={{ duration, delay, ease: EASE }}
       >
         {children}
