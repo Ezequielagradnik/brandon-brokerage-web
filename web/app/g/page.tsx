@@ -242,6 +242,16 @@ export default function ConceptG() {
   // Deck scrub: spring-smoothed scroll progress across the 300vh section
   const { scrollYProgress: deckRaw } = useScroll({ target: deckRef, offset: ["start start", "end end"] });
   const deckProgress = useSpring(deckRaw, { stiffness: 90, damping: 28, mass: 0.4 });
+  // The giant headline bows out as the cards fan over it (desktop only)
+  const deckTitleFade = useTransform(deckProgress, [0.1, 0.45], [1, 0]);
+  const [deckDesktop, setDeckDesktop] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 901px)");
+    const update = () => setDeckDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -271,7 +281,7 @@ export default function ConceptG() {
         style={{
           position: "fixed", top: 0, left: 0, right: 0, zIndex: 60,
           padding: scrolled ? "14px clamp(20px,5vw,60px)" : "22px clamp(20px,5vw,60px)",
-          background: scrolled ? "rgba(20,34,74,0.96)" : "linear-gradient(180deg, rgba(16,24,40,0.45), transparent)",
+          background: scrolled ? "rgba(20,34,74,0.96)" : "linear-gradient(180deg, rgba(16,24,40,0.78), rgba(16,24,40,0.35) 70%, transparent)",
           backdropFilter: scrolled ? "blur(10px)" : "none",
           borderBottom: scrolled ? "1px solid rgba(194,161,91,0.25)" : "1px solid transparent",
         }}
@@ -303,7 +313,7 @@ export default function ConceptG() {
       <div id="top" style={{ position: "relative", minHeight: "100svh", display: "flex", alignItems: "flex-end", overflow: "hidden", padding: "clamp(120px,14vw,180px) clamp(20px,5vw,60px) clamp(60px,8vw,100px)" }}>
         <div style={{ position: "absolute", inset: 0 }}>
           <motion.img
-            src="/images/miami-palms-sunset.jpg"
+            src="/images/miami-sunset.jpg"
             alt=""
             data-photo-slot="hero"
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
@@ -311,7 +321,8 @@ export default function ConceptG() {
             animate={{ opacity: 1, scale: [1.1, 1] }}
             transition={{ opacity: { duration: 1.4 }, scale: { duration: 34, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" } }}
           />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(16,24,40,0.5), rgba(16,24,40,0.25) 40%, rgba(16,24,40,0.78) 92%)" }} />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(16,24,40,0.62), rgba(16,24,40,0.32) 45%, rgba(16,24,40,0.85) 92%)" }} />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(16,24,40,0.55), rgba(16,24,40,0.1) 60%)" }} />
         </div>
         <div style={{ position: "relative", zIndex: 2, maxWidth: 1240, margin: "0 auto", width: "100%" }}>
           <FadeIn delay={0.1} style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 26 }}>
@@ -358,8 +369,8 @@ export default function ConceptG() {
       <div id="solutions" ref={deckRef} className={styles.deckSection}>
         <div className={styles.deckPin} style={{ padding: "0 clamp(20px,5vw,60px)" }}>
 
-          {/* headline column (behind the cards) */}
-          <div style={{ position: "relative", zIndex: 1, maxWidth: 1240, margin: "0 auto", width: "100%" }}>
+          {/* headline column — fades out as the deck fans over it */}
+          <motion.div style={{ position: "relative", zIndex: 1, maxWidth: 1240, margin: "0 auto", width: "100%", opacity: deckDesktop ? deckTitleFade : 1 }}>
             <div data-reveal style={{ fontSize: 12, letterSpacing: "0.24em", textTransform: "uppercase", color: GOLD_DEEP, fontWeight: 700, marginBottom: 26 }}>{t.deck.eyebrow}</div>
             <h2 className={styles.deckHeadline} data-reveal>
               {t.deck.lines.map((l) => (
@@ -367,7 +378,7 @@ export default function ConceptG() {
               ))}
             </h2>
             <a data-reveal href="#contact" className={styles.lnk} style={{ display: "inline-block", marginTop: 34, fontSize: 13, letterSpacing: "0.1em", textTransform: "uppercase", color: NAVY, fontWeight: 700 }}>{t.deck.seeAll} →</a>
-          </div>
+          </motion.div>
 
           {/* the deck (desktop) */}
           <div className={styles.deckCards}>
