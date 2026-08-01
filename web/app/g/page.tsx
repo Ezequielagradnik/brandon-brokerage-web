@@ -5,6 +5,7 @@ import { motion, useReducedMotion, useScroll, useSpring, useTransform, type Moti
 import { useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
 import { ScrollProgress, MaskReveal, FadeIn, CountUp, GrowLine, ParallaxImg, Magnetic, CursorDot, ctaFillFromCursor } from "@/components/motion";
+import GlobeArcs, { GOLD_ARCS } from "@/components/GlobeArcs";
 import styles from "./page.module.css";
 
 // Palette shared with Brandon Latam Network (sister firm)
@@ -36,7 +37,7 @@ const T = {
     nav: { solutions: "Solutions", firm: "The Firm", insights: "Insights", contact: "Contact", cta: "Partner with us" },
     heroEyebrow: "Est. the 1970s · Coral Gables, Florida",
     heroLines: ["The quiet partner", "behind", "extraordinary cases."],
-    heroSub: "Brandon Brokerage Group partners with producers and financial advisors to deliver customized business solutions — advanced sales support, full case management and access to 30+ top-rated carriers.",
+    heroSub: "Advanced sales support, full case management and 30+ top-rated carriers — for producers and financial advisors.",
     heroCta: "Partner with us",
     heroLink: "Our solutions",
     trust: "A Tellus / Crump firm · Serving agents in 50 states · Coral Gables since the 1970s",
@@ -92,7 +93,7 @@ const T = {
     nav: { solutions: "Soluciones", firm: "La Firma", insights: "Insights", contact: "Contacto", cta: "Trabajemos juntos" },
     heroEyebrow: "Desde los años 70 · Coral Gables, Florida",
     heroLines: ["El socio silencioso", "detrás de", "casos extraordinarios."],
-    heroSub: "Brandon Brokerage Group trabaja junto a productores y asesores financieros para entregar soluciones de negocio a medida: soporte avanzado de ventas, gestión integral de casos y acceso a más de 30 aseguradoras de primer nivel.",
+    heroSub: "Soporte avanzado de ventas, gestión integral de casos y más de 30 aseguradoras top, para productores y asesores financieros.",
     heroCta: "Trabajemos juntos",
     heroLink: "Nuestras soluciones",
     trust: "Firma Tellus / Crump · Agentes en 50 estados · Coral Gables desde los años 70",
@@ -184,62 +185,6 @@ function MissionHighlight({ text }: { text: string }) {
         <MissionWord key={`${i}-${w}`} progress={scrollYProgress} range={[i / words.length, Math.min(1, (i + 1.5) / words.length)]} word={w} />
       ))}
     </p>
-  );
-}
-
-// ————— Specialty: minimal line globe with LatAm → Miami arcs —————
-const ARC_MIA = { x: 258, y: 96, label: "MIA" };
-const ARC_CITIES = [
-  { x: 128, y: 178, label: "MEX" },
-  { x: 214, y: 240, label: "BOG" },
-  { x: 188, y: 312, label: "LIM" },
-  { x: 222, y: 408, label: "SCL" },
-  { x: 290, y: 412, label: "BUE" },
-  { x: 352, y: 330, label: "SAO" },
-];
-
-function LatamArcs() {
-  const reduce = useReducedMotion();
-  return (
-    <svg viewBox="0 0 480 500" fill="none" style={{ width: "100%", height: "auto", display: "block" }} aria-hidden="true">
-      {/* thin-line globe */}
-      <circle cx="240" cy="256" r="204" stroke="rgba(217,194,145,0.25)" strokeWidth="1" />
-      <ellipse cx="240" cy="256" rx="204" ry="82" stroke="rgba(217,194,145,0.14)" strokeWidth="1" />
-      <ellipse cx="240" cy="256" rx="150" ry="203" stroke="rgba(217,194,145,0.12)" strokeWidth="1" />
-      <ellipse cx="240" cy="256" rx="78" ry="203" stroke="rgba(217,194,145,0.12)" strokeWidth="1" />
-      <line x1="36" y1="256" x2="444" y2="256" stroke="rgba(217,194,145,0.14)" strokeWidth="1" />
-      {/* arcs LatAm → Miami, drawn on entry */}
-      {ARC_CITIES.map((c, i) => {
-        const midX = (c.x + ARC_MIA.x) / 2 + (c.x < ARC_MIA.x ? -34 : 34);
-        const midY = Math.min(c.y, ARC_MIA.y) - 54 - i * 5;
-        return (
-          <motion.path
-            key={c.label}
-            d={`M ${c.x} ${c.y} Q ${midX} ${midY} ${ARC_MIA.x} ${ARC_MIA.y}`}
-            stroke={GOLD}
-            strokeWidth="1.2"
-            initial={reduce ? false : { pathLength: 0, opacity: 0.35 }}
-            whileInView={{ pathLength: 1, opacity: 0.9 }}
-            viewport={{ once: true, amount: 0.35 }}
-            transition={{ duration: 1.6, delay: 0.35 + i * 0.18, ease: [0.16, 1, 0.3, 1] }}
-          />
-        );
-      })}
-      {/* city points + mono labels */}
-      {[ARC_MIA, ...ARC_CITIES].map((c, i) => (
-        <motion.g
-          key={c.label}
-          initial={reduce ? false : { opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.6, delay: 0.15 + i * 0.12 }}
-        >
-          <circle cx={c.x} cy={c.y} r={i === 0 ? 5 : 3} fill={i === 0 ? "#d9c291" : GOLD} />
-          {i === 0 && <circle cx={c.x} cy={c.y} r="11" stroke="#d9c291" strokeWidth="1" opacity="0.5" />}
-          <text x={c.x + 12} y={c.y + 4} fontFamily="IBM Plex Mono, monospace" fontSize="10.5" letterSpacing="1.5" fill={i === 0 ? "#d9c291" : "rgba(255,255,255,0.55)"}>{c.label}</text>
-        </motion.g>
-      ))}
-    </svg>
   );
 }
 
@@ -403,9 +348,9 @@ export default function ConceptG() {
           {NAV_LINKS.map((l) => (
             <a key={l.href} href={l.href} className={styles.nl}>{l.label}</a>
           ))}
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 2 }}>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 1, marginRight: "clamp(6px,1vw,18px)" }}>
             <button type="button" onClick={() => setLang("en")} className={`${styles.langBtn} ${lang === "en" ? styles.langActive : ""}`}>EN</button>
-            <span style={{ color: "rgba(255,255,255,0.35)", fontSize: 11 }}>/</span>
+            <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 10 }}>/</span>
             <button type="button" onClick={() => setLang("es")} className={`${styles.langBtn} ${lang === "es" ? styles.langActive : ""}`}>ES</button>
           </span>
           <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ padding: "11px 24px", fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase" }}>{t.nav.cta}</a>
@@ -440,13 +385,13 @@ export default function ConceptG() {
             <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }} style={{ width: 42, height: 1, background: GOLD, transformOrigin: "0 50%" }} />
             <span style={{ ...monoEyebrow(true), letterSpacing: "0.3em" }}>{t.heroEyebrow}</span>
           </FadeIn>
-          <h1 key={lang} style={{ ...MASTHEAD, margin: "0 0 30px", color: "#ffffff" }}>
+          <h1 key={lang} style={{ ...MASTHEAD, margin: "0 0 clamp(30px,3.4vw,44px)", color: "#ffffff" }}>
             <MaskReveal delay={0.2}>{t.heroLines[0]}</MaskReveal>
             <MaskReveal delay={0.35}>{t.heroLines[1]}</MaskReveal>
-            <MaskReveal delay={0.5}><span style={{ fontStyle: "italic", color: "#d9c291" }}>{t.heroLines[2]}</span></MaskReveal>
+            <MaskReveal delay={0.5}><span style={{ fontStyle: "italic", color: "#d9c291", fontSize: "0.9em" }}>{t.heroLines[2]}</span></MaskReveal>
           </h1>
           <FadeIn delay={0.65}>
-            <p style={{ fontSize: "clamp(16px,1.4vw,18.5px)", lineHeight: 1.7, color: "rgba(255,255,255,0.85)", fontWeight: 400, maxWidth: 560, margin: "0 0 38px" }}>{t.heroSub}</p>
+            <p style={{ fontSize: 19, lineHeight: 1.65, color: "rgba(255,255,255,0.87)", fontWeight: 400, maxWidth: 520, margin: "0 0 38px" }}>{t.heroSub}</p>
           </FadeIn>
           <FadeIn delay={0.78} style={{ display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap" }}>
             <Magnetic>
@@ -560,21 +505,22 @@ export default function ConceptG() {
         </div>
       </div>
 
-      {/* 04 — SPECIALTY: navy band, line globe with LatAm → Miami arcs */}
+      {/* 04 — SPECIALTY: navy band, 3D globe with LatAm → Miami arcs */}
       <div style={{ position: "relative", padding: "clamp(90px,12vw,160px) clamp(20px,5vw,60px)", background: NAVY, overflow: "hidden" }}>
+        <div className={styles.grain} aria-hidden="true" />
         <div style={{ position: "relative", zIndex: 2, maxWidth: 1240, margin: "0 auto" }}>
           <SectionHead num="04" label={t.heads.specialty} dark />
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,80px)", alignItems: "center" }}>
             <div>
               <h2 style={{ ...MASTHEAD, margin: "0 0 30px", color: "#fff" }}>
                 <MaskReveal inView delay={0.1}>{t.spcTitle1}</MaskReveal>
-                <MaskReveal inView delay={0.25}><span style={{ fontStyle: "italic", color: "#d9c291" }}>{t.spcTitle2}</span></MaskReveal>
+                <MaskReveal inView delay={0.25}><span style={{ fontStyle: "italic", color: "#d9c291", fontSize: "0.9em" }}>{t.spcTitle2}</span></MaskReveal>
               </h2>
               <p data-reveal style={{ fontSize: "clamp(15.5px,1.4vw,18px)", lineHeight: 1.75, color: "rgba(255,255,255,0.82)", margin: "0 0 36px", maxWidth: 560 }}>{t.spcBody}</p>
               <a data-reveal href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "15px 34px", fontSize: 12.5, letterSpacing: "0.12em", textTransform: "uppercase" }}>{t.spcCta}</a>
             </div>
             <div data-reveal style={{ maxWidth: 520, margin: "0 auto", width: "100%" }}>
-              <LatamArcs />
+              <GlobeArcs palette={GOLD_ARCS} />
             </div>
           </div>
         </div>
@@ -625,8 +571,9 @@ export default function ConceptG() {
       </div>
 
       {/* 06 — CONTACT: masthead close, giant clickable phone */}
-      <div id="contact" style={{ padding: "clamp(80px,11vw,150px) clamp(20px,5vw,60px)", background: NAVY }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
+      <div id="contact" style={{ position: "relative", padding: "clamp(80px,11vw,150px) clamp(20px,5vw,60px)", background: NAVY, overflow: "hidden" }}>
+        <div className={styles.grain} aria-hidden="true" />
+        <div style={{ position: "relative", zIndex: 2, maxWidth: 1240, margin: "0 auto" }}>
           <SectionHead num="06" label={t.heads.contact} dark />
           <h2 style={{ ...MASTHEAD, margin: "0 0 30px", color: "#fff", maxWidth: 1050 }}>
             <MaskReveal inView delay={0.1}>{t.ctaTitle}</MaskReveal>

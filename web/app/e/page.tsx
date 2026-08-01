@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
-import { useGlobe, BLUE_GLOBE } from "@/hooks/useGlobe";
 import MobileMenu from "@/components/MobileMenu";
 import { OFFERINGS } from "@/lib/offerings";
+import GlobeArcs, { BLUE_ARCS } from "@/components/GlobeArcs";
 import styles from "./page.module.css";
 
 const NAV_LINKS = [
@@ -26,14 +26,12 @@ const CARRIERS = ["Lincoln", "John Hancock", "AIG", "Nationwide", "Principal", "
 
 export default function ConceptE() {
   const pageRef = useRef<HTMLDivElement>(null);
-  const globeCanvas = useRef<HTMLCanvasElement>(null);
   const heroKicker = useRef<HTMLDivElement>(null);
   const heroTitle = useRef<HTMLHeadingElement>(null);
   const heroSub = useRef<HTMLParagraphElement>(null);
   const heroCta = useRef<HTMLDivElement>(null);
   const [scrolled, setScrolled] = useState(false);
 
-  useGlobe(globeCanvas, BLUE_GLOBE);
   useHeroReveal([heroKicker, heroTitle, heroSub, heroCta]);
   useScrollReveal(pageRef);
 
@@ -73,7 +71,7 @@ export default function ConceptE() {
       {/* HERO — wireframe globe with flight arcs (the foreign-national network) */}
       <div id="top" style={{ position: "relative", minHeight: "92vh", display: "flex", alignItems: "center", padding: "clamp(90px,10vw,140px) clamp(20px,5vw,60px) clamp(70px,8vw,110px)", background: "radial-gradient(130% 100% at 50% 0%, #0a1226 0%, #05070d 62%)", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: "50%", right: "clamp(-180px,-9vw,-80px)", transform: "translateY(-50%)", width: "clamp(360px,46vw,680px)", height: "clamp(360px,46vw,680px)", borderRadius: "50%", overflow: "hidden", background: "radial-gradient(circle at 40% 30%, #0b1c3c, #04070f 75%)", boxShadow: "0 0 140px rgba(37,99,235,0.22)" }}>
-          <canvas ref={globeCanvas} style={{ width: "100%", height: "100%", display: "block" }} />
+          <GlobeArcs palette={BLUE_ARCS} />
         </div>
         <div className={styles.gridOverlay} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(5,7,13,0.25), transparent 30%, transparent 68%, #05070d)" }} />

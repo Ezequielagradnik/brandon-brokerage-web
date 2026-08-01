@@ -32,6 +32,9 @@ const GOLD = "#a9812f";
 const GOLD_DIM = "#9a7526";
 const MUTED = "#6b7482";
 const BODY = "#4a5568";
+// numbered mono section heads, /g structure
+const MONO_K: React.CSSProperties = { fontFamily: "var(--font-plex-mono), monospace", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: GOLD_DIM };
+const D_HAIR = "rgba(169,129,47,0.45)";
 
 const VERTEX_SHADER = "varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position,1.0); }";
 const FRAGMENT_SHADER = `
@@ -54,7 +57,7 @@ void main(){
   col=mix(col,gold, smoothstep(0.55,0.0,d1)*(0.5+0.2*n));
   col=mix(col,navy, smoothstep(0.6,0.0,d2)*(0.32+0.15*n));
   col+= (n-0.5)*0.03;
-  col=mix(col,ivory,0.22);
+  col=mix(col,ivory,0.3);
   gl_FragColor=vec4(col,1.0);
 }
 `;
@@ -224,11 +227,13 @@ export default function ConceptD() {
       <div style={{ padding: "clamp(70px,10vw,140px) clamp(20px,5vw,60px)", background: "#ece7db", borderTop: "1px solid rgba(18,41,74,0.12)", borderBottom: "1px solid rgba(18,41,74,0.12)" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,90px)" }}>
           <div data-reveal>
-            <div style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: GOLD_DIM, marginBottom: 26 }}>Our mission</div>
+            <div style={{ ...MONO_K, marginBottom: 14 }}>01 — Our mission</div>
+            <GrowLine color={D_HAIR} style={{ marginBottom: 24 }} />
             <p style={{ fontFamily: serif, fontWeight: 400, fontSize: "clamp(22px,2.4vw,30px)", lineHeight: 1.42, margin: 0, color: "#1a2536" }}>To provide agents with superior service, personalized sales support and tailored business solutions that <span style={{ fontStyle: "italic", color: GOLD }}>build long-term relationships</span>.</p>
           </div>
           <div data-reveal>
-            <div style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: GOLD_DIM, marginBottom: 26 }}>Our approach</div>
+            <div style={{ ...MONO_K, marginBottom: 14 }}>Our approach</div>
+            <GrowLine color={D_HAIR} delay={0.12} style={{ marginBottom: 24 }} />
             <p style={{ fontSize: 16, lineHeight: 1.75, color: BODY, fontWeight: 400, margin: 0 }}>Open architecture, individualized attention and an exceptional standard of quality. From case design to policy delivery, one dedicated team follows every application — so you can stay in front of your clients, not behind paperwork.</p>
           </div>
         </div>
@@ -238,7 +243,8 @@ export default function ConceptD() {
       <div id="why" style={{ padding: "clamp(64px,9vw,130px) clamp(20px,5vw,60px)", background: "#f3efe6" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
           <div data-reveal style={{ marginBottom: "clamp(40px,5vw,64px)", maxWidth: 640 }}>
-            <div style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: GOLD_DIM, marginBottom: 22 }}>What we offer</div>
+            <div style={{ ...MONO_K, marginBottom: 14 }}>02 — What we offer</div>
+            <GrowLine color={D_HAIR} style={{ marginBottom: 24 }} />
             <h2 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(30px,4.4vw,56px)", margin: 0, color: NAVY, lineHeight: 1.05 }}>Everything behind the case you write.</h2>
           </div>
           <div className={styles.solGrid}>
@@ -275,7 +281,10 @@ export default function ConceptD() {
           <canvas ref={globeCanvas} style={{ width: "100%", height: "100%", display: "block" }} />
         </div>
         <div style={{ position: "relative", maxWidth: 1100, margin: "0 auto" }}>
-          <div data-reveal style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: GOLD_DIM, marginBottom: 34 }}>Signature specialty</div>
+          <div data-reveal style={{ marginBottom: 34, maxWidth: 720 }}>
+            <div style={{ ...MONO_K, marginBottom: 14 }}>03 — Signature specialty</div>
+            <GrowLine color={D_HAIR} />
+          </div>
           <h2 data-reveal style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(34px,6vw,76px)", lineHeight: 1.04, margin: "0 0 40px", color: NAVY, maxWidth: 760 }}>We place the cases <span style={{ fontStyle: "italic", color: GOLD }}>others turn away</span>.</h2>
           <div data-reveal style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: "clamp(28px,3vw,48px)", alignItems: "start", maxWidth: 720 }}>
             <p style={{ fontSize: "clamp(16px,1.5vw,19px)", lineHeight: 1.7, color: BODY, fontWeight: 400, margin: 0 }}>With over 50 years of experience, we are an industry leader in the foreign national market. We help agents devise customized sales strategies and wealth-management solutions for their foreign national clients.</p>
@@ -287,9 +296,13 @@ export default function ConceptD() {
       {/* PRODUCTS — display serif for names only, sans numerals */}
       <div id="products" style={{ padding: "clamp(60px,8vw,110px) clamp(20px,5vw,60px)", background: "#f3efe6" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
+          <div data-reveal style={{ marginBottom: 24 }}>
+            <div style={{ ...MONO_K, marginBottom: 14 }}>04 — Products</div>
+            <GrowLine color={D_HAIR} />
+          </div>
           <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: 16 }}>
             <h2 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(30px,4.4vw,56px)", margin: 0, color: NAVY }}>Products</h2>
-            <span style={{ fontSize: 13, letterSpacing: "0.16em", textTransform: "uppercase", color: GOLD_DIM }}>Backed by 30+ carriers</span>
+            <span style={{ ...MONO_K, fontSize: 11.5 }}>Backed by 30+ carriers</span>
           </div>
           <div data-reveal style={{ borderTop: "1px solid rgba(18,41,74,0.18)" }}>
             {PRODUCTS.map((p) => (
@@ -336,7 +349,8 @@ export default function ConceptD() {
       <div id="contact" style={{ position: "relative", padding: "clamp(90px,13vw,180px) clamp(20px,5vw,60px)", background: "#ece7db" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,90px)", alignItems: "center" }}>
           <div data-reveal>
-            <div style={{ fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: GOLD_DIM, marginBottom: 30 }}>Contact</div>
+            <div style={{ ...MONO_K, marginBottom: 14 }}>05 — Contact</div>
+            <GrowLine color={D_HAIR} style={{ marginBottom: 26 }} />
             <h2 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(38px,5.5vw,72px)", lineHeight: 1.02, margin: "0 0 28px", color: NAVY }}>Let&apos;s write more business, together.</h2>
             <p style={{ fontSize: 17, lineHeight: 1.66, color: BODY, fontWeight: 400, margin: 0, maxWidth: 440 }}>Tell us about your case or your book of business. A brokerage director responds within one business day.</p>
           </div>
