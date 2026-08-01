@@ -5,18 +5,23 @@ import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import { useHeroReveal, useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
 import { OFFERINGS } from "@/lib/offerings";
-import GlobeArcs, { BLUE_ARCS } from "@/components/GlobeArcs";
-import { GrowLine } from "@/components/motion";
+import { GrowLine, CountUp } from "@/components/motion";
 import styles from "./page.module.css";
+
+const INK = "#0d0f12";
+const COBALT = "#1f4fd8";
+const HAIR = "#e5e7eb";
+const GRAY = "#4b5158";
+const GRAY_LIGHT = "#6b7280";
 
 // ————— Signature scroll moment: the blueprint assembles along a spine —————
 const E_CATS = ["ESPECIALIDAD", "SOPORTE", "OPERACIONES", "RED"];
 
 // mono label that types itself in when it appears
-function TypeMono({ text, delay = 0, color = "#5c8dff" }: { text: string; delay?: number; color?: string }) {
+function TypeMono({ text, delay = 0, color = COBALT }: { text: string; delay?: number; color?: string }) {
   const reduce = useReducedMotion();
   return (
-    <span aria-label={text} style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 12, letterSpacing: "0.14em", color, display: "inline-block" }}>
+    <span aria-label={text} className={styles.mono} style={{ fontSize: 11.5, color, display: "inline-block" }}>
       {text.split("").map((ch, i) => (
         <motion.span
           key={i}
@@ -46,9 +51,9 @@ function SpineNode({ i }: { i: number }) {
       transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
       style={{ textAlign: left ? "right" : "left" }}
     >
-      <div style={{ marginBottom: 10 }}><TypeMono text={`[0${i + 1}] ${E_CATS[i]}`} delay={0.25} /></div>
-      <h3 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(20px,2.2vw,30px)", margin: "0 0 10px", color: "#fff", letterSpacing: "-0.01em", lineHeight: 1.15 }}>{o.title}</h3>
-      <p style={{ fontSize: 14, lineHeight: 1.6, color: "#8b99b5", margin: 0, maxWidth: 380, marginLeft: left ? "auto" : 0 }}>{o.blurb}</p>
+      <div style={{ marginBottom: 12 }}><TypeMono text={`[0${i + 1}] ${E_CATS[i]}`} delay={0.25} /></div>
+      <h3 style={{ fontWeight: 600, fontSize: "clamp(20px,2.2vw,28px)", margin: "0 0 10px", color: INK, letterSpacing: "-0.02em", lineHeight: 1.15 }}>{o.title}</h3>
+      <p style={{ fontSize: 14.5, lineHeight: 1.6, color: GRAY_LIGHT, margin: 0, maxWidth: 380, marginLeft: left ? "auto" : 0 }}>{o.blurb}</p>
     </motion.div>
   );
   return (
@@ -60,11 +65,68 @@ function SpineNode({ i }: { i: number }) {
           whileInView={{ scale: 1 }}
           viewport={{ once: true, amount: 0.9 }}
           transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.1 }}
-          style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 9, height: 9, background: "#05070d", border: "2px solid #3b82f6", borderRadius: "50%", zIndex: 2 }}
+          style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 7, height: 7, background: INK, zIndex: 2 }}
         />
-        <GrowLine color="#2563eb" origin={left ? "left" : "left"} style={{ position: "absolute", top: "50%", [left ? "right" : "left"]: "50%", width: "clamp(30px,4vw,70px)", transformOrigin: left ? "100% 50%" : "0 50%" }} />
+        <GrowLine color={INK} style={{ position: "absolute", top: "50%", [left ? "right" : "left"]: "50%", width: "clamp(30px,4vw,70px)", transformOrigin: left ? "100% 50%" : "0 50%" }} />
       </div>
       <div className={styles.spineCellR}>{!left && content}</div>
+    </div>
+  );
+}
+
+// ————— Route band: LatAm city codes strung along one line into MIA —————
+const ROUTE = [
+  { code: "MEX", coord: "19.4°N" },
+  { code: "BOG", coord: "4.7°N" },
+  { code: "LIM", coord: "12.0°S" },
+  { code: "SCL", coord: "33.4°S" },
+  { code: "BUE", coord: "34.6°S" },
+  { code: "SAO", coord: "23.5°S" },
+  { code: "MIA", coord: "25.7°N", hub: true },
+];
+
+function RouteBand() {
+  const reduce = useReducedMotion();
+  return (
+    <div>
+      <div className={styles.routeBand}>
+        {ROUTE.map((c, i) => (
+          <motion.div
+            key={c.code}
+            initial={reduce ? false : { opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.6, delay: 0.35 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+            style={{ paddingBottom: 14 }}
+          >
+            <div className={styles.mono} style={{ fontSize: 10.5, color: GRAY_LIGHT, marginBottom: 6 }}>{c.coord}</div>
+            <div style={{ fontSize: "clamp(18px,2.2vw,28px)", fontWeight: c.hub ? 700 : 500, letterSpacing: "-0.01em", color: c.hub ? COBALT : INK }}>{c.code}</div>
+          </motion.div>
+        ))}
+      </div>
+      {/* the connecting line, drawn on entry */}
+      <div style={{ position: "relative" }}>
+        <GrowLine color={INK} />
+        <div className={styles.routeBand} style={{ position: "absolute", top: -3, left: 0, right: 0 }}>
+          {ROUTE.map((c, i) => (
+            <motion.span
+              key={c.code}
+              initial={reduce ? false : { opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.4, delay: 0.35 + i * 0.12 }}
+              style={{ width: c.hub ? 9 : 7, height: c.hub ? 9 : 7, background: c.hub ? COBALT : INK, borderRadius: c.hub ? "50%" : 0, justifySelf: "start" }}
+            />
+          ))}
+        </div>
+      </div>
+      <div className={styles.routeBand} style={{ marginTop: 12 }}>
+        {ROUTE.map((c) => (
+          <span key={c.code} className={styles.mono} style={{ fontSize: 9.5, color: c.hub ? COBALT : "#9aa0a8" }}>
+            {c.hub ? "HUB" : "→ MIA"}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
@@ -109,143 +171,151 @@ export default function ConceptE() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const kicker: React.CSSProperties = { fontFamily: "var(--font-plex-mono), monospace", fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", color: GRAY_LIGHT };
+
   return (
     <div ref={pageRef} className={styles.page}>
 
-      {/* HEADER */}
-      <div className={styles.headerBar} style={{ position: "sticky", top: 0, zIndex: 60, padding: scrolled ? "13px clamp(20px,5vw,60px)" : "20px clamp(20px,5vw,60px)", background: "rgba(5,7,13,0.82)", backdropFilter: "blur(12px)", borderBottom: scrolled ? "1px solid #1b2842" : "1px solid #10192c", boxShadow: scrolled ? "0 10px 40px rgba(0,0,0,0.55)" : "none", transition: "padding 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease" }}>
+      {/* NAV — white, hairline under */}
+      <div className={styles.headerBar} style={{ position: "sticky", top: 0, zIndex: 60, padding: scrolled ? "13px clamp(20px,5vw,60px)" : "20px clamp(20px,5vw,60px)", transition: "padding 0.28s ease" }}>
         <a href="#top" style={{ display: "inline-flex" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/brandon-logo-white.png" alt="Brandon Brokerage Group" style={{ height: scrolled ? 24 : 28, transition: "height 0.28s ease" }} />
+          <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: scrolled ? 24 : 28, transition: "height 0.28s ease" }} />
         </a>
         <div className={styles.headerNav}>
-          <a href="#why" className={styles.nl}>La Firma</a>
-          <a href="#foreign" className={styles.nl}>Clientes Extranjeros</a>
-          <a href="#products" className={styles.nl}>Productos</a>
-          <a href="#contact" className={styles.nl}>Contacto</a>
-          <a href="#contact" className={`${styles.cta} ${styles.ctaBlue}`} style={{ padding: "11px 22px", borderRadius: 4, fontSize: 13, fontFamily: "var(--font-plex-mono), monospace", letterSpacing: "0.06em", textTransform: "uppercase" }}>Trabajemos Juntos</a>
+          {NAV_LINKS.map((l) => (
+            <a key={l.href} href={l.href} className={styles.nl}>{l.label}</a>
+          ))}
+          <a href="#contact" className={styles.cta} style={{ padding: "11px 22px", fontSize: 12.5, letterSpacing: "0.02em" }}>Trabajemos juntos</a>
         </div>
         <MobileMenu
           links={NAV_LINKS}
-          ctaLabel="Trabajemos Juntos"
+          ctaLabel="Trabajemos juntos"
           ctaHref="#contact"
-          panelBg="#0a0f1c"
-          textColor="#eef2f8"
-          accentColor="#3b82f6"
+          panelBg="#ffffff"
+          textColor={INK}
+          accentColor={COBALT}
         />
       </div>
 
-      {/* HERO — blueprint grid, no globe (it belongs to Foreign National) */}
-      <div id="top" style={{ position: "relative", minHeight: "92vh", display: "flex", alignItems: "center", padding: "clamp(90px,10vw,140px) clamp(20px,5vw,60px) clamp(70px,8vw,110px)", background: "radial-gradient(130% 100% at 50% 0%, #0a1226 0%, #05070d 62%)", overflow: "hidden" }}>
+      {/* HERO — white, blueprint hairlines, Helvetica */}
+      <div id="top" style={{ position: "relative", minHeight: "88vh", display: "flex", alignItems: "center", padding: "clamp(70px,9vw,120px) clamp(20px,5vw,60px) clamp(60px,8vw,100px)", overflow: "hidden" }}>
         <div className={styles.gridOverlay} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(5,7,13,0.25), transparent 30%, transparent 68%, #05070d)" }} />
         <div style={{ position: "relative", maxWidth: 1300, margin: "0 auto", width: "100%" }}>
-          <div style={{ maxWidth: 860 }}>
-            <div ref={heroKicker} style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 30 }}>
-              <span style={{ width: 34, height: 1, background: "#3b82f6" }} />
-              <span className={styles.tag}>Coral Gables — Desde los años 70</span>
+          <div style={{ maxWidth: 980 }}>
+            <div ref={heroKicker} style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 34 }}>
+              <span style={{ width: 28, height: 1, background: INK }} />
+              <span className={styles.mono} style={{ fontSize: 11, textTransform: "uppercase", color: GRAY }}>Coral Gables, FL · 25.7213° N, 80.2683° W</span>
             </div>
-            <h1 ref={heroTitle} style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,68px)", lineHeight: 1.05, letterSpacing: "-0.02em", margin: "0 0 26px", color: "#fff" }}>
-              Trabajamos junto a productores y asesores financieros para entregar soluciones de negocio a medida, con <span style={{ color: "#5c8dff" }}>una ejecución impecable</span>.
+            <h1 ref={heroTitle} style={{ fontWeight: 600, fontSize: "clamp(38px,5.6vw,82px)", lineHeight: 1.02, letterSpacing: "-0.035em", margin: "0 0 30px", color: INK }}>
+              Trabajamos junto a productores y asesores financieros para entregar soluciones de negocio a medida, con <span style={{ color: COBALT }}>una ejecución impecable</span>.
             </h1>
-            <p ref={heroSub} style={{ fontSize: "clamp(16px,1.3vw,18.5px)", lineHeight: 1.65, color: "#9fb0cc", fontWeight: 400, maxWidth: 580, margin: "0 0 40px" }}>
-              Desde hace más de cincuenta años, Brandon Brokerage Group combina soporte avanzado de ventas y gestión integral de casos con acceso a más de 30 aseguradoras de primer nivel, y un dominio poco común del mercado de clientes extranjeros.
+            <p ref={heroSub} style={{ fontSize: "clamp(16px,1.3vw,18.5px)", lineHeight: 1.6, color: GRAY_LIGHT, maxWidth: 560, margin: "0 0 40px" }}>
+              Desde hace más de cincuenta años combinamos soporte avanzado de ventas y gestión integral de casos con acceso a más de 30 aseguradoras de primer nivel.
             </p>
-            <div ref={heroCta} style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
-              <a href="#contact" className={`${styles.cta} ${styles.ctaBlue}`} style={{ padding: "16px 32px", borderRadius: 4, fontSize: 13.5, fontFamily: "var(--font-plex-mono), monospace", letterSpacing: "0.06em", textTransform: "uppercase" }}>Trabajemos Juntos</a>
-              <a href="#products" className={`${styles.cta} ${styles.ctaOutline}`} style={{ padding: "16px 32px", borderRadius: 4, fontSize: 13.5, fontFamily: "var(--font-plex-mono), monospace", letterSpacing: "0.06em", textTransform: "uppercase" }}>Ver Productos</a>
+            <div ref={heroCta} style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+              <a href="#contact" className={styles.cta} style={{ padding: "16px 32px", fontSize: 14 }}>Trabajemos juntos</a>
+              <a href="#products" className={`${styles.cta} ${styles.ctaGhost}`} style={{ padding: "16px 32px", fontSize: 14 }}>Ver productos</a>
             </div>
           </div>
         </div>
-        <div style={{ position: "absolute", bottom: 30, left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
-          <span className={styles.mono} style={{ fontSize: 10, letterSpacing: "0.3em", textTransform: "uppercase", color: "#54647f" }}>Scroll</span>
-          <span style={{ width: 1, height: 34, background: "linear-gradient(#3b82f6, transparent)" }} />
-        </div>
       </div>
 
-      {/* STATS */}
-      <div data-reveal style={{ borderTop: "1px solid #10192c", borderBottom: "1px solid #10192c", background: "#05070d" }}>
+      {/* STATS — hairline ledger, one cobalt data point */}
+      <div data-reveal style={{ borderTop: `1px solid ${HAIR}`, borderBottom: `1px solid ${HAIR}` }}>
         <div style={{ maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))" }}>
-          {[["50+", "Años de experiencia"], ["30+", "Aseguradoras top"], ["05", "Líneas de producto"], ["No.1", "Mercado de extranjeros"]].map(([n, l], i) => (
-            <div key={l} style={{ padding: "40px clamp(20px,4vw,48px)", borderLeft: i > 0 ? "1px solid #10192c" : undefined }}>
-              <div style={{ fontFamily: "var(--font-archivo), sans-serif", fontSize: "clamp(34px,4.4vw,50px)", fontWeight: 800, color: n === "No.1" ? "#5c8dff" : "#fff", lineHeight: 0.95 }}>{n}</div>
-              <div className={styles.mono} style={{ fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6b7c9c", marginTop: 12 }}>{l}</div>
+          {[
+            { num: 50, suffix: "+", label: "Años de experiencia" },
+            { num: 30, suffix: "+", label: "Aseguradoras top" },
+            { num: 5, suffix: "", label: "Líneas de producto" },
+            { num: null, text: "N.º 1", label: "Mercado de extranjeros", accent: true },
+          ].map((s, i) => (
+            <div key={s.label} style={{ padding: "clamp(32px,4vw,48px) clamp(20px,4vw,44px)", borderLeft: i > 0 ? `1px solid ${HAIR}` : undefined }}>
+              <div style={{ fontSize: "clamp(34px,4.4vw,54px)", fontWeight: 600, letterSpacing: "-0.04em", lineHeight: 0.95, color: s.accent ? COBALT : INK }}>
+                {s.num !== null ? <CountUp to={s.num} suffix={s.suffix} /> : s.text}
+              </div>
+              <div className={styles.mono} style={{ fontSize: 10.5, textTransform: "uppercase", color: GRAY_LIGHT, marginTop: 14 }}>{s.label}</div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* MISSION */}
-      <div style={{ padding: "clamp(76px,10vw,140px) clamp(20px,5vw,60px)", background: "#05070d" }}>
-        <div style={{ maxWidth: 1000, margin: "0 auto" }}>
-          <div data-reveal className={styles.tag} style={{ marginBottom: 30 }}>Nuestra Misión</div>
-          <p data-reveal style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 600, fontSize: "clamp(24px,3.2vw,40px)", lineHeight: 1.34, margin: 0, color: "#dbe4f5" }}>
-            Brindar a los agentes un servicio superior, soporte de ventas personalizado y soluciones a medida que <span style={{ color: "#5c8dff" }}>construyan relaciones de largo plazo</span>.
-          </p>
+      {/* MISSION + one duotone photograph */}
+      <div style={{ padding: "clamp(70px,9vw,130px) clamp(20px,5vw,60px)" }}>
+        <div style={{ maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(36px,5vw,72px)", alignItems: "center" }}>
+          <div data-reveal>
+            <div style={{ ...kicker, marginBottom: 14 }}>Nuestra misión</div>
+            <GrowLine color={HAIR} style={{ marginBottom: 28 }} />
+            <p style={{ fontWeight: 500, fontSize: "clamp(22px,2.8vw,36px)", lineHeight: 1.28, letterSpacing: "-0.025em", margin: 0, color: INK }}>
+              Brindar a los agentes un servicio superior, soporte de ventas personalizado y soluciones a medida que <span style={{ color: COBALT }}>construyan relaciones de largo plazo</span>.
+            </p>
+          </div>
+          <div data-reveal className={styles.duotone} style={{ height: "clamp(280px,34vw,420px)" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/handshake-office.jpg" alt="Brandon Brokerage Group" data-photo-slot="firm" />
+          </div>
         </div>
       </div>
 
-      {/* WHAT WE OFFER — signature scroll moment: the blueprint assembles */}
-      <div id="why" ref={spineRef} style={{ padding: "clamp(64px,8vw,110px) clamp(20px,5vw,60px) 0", background: "#070b14", borderTop: "1px solid #10192c" }}>
+      {/* WHAT WE OFFER — the blueprint assembles */}
+      <div id="why" ref={spineRef} style={{ padding: "clamp(56px,7vw,96px) clamp(20px,5vw,60px) 0", borderTop: `1px solid ${HAIR}` }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
           <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: "clamp(44px,6vw,80px)" }}>
             <div>
-              <div className={styles.tag} style={{ marginBottom: 14 }}>Qué Ofrecemos</div>
-              <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(28px,3.6vw,44px)", margin: 0, color: "#fff", letterSpacing: "-0.01em" }}>El blueprint, ensamblado.</h2>
+              <div style={{ ...kicker, marginBottom: 14 }}>Qué ofrecemos</div>
+              <h2 style={{ fontWeight: 600, fontSize: "clamp(28px,3.6vw,46px)", margin: 0, color: INK, letterSpacing: "-0.03em" }}>El blueprint, ensamblado.</h2>
             </div>
-            <span className={styles.mono} style={{ fontSize: 11.5, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6b7c9c" }}>Cuatro disciplinas / un equipo</span>
+            <span className={styles.mono} style={{ fontSize: 11, textTransform: "uppercase", color: GRAY_LIGHT }}>Cuatro disciplinas / un equipo</span>
           </div>
 
           <div className={styles.spineWrap}>
-            {/* the spine draws itself with scroll */}
             <motion.div className={styles.spineLine} style={{ scaleY: spineScale }} aria-hidden="true" />
             {OFFERINGS.map((_, i) => (
               <SpineNode key={i} i={i} />
             ))}
-            {/* terminal: the spine connects to the global network */}
             <div className={styles.spineEnd}>
-              <span style={{ width: 11, height: 11, background: "#3b82f6", borderRadius: "50%", boxShadow: "0 0 18px rgba(59,130,246,0.8)" }} />
-              <a href="#foreign" className={styles.mono} style={{ fontSize: 11.5, letterSpacing: "0.18em", textTransform: "uppercase", color: "#5c8dff", marginTop: 14 }}>↓ Red de clientes extranjeros</a>
+              <span style={{ width: 9, height: 9, background: COBALT }} />
+              <a href="#foreign" className={`${styles.mono} ${styles.lnk}`} style={{ fontSize: 11, textTransform: "uppercase", marginTop: 16 }}>↓ Red de clientes extranjeros</a>
             </div>
           </div>
         </div>
       </div>
 
-      {/* FOREIGN NATIONAL — the globe lands here, where the spine points */}
-      <div id="foreign" style={{ position: "relative", padding: "clamp(76px,10vw,130px) clamp(20px,5vw,60px)", background: "linear-gradient(180deg,#070b14,#0a1226)", overflow: "hidden", borderTop: "1px solid #10192c" }}>
-        <div style={{ position: "relative", maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))", gap: "clamp(40px,6vw,80px)", alignItems: "center" }}>
-          <div>
-            <div data-reveal className={styles.tag} style={{ marginBottom: 24 }}>Especialidad Distintiva</div>
-            <h2 data-reveal style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(32px,5vw,72px)", lineHeight: 1.02, margin: "0 0 40px", color: "#fff", letterSpacing: "-0.02em" }}>
-              Colocamos los casos que <span style={{ color: "#5c8dff" }}>otros rechazan</span>.
+      {/* FOREIGN NATIONAL — the route band */}
+      <div id="foreign" style={{ padding: "clamp(70px,9vw,130px) clamp(20px,5vw,60px)", borderTop: `1px solid ${HAIR}`, background: "#fafafa" }}>
+        <div style={{ maxWidth: 1300, margin: "0 auto" }}>
+          <div data-reveal style={{ maxWidth: 900, marginBottom: "clamp(44px,6vw,72px)" }}>
+            <div style={{ ...kicker, marginBottom: 14 }}>Especialidad distintiva</div>
+            <GrowLine color={HAIR} style={{ marginBottom: 30 }} />
+            <h2 style={{ fontWeight: 600, fontSize: "clamp(30px,4.6vw,64px)", lineHeight: 1.03, margin: "0 0 28px", color: INK, letterSpacing: "-0.035em" }}>
+              Colocamos los casos que <span style={{ color: COBALT }}>otros rechazan</span>.
             </h2>
-            <div data-reveal style={{ display: "grid", gap: 24, borderTop: "1px solid #1b2842", paddingTop: 34 }}>
-              <p style={{ fontSize: 16, lineHeight: 1.7, color: "#9fb0cc", margin: 0 }}>Con más de 50 años de experiencia, somos líderes del mercado de clientes extranjeros. Ayudamos a los agentes a diseñar estrategias de venta y soluciones de wealth management a medida para sus clientes internacionales.</p>
-              <p style={{ fontSize: 16, lineHeight: 1.7, color: "#9fb0cc", margin: 0 }}>Nuestro enfoque de arquitectura abierta ofrece una variedad de productos y servicios para cubrir las necesidades de sus clientes, siempre dentro de las normas de cada aseguradora, estado y regulación federal. <a href="#contact" style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 14 }}>Trabajemos juntos →</a></p>
-            </div>
+            <p style={{ fontSize: 16, lineHeight: 1.65, color: GRAY_LIGHT, margin: 0, maxWidth: 620 }}>
+              Con más de 50 años de experiencia, somos líderes del mercado de clientes extranjeros: estrategias de venta y soluciones de wealth management a medida, siempre dentro de las normas de cada aseguradora, estado y regulación federal.
+            </p>
           </div>
-          <div data-reveal style={{ position: "relative", width: "min(100%, 520px)", margin: "0 auto", aspectRatio: "1 / 1", borderRadius: "50%", overflow: "hidden", background: "radial-gradient(circle at 40% 30%, #0b1c3c, #04070f 75%)", boxShadow: "0 0 140px rgba(37,99,235,0.22)" }}>
-            <GlobeArcs palette={BLUE_ARCS} />
+          <div data-reveal>
+            <RouteBand />
           </div>
         </div>
       </div>
 
       {/* PRODUCTS */}
-      <div id="products" style={{ padding: "clamp(64px,8vw,110px) clamp(20px,5vw,60px)", background: "#05070d", borderTop: "1px solid #10192c" }}>
+      <div id="products" style={{ padding: "clamp(70px,9vw,130px) clamp(20px,5vw,60px)", borderTop: `1px solid ${HAIR}` }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
-          <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: 24 }}>
+          <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: 34 }}>
             <div>
-              <div className={styles.tag} style={{ marginBottom: 14 }}>Productos</div>
-              <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(28px,3.6vw,44px)", margin: 0, color: "#fff", letterSpacing: "-0.01em" }}>Cinco líneas, una relación.</h2>
+              <div style={{ ...kicker, marginBottom: 14 }}>Productos</div>
+              <h2 style={{ fontWeight: 600, fontSize: "clamp(28px,3.6vw,46px)", margin: 0, color: INK, letterSpacing: "-0.03em" }}>Cinco líneas, una relación.</h2>
             </div>
-            <span className={styles.mono} style={{ fontSize: 11.5, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6b7c9c" }}>Con el respaldo de más de 30 aseguradoras</span>
+            <span className={styles.mono} style={{ fontSize: 11, textTransform: "uppercase", color: GRAY_LIGHT }}>Con el respaldo de más de 30 aseguradoras</span>
           </div>
-          <div data-reveal style={{ borderTop: "1px solid #16223a" }}>
+          <div data-reveal style={{ borderTop: `1px solid ${INK}` }}>
             {PRODUCTS.map((p) => (
               <a key={p.n} href="#contact" className={styles.prodRow}>
-                <span className={styles.mono} style={{ fontSize: 12.5, color: "#3b82f6" }}>{p.n}</span>
-                <span className={styles.prodName} style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 700, fontSize: "clamp(20px,2.6vw,30px)", color: "#eef2f8", letterSpacing: "-0.01em" }}>{p.name}</span>
-                <span className={styles.mono} style={{ fontSize: 12, color: "#6b7c9c", textAlign: "right" }}>{p.desc}</span>
+                <span className={styles.mono} style={{ fontSize: 11.5, color: COBALT }}>[{p.n}]</span>
+                <span className={styles.prodName} style={{ fontWeight: 600, fontSize: "clamp(20px,2.4vw,30px)", color: INK, letterSpacing: "-0.025em" }}>{p.name}</span>
+                <span className={styles.mono} style={{ fontSize: 11, color: GRAY_LIGHT, textAlign: "right", textTransform: "uppercase" }}>{p.desc}</span>
               </a>
             ))}
           </div>
@@ -253,82 +323,92 @@ export default function ConceptE() {
       </div>
 
       {/* CARRIERS */}
-      <div data-reveal style={{ padding: "clamp(56px,7vw,90px) clamp(20px,5vw,60px)", background: "#05070d", borderTop: "1px solid #10192c" }}>
-        <div style={{ maxWidth: 1300, margin: "0 auto" }}>
-          <div className={styles.mono} style={{ fontSize: 11.5, letterSpacing: "0.14em", textTransform: "uppercase", color: "#6b7c9c", marginBottom: 30 }}>Nuestras aseguradoras — firma líder de Tellus / Crump</div>
-          <div style={{ position: "relative", overflow: "hidden", WebkitMaskImage: "linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)", maskImage: "linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)" }}>
-            <div className={styles.marquee}>
-              {[0, 1].map((rep) => (
-                <div key={rep} style={{ display: "flex", alignItems: "center", gap: "clamp(26px,3.4vw,52px)", paddingRight: "clamp(26px,3.4vw,52px)" }} aria-hidden={rep === 1}>
-                  {CARRIERS.map((c) => (
-                    <span key={c} style={{ display: "flex", alignItems: "center", gap: "clamp(26px,3.4vw,52px)", whiteSpace: "nowrap" }}>
-                      <span style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 700, fontSize: "clamp(17px,1.8vw,24px)", color: "#41506b" }}>{c}</span>
-                      <span style={{ width: 5, height: 5, background: "#2563eb" }} />
-                    </span>
-                  ))}
-                </div>
-              ))}
-            </div>
+      <div data-reveal style={{ padding: "clamp(50px,6vw,80px) 0", borderTop: `1px solid ${HAIR}`, background: "#fafafa" }}>
+        <div style={{ ...kicker, textAlign: "center", marginBottom: 32 }}>Nuestras aseguradoras — firma líder de Tellus / Crump</div>
+        <div style={{ position: "relative", overflow: "hidden", WebkitMaskImage: "linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)", maskImage: "linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)" }}>
+          <div className={styles.marquee}>
+            {[0, 1].map((rep) => (
+              <div key={rep} style={{ display: "flex", alignItems: "center", gap: "clamp(26px,3.4vw,52px)", paddingRight: "clamp(26px,3.4vw,52px)" }} aria-hidden={rep === 1}>
+                {CARRIERS.map((c) => (
+                  <span key={c} style={{ display: "flex", alignItems: "center", gap: "clamp(26px,3.4vw,52px)", whiteSpace: "nowrap" }}>
+                    <span style={{ fontWeight: 500, fontSize: "clamp(16px,1.7vw,22px)", color: "#9aa0a8", letterSpacing: "-0.02em" }}>{c}</span>
+                    <span style={{ width: 4, height: 4, background: HAIR }} />
+                  </span>
+                ))}
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
       {/* CONTACT */}
-      <div id="contact" style={{ position: "relative", padding: "clamp(76px,10vw,130px) clamp(20px,5vw,60px)", background: "radial-gradient(110% 120% at 20% 0%, #10254d 0%, #070b14 60%)", overflow: "hidden", borderTop: "1px solid #10192c" }}>
-        <div style={{ position: "relative", maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,90px)", alignItems: "center" }}>
+      <div id="contact" style={{ padding: "clamp(70px,9vw,130px) clamp(20px,5vw,60px)", borderTop: `1px solid ${HAIR}` }}>
+        <div style={{ maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,90px)", alignItems: "start" }}>
           <div data-reveal>
-            <div className={styles.tag} style={{ marginBottom: 24 }}>Contacto</div>
-            <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(30px,4.6vw,58px)", lineHeight: 1.05, margin: "0 0 24px", color: "#fff", letterSpacing: "-0.02em" }}>Escribamos más negocio, juntos.</h2>
-            <p style={{ fontSize: 16.5, lineHeight: 1.6, color: "#9fb0cc", margin: 0, maxWidth: 460 }}>Cuéntenos sobre su caso o su cartera. Un director de brokerage responde dentro de un día hábil.</p>
+            <div style={{ ...kicker, marginBottom: 14 }}>Contacto</div>
+            <GrowLine color={HAIR} style={{ marginBottom: 30 }} />
+            <h2 style={{ fontWeight: 600, fontSize: "clamp(30px,4.2vw,56px)", lineHeight: 1.03, margin: "0 0 24px", color: INK, letterSpacing: "-0.035em" }}>Escribamos más negocio, juntos.</h2>
+            <p style={{ fontSize: 16.5, lineHeight: 1.6, color: GRAY_LIGHT, margin: "0 0 34px", maxWidth: 440 }}>Cuéntenos sobre su caso o su cartera. Un director de brokerage responde dentro de un día hábil.</p>
+            <a href="tel:+13054447401" className={styles.cta} style={{ padding: "16px 32px", fontSize: 14 }}>Trabajemos juntos</a>
           </div>
-          <div data-reveal style={{ border: "1px solid #1b2842", background: "rgba(7,11,20,0.7)", backdropFilter: "blur(6px)" }}>
-            <a href="tel:+13054447401" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "24px 24px", borderBottom: "1px solid #1b2842" }}><span className={styles.mono} style={{ fontSize: 11, letterSpacing: "0.12em", color: "#6b7c9c" }}>TELÉFONO</span><span style={{ fontFamily: "var(--font-archivo), sans-serif", fontSize: 21, fontWeight: 700, color: "#fff" }}>305-444-7401</span></a>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "24px 24px", borderBottom: "1px solid #1b2842" }}><span className={styles.mono} style={{ fontSize: 11, letterSpacing: "0.12em", color: "#6b7c9c" }}>LÍNEA GRATUITA</span><span style={{ fontFamily: "var(--font-archivo), sans-serif", fontSize: 21, fontWeight: 700, color: "#fff" }}>1-888-776-4678</span></div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "24px 24px" }}><span className={styles.mono} style={{ fontSize: 11, letterSpacing: "0.12em", color: "#6b7c9c" }}>OFICINA</span><span style={{ fontFamily: "var(--font-archivo), sans-serif", fontSize: 15.5, fontWeight: 700, color: "#fff", textAlign: "right" }}>75 Valencia Ave, Suite 200<br />Coral Gables, FL 33134</span></div>
+          <div data-reveal style={{ borderTop: `1px solid ${INK}` }}>
+            {[
+              ["Teléfono", "305-444-7401", "tel:+13054447401"],
+              ["Línea gratuita", "1-888-776-4678", "tel:+18887764678"],
+            ].map(([l, v, href]) => (
+              <a key={l} href={href} style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "22px 0", borderBottom: `1px solid ${HAIR}` }}>
+                <span className={styles.mono} style={{ fontSize: 10.5, textTransform: "uppercase", color: GRAY_LIGHT }}>{l}</span>
+                <span className={styles.mono} style={{ fontSize: "clamp(16px,1.7vw,21px)", color: INK, letterSpacing: "0.02em" }}>{v}</span>
+              </a>
+            ))}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "22px 0", borderBottom: `1px solid ${HAIR}`, gap: 20 }}>
+              <span className={styles.mono} style={{ fontSize: 10.5, textTransform: "uppercase", color: GRAY_LIGHT }}>Oficina</span>
+              <span style={{ fontSize: 15.5, color: INK, textAlign: "right", lineHeight: 1.45 }}>75 Valencia Ave, Suite 200<br />Coral Gables, FL 33134</span>
+            </div>
           </div>
         </div>
       </div>
 
       {/* FOOTER */}
-      <footer style={{ background: "#03050a", padding: "clamp(48px,6vw,72px) clamp(20px,5vw,60px) 0", borderTop: "1px solid #10192c" }}>
+      <footer style={{ padding: "clamp(44px,5vw,64px) clamp(20px,5vw,60px) 0", borderTop: `1px solid ${HAIR}`, background: "#fafafa" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
           <div className={styles.footerGrid}>
             <div>
               <div style={{ display: "inline-flex", marginBottom: 18 }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/assets/brandon-logo-white.png" alt="Brandon Brokerage Group" style={{ height: 26 }} />
+                <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 26 }} />
               </div>
-              <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#6b7c9c", margin: 0, maxWidth: 280 }}>Firma líder de Tellus / Crump al servicio de productores y asesores financieros desde los años 70.</p>
+              <p style={{ fontSize: 13.5, lineHeight: 1.6, color: GRAY_LIGHT, margin: 0, maxWidth: 280 }}>Firma líder de Tellus / Crump al servicio de productores y asesores financieros desde los años 70.</p>
             </div>
 
             <div>
-              <div className={styles.tag} style={{ marginBottom: 16 }}>Compañía</div>
+              <div style={{ ...kicker, marginBottom: 16 }}>Compañía</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
                 {NAV_LINKS.map((l) => (
-                  <a key={l.href} href={l.href} className={styles.footLink} style={{ fontSize: 14, color: "#9fb0cc" }}>{l.label}</a>
+                  <a key={l.href} href={l.href} className={styles.footLink} style={{ fontSize: 14 }}>{l.label}</a>
                 ))}
               </div>
             </div>
 
             <div>
-              <div className={styles.tag} style={{ marginBottom: 16 }}>Contacto</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 11, fontSize: 14, color: "#9fb0cc" }}>
-                <a href="tel:+13054447401" className={styles.footLink} style={{ color: "#9fb0cc" }}>305-444-7401</a>
-                <a href="tel:+18887764678" className={styles.footLink} style={{ color: "#9fb0cc" }}>1-888-776-4678</a>
-                <span style={{ color: "#6b7c9c", lineHeight: 1.5 }}>75 Valencia Ave, Suite 200<br />Coral Gables, FL 33134</span>
+              <div style={{ ...kicker, marginBottom: 16 }}>Contacto</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 11, fontSize: 14 }}>
+                <a href="tel:+13054447401" className={`${styles.footLink} ${styles.mono}`} style={{ fontSize: 13 }}>305-444-7401</a>
+                <a href="tel:+18887764678" className={`${styles.footLink} ${styles.mono}`} style={{ fontSize: 13 }}>1-888-776-4678</a>
+                <span style={{ color: GRAY_LIGHT, lineHeight: 1.5 }}>75 Valencia Ave, Suite 200<br />Coral Gables, FL 33134</span>
               </div>
             </div>
 
             <div>
-              <div className={styles.tag} style={{ marginBottom: 16 }}>Trabajemos juntos</div>
-              <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#6b7c9c", margin: "0 0 16px" }}>Un director de brokerage responde dentro de un día hábil.</p>
-              <a href="#contact" className={`${styles.cta} ${styles.ctaBlue}`} style={{ display: "inline-block", padding: "11px 22px", borderRadius: 4, fontSize: 12, fontFamily: "var(--font-plex-mono), monospace", letterSpacing: "0.06em", textTransform: "uppercase" }}>Trabajemos Juntos</a>
+              <div style={{ ...kicker, marginBottom: 16 }}>Trabajemos juntos</div>
+              <p style={{ fontSize: 13.5, lineHeight: 1.6, color: GRAY_LIGHT, margin: "0 0 16px" }}>Un director de brokerage responde dentro de un día hábil.</p>
+              <a href="#contact" className={styles.cta} style={{ padding: "11px 22px", fontSize: 12.5 }}>Trabajemos juntos</a>
             </div>
           </div>
 
-          <div style={{ borderTop: "1px solid #10192c", marginTop: "clamp(40px,5vw,56px)", padding: "24px 0", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
-            <div className={styles.mono} style={{ fontSize: 11.5, color: "#54647f" }}>© 1970s–2026 BRANDON BROKERAGE GROUP. TODOS LOS DERECHOS RESERVADOS.</div>
-            <div className={styles.mono} style={{ fontSize: 11.5, color: "#54647f" }}>SOLO PARA AGENTES Y ASESORES CON LICENCIA</div>
+          <div style={{ borderTop: `1px solid ${HAIR}`, marginTop: "clamp(36px,4vw,52px)", padding: "22px 0", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+            <div className={styles.mono} style={{ fontSize: 10.5, color: "#9aa0a8", textTransform: "uppercase" }}>© 1970s–2026 Brandon Brokerage Group</div>
+            <div className={styles.mono} style={{ fontSize: 10.5, color: "#9aa0a8", textTransform: "uppercase" }}>Solo para agentes y asesores con licencia</div>
           </div>
         </div>
       </footer>

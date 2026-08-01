@@ -76,22 +76,26 @@ export default function Home() {
           </Link>
 
           <Link href="/e" className={styles.card} style={{ border: CARD_BORDER, borderRadius: 12, overflow: "hidden", background: CARD_BG }}>
-            <div style={{ position: "relative", height: 190, background: "radial-gradient(120% 100% at 50% 0%, #0a1226, #05070d 70%)", overflow: "hidden" }}>
-              <svg width="100%" height="100%" viewBox="0 0 300 190" style={{ position: "absolute", inset: 0 }}>
-                <circle cx="150" cy="95" r="64" fill="none" stroke="#2563eb" strokeWidth="1" opacity="0.6" />
-                <ellipse cx="150" cy="95" rx="64" ry="22" fill="none" stroke="#5c8dff" strokeWidth="1" opacity="0.55" />
-                <ellipse cx="150" cy="95" rx="64" ry="46" fill="none" stroke="#2563eb" strokeWidth="0.8" opacity="0.4" />
-                <ellipse cx="150" cy="95" rx="88" ry="30" fill="none" stroke="#3b82f6" strokeWidth="0.8" opacity="0.45" transform="rotate(-18 150 95)" />
-                <g fill="#9fb8ff">
-                  <circle cx="118" cy="72" r="2.6" /><circle cx="176" cy="60" r="2.6" /><circle cx="196" cy="108" r="2.6" />
-                  <circle cx="140" cy="128" r="2.6" /><circle cx="104" cy="106" r="2.6" /><circle cx="222" cy="76" r="2.2" />
-                </g>
+            <div style={{ position: "relative", height: 190, background: "#ffffff", overflow: "hidden", padding: "22px 20px" }}>
+              <svg width="100%" height="100%" viewBox="0 0 300 190" preserveAspectRatio="none" style={{ position: "absolute", inset: 0, opacity: 0.55 }}>
+                {[38, 76, 114, 152, 190, 228, 266].map((x) => (<line key={x} x1={x} y1="0" x2={x} y2="190" stroke="#e5e7eb" strokeWidth="1" />))}
+                {[38, 76, 114, 152].map((y) => (<line key={y} x1="0" y1={y} x2="300" y2={y} stroke="#e5e7eb" strokeWidth="1" />))}
               </svg>
+              <div style={{ position: "relative" }}>
+                <div style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 8, letterSpacing: "0.18em", color: "#6b7280", marginBottom: 12 }}>25.7213° N, 80.2683° W</div>
+                <div style={{ fontFamily: "'Helvetica Neue', var(--font-inter-tight), sans-serif", fontWeight: 600, fontSize: 25, lineHeight: 1.04, letterSpacing: "-0.035em", color: "#0d0f12" }}>Ejecución<br />impecable, <span style={{ color: "#1f4fd8" }}>medida</span><br />al milímetro.</div>
+              </div>
+              <div style={{ position: "absolute", left: 20, right: 20, bottom: 18 }}>
+                <div style={{ height: 1, background: "#0d0f12" }} />
+                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 7, fontFamily: "var(--font-plex-mono), monospace", fontSize: 7.5, letterSpacing: "0.12em", color: "#9aa0a8" }}>
+                  <span>MEX</span><span>BOG</span><span>LIM</span><span>SCL</span><span>BUE</span><span>SAO</span><span style={{ color: "#1f4fd8" }}>MIA</span>
+                </div>
+              </div>
             </div>
             <div style={{ padding: "20px 18px", borderTop: CARD_DIVIDER }}>
-              <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.07em", textTransform: "uppercase", color: GOLD_DEEP, marginBottom: 8 }}>04 — Corporate Tech</div>
-              <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: 19, margin: "0 0 8px", color: NAVY, letterSpacing: "-0.01em" }}>Formal, cableada en azul.</h2>
-              <p style={{ fontSize: 13, color: CARD_TEXT, fontWeight: 500, lineHeight: 1.55, margin: "0 0 14px" }}>Negro y azul eléctrico, etiquetas mono y grilla de blueprint, con un globo wireframe y arcos de vuelo.</p>
+              <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.07em", textTransform: "uppercase", color: GOLD_DEEP, marginBottom: 8 }}>04 — Swiss Precision</div>
+              <h2 style={{ fontFamily: "'Helvetica Neue', var(--font-inter-tight), sans-serif", fontWeight: 700, fontSize: 19, margin: "0 0 8px", color: NAVY, letterSpacing: "-0.03em" }}>Blanco, tinta y un cobalto.</h2>
+              <p style={{ fontSize: 13, color: CARD_TEXT, fontWeight: 500, lineHeight: 1.55, margin: "0 0 14px" }}>Helvetica sobre blanco, grilla de hairlines grises y un único acento cobalto. Spine de blueprint y banda de códigos de ciudad.</p>
               <span style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: NAVY }}>Abrir home →</span>
             </div>
           </Link>

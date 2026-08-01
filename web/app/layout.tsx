@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Archivo, Manrope, Fraunces, IBM_Plex_Mono, Bodoni_Moda, Cormorant_Garamond, Lora } from "next/font/google";
+import { Archivo, Manrope, Fraunces, IBM_Plex_Mono, Bodoni_Moda, Cormorant_Garamond, Lora, Inter_Tight } from "next/font/google";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -42,6 +42,12 @@ const lora = Lora({
   style: ["normal", "italic"],
 });
 
+const interTight = Inter_Tight({
+  variable: "--font-inter-tight",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
 const plexMono = IBM_Plex_Mono({
   variable: "--font-plex-mono",
   subsets: ["latin"],
@@ -59,7 +65,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${archivo.variable} ${manrope.variable} ${fraunces.variable} ${plexMono.variable} ${bodoniModa.variable} ${cormorant.variable} ${lora.variable}`}>
+    <html lang="en" className={`${archivo.variable} ${manrope.variable} ${fraunces.variable} ${plexMono.variable} ${bodoniModa.variable} ${cormorant.variable} ${lora.variable} ${interTight.variable}`}>
       <body>{children}</body>
     </html>
   );
