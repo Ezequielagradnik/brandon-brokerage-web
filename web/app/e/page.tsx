@@ -10,7 +10,7 @@ import { GrowLine } from "@/components/motion";
 import styles from "./page.module.css";
 
 // ————— Signature scroll moment: the blueprint assembles along a spine —————
-const E_CATS = ["SPECIALTY", "SUPPORT", "OPERATIONS", "NETWORK"];
+const E_CATS = ["ESPECIALIDAD", "SOPORTE", "OPERACIONES", "RED"];
 
 // mono label that types itself in when it appears
 function TypeMono({ text, delay = 0, color = "#5c8dff" }: { text: string; delay?: number; color?: string }) {
@@ -70,18 +70,18 @@ function SpineNode({ i }: { i: number }) {
 }
 
 const NAV_LINKS = [
-  { href: "#why", label: "Firm" },
-  { href: "#foreign", label: "Foreign National" },
-  { href: "#products", label: "Products" },
-  { href: "#contact", label: "Contact" },
+  { href: "#why", label: "La Firma" },
+  { href: "#foreign", label: "Clientes Extranjeros" },
+  { href: "#products", label: "Productos" },
+  { href: "#contact", label: "Contacto" },
 ];
 
 const PRODUCTS = [
-  { n: "01", name: "Term Life", desc: "Income & mortgage protection" },
-  { n: "02", name: "Permanent Life", desc: "Whole, universal & IUL" },
-  { n: "03", name: "Annuities", desc: "Fixed & indexed income" },
-  { n: "04", name: "Long-Term Care", desc: "Traditional & hybrid" },
-  { n: "05", name: "Disability Income", desc: "Protect earning power" },
+  { n: "01", name: "Term Life", desc: "Protección de ingresos e hipoteca" },
+  { n: "02", name: "Vida Permanente", desc: "Whole, universal e IUL" },
+  { n: "03", name: "Anualidades", desc: "Renta fija e indexada" },
+  { n: "04", name: "Long-Term Care", desc: "Tradicional e híbrido" },
+  { n: "05", name: "Disability Income", desc: "Proteja su capacidad de ingreso" },
 ];
 
 const CARRIERS = ["Lincoln", "John Hancock", "AIG", "Nationwide", "Principal", "MassMutual", "Mutual of Omaha", "Protective", "Prudential", "Pacific Life", "Transamerica", "Symetra", "Global Atlantic", "Allianz"];
@@ -119,15 +119,15 @@ export default function ConceptE() {
           <img src="/assets/brandon-logo-white.png" alt="Brandon Brokerage Group" style={{ height: scrolled ? 24 : 28, transition: "height 0.28s ease" }} />
         </a>
         <div className={styles.headerNav}>
-          <a href="#why" className={styles.nl}>Firm</a>
-          <a href="#foreign" className={styles.nl}>Foreign National</a>
-          <a href="#products" className={styles.nl}>Products</a>
-          <a href="#contact" className={styles.nl}>Contact</a>
-          <a href="#contact" className={`${styles.cta} ${styles.ctaBlue}`} style={{ padding: "11px 22px", borderRadius: 4, fontSize: 13, fontFamily: "var(--font-plex-mono), monospace", letterSpacing: "0.06em", textTransform: "uppercase" }}>Partner With Us</a>
+          <a href="#why" className={styles.nl}>La Firma</a>
+          <a href="#foreign" className={styles.nl}>Clientes Extranjeros</a>
+          <a href="#products" className={styles.nl}>Productos</a>
+          <a href="#contact" className={styles.nl}>Contacto</a>
+          <a href="#contact" className={`${styles.cta} ${styles.ctaBlue}`} style={{ padding: "11px 22px", borderRadius: 4, fontSize: 13, fontFamily: "var(--font-plex-mono), monospace", letterSpacing: "0.06em", textTransform: "uppercase" }}>Trabajemos Juntos</a>
         </div>
         <MobileMenu
           links={NAV_LINKS}
-          ctaLabel="Partner With Us"
+          ctaLabel="Trabajemos Juntos"
           ctaHref="#contact"
           panelBg="#0a0f1c"
           textColor="#eef2f8"
@@ -143,17 +143,17 @@ export default function ConceptE() {
           <div style={{ maxWidth: 860 }}>
             <div ref={heroKicker} style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 30 }}>
               <span style={{ width: 34, height: 1, background: "#3b82f6" }} />
-              <span className={styles.tag}>Coral Gables — Since the 1970s</span>
+              <span className={styles.tag}>Coral Gables — Desde los años 70</span>
             </div>
             <h1 ref={heroTitle} style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,68px)", lineHeight: 1.05, letterSpacing: "-0.02em", margin: "0 0 26px", color: "#fff" }}>
-              Partnering with producers and financial advisors to deliver customized business solutions with <span style={{ color: "#5c8dff" }}>seamless execution</span>.
+              Trabajamos junto a productores y asesores financieros para entregar soluciones de negocio a medida, con <span style={{ color: "#5c8dff" }}>una ejecución impecable</span>.
             </h1>
             <p ref={heroSub} style={{ fontSize: "clamp(16px,1.3vw,18.5px)", lineHeight: 1.65, color: "#9fb0cc", fontWeight: 400, maxWidth: 580, margin: "0 0 40px" }}>
-              For over fifty years, Brandon Brokerage Group has paired advanced sales support and full case management with access to 30+ top-rated carriers — and a rare command of the foreign national market.
+              Desde hace más de cincuenta años, Brandon Brokerage Group combina soporte avanzado de ventas y gestión integral de casos con acceso a más de 30 aseguradoras de primer nivel, y un dominio poco común del mercado de clientes extranjeros.
             </p>
             <div ref={heroCta} style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
-              <a href="#contact" className={`${styles.cta} ${styles.ctaBlue}`} style={{ padding: "16px 32px", borderRadius: 4, fontSize: 13.5, fontFamily: "var(--font-plex-mono), monospace", letterSpacing: "0.06em", textTransform: "uppercase" }}>Partner With Us</a>
-              <a href="#products" className={`${styles.cta} ${styles.ctaOutline}`} style={{ padding: "16px 32px", borderRadius: 4, fontSize: 13.5, fontFamily: "var(--font-plex-mono), monospace", letterSpacing: "0.06em", textTransform: "uppercase" }}>Explore Products</a>
+              <a href="#contact" className={`${styles.cta} ${styles.ctaBlue}`} style={{ padding: "16px 32px", borderRadius: 4, fontSize: 13.5, fontFamily: "var(--font-plex-mono), monospace", letterSpacing: "0.06em", textTransform: "uppercase" }}>Trabajemos Juntos</a>
+              <a href="#products" className={`${styles.cta} ${styles.ctaOutline}`} style={{ padding: "16px 32px", borderRadius: 4, fontSize: 13.5, fontFamily: "var(--font-plex-mono), monospace", letterSpacing: "0.06em", textTransform: "uppercase" }}>Ver Productos</a>
             </div>
           </div>
         </div>
@@ -166,7 +166,7 @@ export default function ConceptE() {
       {/* STATS */}
       <div data-reveal style={{ borderTop: "1px solid #10192c", borderBottom: "1px solid #10192c", background: "#05070d" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))" }}>
-          {[["50+", "Years of expertise"], ["30+", "Top-rated carriers"], ["05", "Product lines"], ["No.1", "Foreign national market"]].map(([n, l], i) => (
+          {[["50+", "Años de experiencia"], ["30+", "Aseguradoras top"], ["05", "Líneas de producto"], ["No.1", "Mercado de extranjeros"]].map(([n, l], i) => (
             <div key={l} style={{ padding: "40px clamp(20px,4vw,48px)", borderLeft: i > 0 ? "1px solid #10192c" : undefined }}>
               <div style={{ fontFamily: "var(--font-archivo), sans-serif", fontSize: "clamp(34px,4.4vw,50px)", fontWeight: 800, color: n === "No.1" ? "#5c8dff" : "#fff", lineHeight: 0.95 }}>{n}</div>
               <div className={styles.mono} style={{ fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6b7c9c", marginTop: 12 }}>{l}</div>
@@ -178,9 +178,9 @@ export default function ConceptE() {
       {/* MISSION */}
       <div style={{ padding: "clamp(76px,10vw,140px) clamp(20px,5vw,60px)", background: "#05070d" }}>
         <div style={{ maxWidth: 1000, margin: "0 auto" }}>
-          <div data-reveal className={styles.tag} style={{ marginBottom: 30 }}>Our Mission</div>
+          <div data-reveal className={styles.tag} style={{ marginBottom: 30 }}>Nuestra Misión</div>
           <p data-reveal style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 600, fontSize: "clamp(24px,3.2vw,40px)", lineHeight: 1.34, margin: 0, color: "#dbe4f5" }}>
-            To provide agents with superior service, personalized sales support and tailored business solutions that <span style={{ color: "#5c8dff" }}>build and develop long-term relationships</span>.
+            Brindar a los agentes un servicio superior, soporte de ventas personalizado y soluciones a medida que <span style={{ color: "#5c8dff" }}>construyan relaciones de largo plazo</span>.
           </p>
         </div>
       </div>
@@ -190,10 +190,10 @@ export default function ConceptE() {
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
           <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: "clamp(44px,6vw,80px)" }}>
             <div>
-              <div className={styles.tag} style={{ marginBottom: 14 }}>What We Offer</div>
-              <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(28px,3.6vw,44px)", margin: 0, color: "#fff", letterSpacing: "-0.01em" }}>The blueprint, assembled.</h2>
+              <div className={styles.tag} style={{ marginBottom: 14 }}>Qué Ofrecemos</div>
+              <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(28px,3.6vw,44px)", margin: 0, color: "#fff", letterSpacing: "-0.01em" }}>El blueprint, ensamblado.</h2>
             </div>
-            <span className={styles.mono} style={{ fontSize: 11.5, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6b7c9c" }}>Four disciplines / one team</span>
+            <span className={styles.mono} style={{ fontSize: 11.5, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6b7c9c" }}>Cuatro disciplinas / un equipo</span>
           </div>
 
           <div className={styles.spineWrap}>
@@ -205,7 +205,7 @@ export default function ConceptE() {
             {/* terminal: the spine connects to the global network */}
             <div className={styles.spineEnd}>
               <span style={{ width: 11, height: 11, background: "#3b82f6", borderRadius: "50%", boxShadow: "0 0 18px rgba(59,130,246,0.8)" }} />
-              <a href="#foreign" className={styles.mono} style={{ fontSize: 11.5, letterSpacing: "0.18em", textTransform: "uppercase", color: "#5c8dff", marginTop: 14 }}>↓ Foreign national network</a>
+              <a href="#foreign" className={styles.mono} style={{ fontSize: 11.5, letterSpacing: "0.18em", textTransform: "uppercase", color: "#5c8dff", marginTop: 14 }}>↓ Red de clientes extranjeros</a>
             </div>
           </div>
         </div>
@@ -215,13 +215,13 @@ export default function ConceptE() {
       <div id="foreign" style={{ position: "relative", padding: "clamp(76px,10vw,130px) clamp(20px,5vw,60px)", background: "linear-gradient(180deg,#070b14,#0a1226)", overflow: "hidden", borderTop: "1px solid #10192c" }}>
         <div style={{ position: "relative", maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))", gap: "clamp(40px,6vw,80px)", alignItems: "center" }}>
           <div>
-            <div data-reveal className={styles.tag} style={{ marginBottom: 24 }}>Signature Specialty</div>
+            <div data-reveal className={styles.tag} style={{ marginBottom: 24 }}>Especialidad Distintiva</div>
             <h2 data-reveal style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(32px,5vw,72px)", lineHeight: 1.02, margin: "0 0 40px", color: "#fff", letterSpacing: "-0.02em" }}>
-              We place the cases <span style={{ color: "#5c8dff" }}>others turn away</span>.
+              Colocamos los casos que <span style={{ color: "#5c8dff" }}>otros rechazan</span>.
             </h2>
             <div data-reveal style={{ display: "grid", gap: 24, borderTop: "1px solid #1b2842", paddingTop: 34 }}>
-              <p style={{ fontSize: 16, lineHeight: 1.7, color: "#9fb0cc", margin: 0 }}>With over 50 years of experience, we are an industry leader in the foreign national market. We help agents devise customized sales strategies and wealth-management solutions for their foreign national clients.</p>
-              <p style={{ fontSize: 16, lineHeight: 1.7, color: "#9fb0cc", margin: 0 }}>Our open-architecture approach offers a variety of products and services to best suit your clients&apos; needs — while adhering to all carrier, state and federal guidelines. <a href="#contact" style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 14 }}>Partner with us →</a></p>
+              <p style={{ fontSize: 16, lineHeight: 1.7, color: "#9fb0cc", margin: 0 }}>Con más de 50 años de experiencia, somos líderes del mercado de clientes extranjeros. Ayudamos a los agentes a diseñar estrategias de venta y soluciones de wealth management a medida para sus clientes internacionales.</p>
+              <p style={{ fontSize: 16, lineHeight: 1.7, color: "#9fb0cc", margin: 0 }}>Nuestro enfoque de arquitectura abierta ofrece una variedad de productos y servicios para cubrir las necesidades de sus clientes, siempre dentro de las normas de cada aseguradora, estado y regulación federal. <a href="#contact" style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 14 }}>Trabajemos juntos →</a></p>
             </div>
           </div>
           <div data-reveal style={{ position: "relative", width: "min(100%, 520px)", margin: "0 auto", aspectRatio: "1 / 1", borderRadius: "50%", overflow: "hidden", background: "radial-gradient(circle at 40% 30%, #0b1c3c, #04070f 75%)", boxShadow: "0 0 140px rgba(37,99,235,0.22)" }}>
@@ -235,10 +235,10 @@ export default function ConceptE() {
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
           <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: 24 }}>
             <div>
-              <div className={styles.tag} style={{ marginBottom: 14 }}>Products</div>
-              <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(28px,3.6vw,44px)", margin: 0, color: "#fff", letterSpacing: "-0.01em" }}>Five lines, one relationship.</h2>
+              <div className={styles.tag} style={{ marginBottom: 14 }}>Productos</div>
+              <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(28px,3.6vw,44px)", margin: 0, color: "#fff", letterSpacing: "-0.01em" }}>Cinco líneas, una relación.</h2>
             </div>
-            <span className={styles.mono} style={{ fontSize: 11.5, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6b7c9c" }}>Backed by 30+ carriers</span>
+            <span className={styles.mono} style={{ fontSize: 11.5, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6b7c9c" }}>Con el respaldo de más de 30 aseguradoras</span>
           </div>
           <div data-reveal style={{ borderTop: "1px solid #16223a" }}>
             {PRODUCTS.map((p) => (
@@ -255,7 +255,7 @@ export default function ConceptE() {
       {/* CARRIERS */}
       <div data-reveal style={{ padding: "clamp(56px,7vw,90px) clamp(20px,5vw,60px)", background: "#05070d", borderTop: "1px solid #10192c" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
-          <div className={styles.mono} style={{ fontSize: 11.5, letterSpacing: "0.14em", textTransform: "uppercase", color: "#6b7c9c", marginBottom: 30 }}>Our carriers — a leading Tellus / Crump firm</div>
+          <div className={styles.mono} style={{ fontSize: 11.5, letterSpacing: "0.14em", textTransform: "uppercase", color: "#6b7c9c", marginBottom: 30 }}>Nuestras aseguradoras — firma líder de Tellus / Crump</div>
           <div style={{ position: "relative", overflow: "hidden", WebkitMaskImage: "linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)", maskImage: "linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)" }}>
             <div className={styles.marquee}>
               {[0, 1].map((rep) => (
@@ -277,14 +277,14 @@ export default function ConceptE() {
       <div id="contact" style={{ position: "relative", padding: "clamp(76px,10vw,130px) clamp(20px,5vw,60px)", background: "radial-gradient(110% 120% at 20% 0%, #10254d 0%, #070b14 60%)", overflow: "hidden", borderTop: "1px solid #10192c" }}>
         <div style={{ position: "relative", maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,90px)", alignItems: "center" }}>
           <div data-reveal>
-            <div className={styles.tag} style={{ marginBottom: 24 }}>Contact</div>
-            <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(30px,4.6vw,58px)", lineHeight: 1.05, margin: "0 0 24px", color: "#fff", letterSpacing: "-0.02em" }}>Let&apos;s write more business, together.</h2>
-            <p style={{ fontSize: 16.5, lineHeight: 1.6, color: "#9fb0cc", margin: 0, maxWidth: 460 }}>Tell us about your case or your book of business. A brokerage director responds within one business day.</p>
+            <div className={styles.tag} style={{ marginBottom: 24 }}>Contacto</div>
+            <h2 style={{ fontFamily: "var(--font-archivo), sans-serif", fontWeight: 800, fontSize: "clamp(30px,4.6vw,58px)", lineHeight: 1.05, margin: "0 0 24px", color: "#fff", letterSpacing: "-0.02em" }}>Escribamos más negocio, juntos.</h2>
+            <p style={{ fontSize: 16.5, lineHeight: 1.6, color: "#9fb0cc", margin: 0, maxWidth: 460 }}>Cuéntenos sobre su caso o su cartera. Un director de brokerage responde dentro de un día hábil.</p>
           </div>
           <div data-reveal style={{ border: "1px solid #1b2842", background: "rgba(7,11,20,0.7)", backdropFilter: "blur(6px)" }}>
-            <a href="tel:+13054447401" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "24px 24px", borderBottom: "1px solid #1b2842" }}><span className={styles.mono} style={{ fontSize: 11, letterSpacing: "0.12em", color: "#6b7c9c" }}>PHONE</span><span style={{ fontFamily: "var(--font-archivo), sans-serif", fontSize: 21, fontWeight: 700, color: "#fff" }}>305-444-7401</span></a>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "24px 24px", borderBottom: "1px solid #1b2842" }}><span className={styles.mono} style={{ fontSize: 11, letterSpacing: "0.12em", color: "#6b7c9c" }}>TOLL-FREE</span><span style={{ fontFamily: "var(--font-archivo), sans-serif", fontSize: 21, fontWeight: 700, color: "#fff" }}>1-888-776-4678</span></div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "24px 24px" }}><span className={styles.mono} style={{ fontSize: 11, letterSpacing: "0.12em", color: "#6b7c9c" }}>OFFICE</span><span style={{ fontFamily: "var(--font-archivo), sans-serif", fontSize: 15.5, fontWeight: 700, color: "#fff", textAlign: "right" }}>75 Valencia Ave, Suite 200<br />Coral Gables, FL 33134</span></div>
+            <a href="tel:+13054447401" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "24px 24px", borderBottom: "1px solid #1b2842" }}><span className={styles.mono} style={{ fontSize: 11, letterSpacing: "0.12em", color: "#6b7c9c" }}>TELÉFONO</span><span style={{ fontFamily: "var(--font-archivo), sans-serif", fontSize: 21, fontWeight: 700, color: "#fff" }}>305-444-7401</span></a>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "24px 24px", borderBottom: "1px solid #1b2842" }}><span className={styles.mono} style={{ fontSize: 11, letterSpacing: "0.12em", color: "#6b7c9c" }}>LÍNEA GRATUITA</span><span style={{ fontFamily: "var(--font-archivo), sans-serif", fontSize: 21, fontWeight: 700, color: "#fff" }}>1-888-776-4678</span></div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "24px 24px" }}><span className={styles.mono} style={{ fontSize: 11, letterSpacing: "0.12em", color: "#6b7c9c" }}>OFICINA</span><span style={{ fontFamily: "var(--font-archivo), sans-serif", fontSize: 15.5, fontWeight: 700, color: "#fff", textAlign: "right" }}>75 Valencia Ave, Suite 200<br />Coral Gables, FL 33134</span></div>
           </div>
         </div>
       </div>
@@ -298,11 +298,11 @@ export default function ConceptE() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/assets/brandon-logo-white.png" alt="Brandon Brokerage Group" style={{ height: 26 }} />
               </div>
-              <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#6b7c9c", margin: 0, maxWidth: 280 }}>A leading Tellus / Crump firm serving producers and financial advisors since the 1970s.</p>
+              <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#6b7c9c", margin: 0, maxWidth: 280 }}>Firma líder de Tellus / Crump al servicio de productores y asesores financieros desde los años 70.</p>
             </div>
 
             <div>
-              <div className={styles.tag} style={{ marginBottom: 16 }}>Company</div>
+              <div className={styles.tag} style={{ marginBottom: 16 }}>Compañía</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
                 {NAV_LINKS.map((l) => (
                   <a key={l.href} href={l.href} className={styles.footLink} style={{ fontSize: 14, color: "#9fb0cc" }}>{l.label}</a>
@@ -311,7 +311,7 @@ export default function ConceptE() {
             </div>
 
             <div>
-              <div className={styles.tag} style={{ marginBottom: 16 }}>Contact</div>
+              <div className={styles.tag} style={{ marginBottom: 16 }}>Contacto</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 11, fontSize: 14, color: "#9fb0cc" }}>
                 <a href="tel:+13054447401" className={styles.footLink} style={{ color: "#9fb0cc" }}>305-444-7401</a>
                 <a href="tel:+18887764678" className={styles.footLink} style={{ color: "#9fb0cc" }}>1-888-776-4678</a>
@@ -320,15 +320,15 @@ export default function ConceptE() {
             </div>
 
             <div>
-              <div className={styles.tag} style={{ marginBottom: 16 }}>Partner with us</div>
-              <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#6b7c9c", margin: "0 0 16px" }}>A brokerage director responds within one business day.</p>
-              <a href="#contact" className={`${styles.cta} ${styles.ctaBlue}`} style={{ display: "inline-block", padding: "11px 22px", borderRadius: 4, fontSize: 12, fontFamily: "var(--font-plex-mono), monospace", letterSpacing: "0.06em", textTransform: "uppercase" }}>Partner With Us</a>
+              <div className={styles.tag} style={{ marginBottom: 16 }}>Trabajemos juntos</div>
+              <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#6b7c9c", margin: "0 0 16px" }}>Un director de brokerage responde dentro de un día hábil.</p>
+              <a href="#contact" className={`${styles.cta} ${styles.ctaBlue}`} style={{ display: "inline-block", padding: "11px 22px", borderRadius: 4, fontSize: 12, fontFamily: "var(--font-plex-mono), monospace", letterSpacing: "0.06em", textTransform: "uppercase" }}>Trabajemos Juntos</a>
             </div>
           </div>
 
           <div style={{ borderTop: "1px solid #10192c", marginTop: "clamp(40px,5vw,56px)", padding: "24px 0", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
-            <div className={styles.mono} style={{ fontSize: 11.5, color: "#54647f" }}>© 1970s–2026 BRANDON BROKERAGE GROUP. ALL RIGHTS RESERVED.</div>
-            <div className={styles.mono} style={{ fontSize: 11.5, color: "#54647f" }}>FOR LICENSED AGENTS &amp; ADVISORS ONLY</div>
+            <div className={styles.mono} style={{ fontSize: 11.5, color: "#54647f" }}>© 1970s–2026 BRANDON BROKERAGE GROUP. TODOS LOS DERECHOS RESERVADOS.</div>
+            <div className={styles.mono} style={{ fontSize: 11.5, color: "#54647f" }}>SOLO PARA AGENTES Y ASESORES CON LICENCIA</div>
           </div>
         </div>
       </footer>

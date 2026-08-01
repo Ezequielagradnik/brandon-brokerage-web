@@ -286,7 +286,7 @@ export default function ConceptG() {
   const pageRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const deckRef = useRef<HTMLDivElement>(null);
-  const [lang, setLang] = useState<Lang>("en");
+  const [lang, setLang] = useState<Lang>("es");
   const [scrolled, setScrolled] = useState(false);
   const [deckHovered, setDeckHovered] = useState<number | null>(null);
   const reduce = useReducedMotion();

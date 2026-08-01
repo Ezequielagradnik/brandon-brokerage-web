@@ -9,20 +9,20 @@ import { ScrollProgress, MaskReveal, LettersReveal, FadeIn, CountUp, ParallaxImg
 import styles from "./page.module.css";
 
 const NAV_LINKS = [
-  { href: "#firm", label: "The Firm" },
-  { href: "#foreign", label: "Foreign National" },
-  { href: "#products", label: "Products" },
-  { href: "#contact", label: "Contact" },
+  { href: "#firm", label: "La Firma" },
+  { href: "#foreign", label: "Clientes Extranjeros" },
+  { href: "#products", label: "Productos" },
+  { href: "#contact", label: "Contacto" },
 ];
 
 const CARRIERS = ["Lincoln", "John Hancock", "AIG", "Nationwide", "Principal", "MassMutual", "Mutual of Omaha", "Protective", "Prudential", "Pacific Life", "Transamerica", "Symetra", "Global Atlantic", "Allianz"];
 
 const PRODUCTS = [
-  { n: "No. 1", name: "Term Life", desc: "Income & mortgage protection" },
-  { n: "No. 2", name: "Permanent Life", desc: "Whole, universal & IUL" },
-  { n: "No. 3", name: "Annuities", desc: "Fixed & indexed income" },
-  { n: "No. 4", name: "Long-Term Care", desc: "Traditional & hybrid" },
-  { n: "No. 5", name: "Disability Income", desc: "Protect earning power" },
+  { n: "N.º 1", name: "Term Life", desc: "Protección de ingresos e hipoteca" },
+  { n: "N.º 2", name: "Vida Permanente", desc: "Whole, universal e IUL" },
+  { n: "N.º 3", name: "Anualidades", desc: "Renta fija e indexada" },
+  { n: "N.º 4", name: "Long-Term Care", desc: "Tradicional e híbrido" },
+  { n: "N.º 5", name: "Disability Income", desc: "Proteja su capacidad de ingreso" },
 ];
 
 const INK = "#1a1814";
@@ -79,11 +79,11 @@ export default function ConceptI() {
           {NAV_LINKS.map((l) => (
             <a key={l.href} href={l.href} className={styles.nl}>{l.label}</a>
           ))}
-          <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ padding: "10px 22px", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase" }}>Partner with us</a>
+          <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ padding: "10px 22px", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase" }}>Trabajemos juntos</a>
         </div>
         <MobileMenu
           links={NAV_LINKS}
-          ctaLabel="Partner with us"
+          ctaLabel="Trabajemos juntos"
           ctaHref="#contact"
           panelBg={PAPER}
           textColor={INK}
@@ -98,25 +98,25 @@ export default function ConceptI() {
             <FadeIn delay={0.1} y={14} style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12, paddingBottom: 18 }}>
               <span style={label}>Brandon Brokerage Group</span>
               <span style={label}>Coral Gables, Florida</span>
-              <span style={label}>Since the 1970s</span>
+              <span style={label}>Desde los años 70</span>
             </FadeIn>
             <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.4, delay: 0.2, ease: [0.2, 0.7, 0.2, 1] }} style={{ height: 1, background: INK, transformOrigin: "0 50%" }} />
           </div>
           <div className={styles.mastGrid} style={{ paddingBottom: "clamp(40px,6vw,80px)" }}>
             <div className={styles.mastText}>
               <h1 style={{ fontFamily: serif, fontWeight: 400, fontSize: "clamp(50px,8.2vw,124px)", lineHeight: 0.98, margin: "0 0 clamp(34px,4.5vw,60px)", color: INK, letterSpacing: "-0.015em" }}>
-                <span style={{ display: "block" }}><LettersReveal text="Seamless" delay={0.3} /></span>
-                <span style={{ display: "block", fontStyle: "italic" }}><LettersReveal text="execution," delay={0.62} /></span>
-                <span style={{ display: "block" }}><LettersReveal text="since the ’70s." delay={0.98} /></span>
+                <span style={{ display: "block" }}><LettersReveal text="Ejecución" delay={0.3} /></span>
+                <span style={{ display: "block", fontStyle: "italic" }}><LettersReveal text="impecable," delay={0.62} /></span>
+                <span style={{ display: "block" }}><LettersReveal text="desde los años 70." delay={0.98} /></span>
               </h1>
               <FadeIn delay={1.15}>
-                <p style={{ maxWidth: 460, fontSize: 16, lineHeight: 1.75, color: MUTED, fontWeight: 400, margin: "0 0 30px" }}>We partner with producers and financial advisors to deliver customized business solutions — advanced sales support, full case management and 30+ top-rated carriers behind every case.</p>
+                <p style={{ maxWidth: 460, fontSize: 16, lineHeight: 1.75, color: MUTED, fontWeight: 400, margin: "0 0 30px" }}>Trabajamos junto a productores y asesores financieros para entregar soluciones a medida: soporte avanzado de ventas, gestión integral de casos y más de 30 aseguradoras de primer nivel detrás de cada caso.</p>
               </FadeIn>
               <FadeIn delay={1.35} style={{ display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap" }}>
                 <Magnetic>
-                  <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "15px 34px", fontSize: 12.5, letterSpacing: "0.1em", textTransform: "uppercase" }}>Partner with us</a>
+                  <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "15px 34px", fontSize: 12.5, letterSpacing: "0.1em", textTransform: "uppercase" }}>Trabajemos juntos</a>
                 </Magnetic>
-                <a href="#firm" className={styles.lnk} style={{ fontSize: 13, letterSpacing: "0.06em", color: INK }}>The firm, in brief</a>
+                <a href="#firm" className={styles.lnk} style={{ fontSize: 13, letterSpacing: "0.06em", color: INK }}>La firma, en breve</a>
               </FadeIn>
             </div>
             <div className={styles.mastFig}>
@@ -138,15 +138,15 @@ export default function ConceptI() {
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <ParallaxImg
             src="/images/handshake-moody.jpg"
-            alt="A firm handshake"
+            alt="Un apretón de manos"
             range={44}
             photoSlot="firm"
             style={{ height: "clamp(300px,52vh,600px)" }}
             imgClassName={styles.bw}
           />
           <div style={{ display: "flex", justifyContent: "space-between", gap: 12, padding: "14px 2px 0", flexWrap: "wrap" }}>
-            <span style={label}>Fig. 02 — The partnership</span>
-            <span style={label}>50+ years · 30+ carriers · 5 product lines</span>
+            <span style={label}>Fig. 02 — La sociedad</span>
+            <span style={label}>50+ años · 30+ aseguradoras · 5 líneas de producto</span>
           </div>
         </div>
       </div>
@@ -155,10 +155,10 @@ export default function ConceptI() {
       <div data-reveal style={{ padding: "clamp(56px,7vw,90px) clamp(20px,5vw,60px) 0" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: "28px clamp(24px,4vw,64px)" }}>
           {[
-            { num: 50, suffix: "+", label: "Years of expertise" },
-            { num: 30, suffix: "+", label: "Top-rated carriers" },
-            { num: 5, suffix: "", label: "Product lines" },
-            { num: 1, suffix: "", label: "Business-day response" },
+            { num: 50, suffix: "+", label: "Años de experiencia" },
+            { num: 30, suffix: "+", label: "Aseguradoras top" },
+            { num: 5, suffix: "", label: "Líneas de producto" },
+            { num: 1, suffix: "", label: "Día hábil de respuesta" },
           ].map((s, i) => (
             <div key={s.label}>
               <GrowLine color={INK} delay={i * 0.12} />
@@ -176,8 +176,8 @@ export default function ConceptI() {
       {/* MISSION — indented editorial pull quote */}
       <div style={{ padding: "clamp(90px,13vw,170px) clamp(20px,5vw,60px)" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(12,minmax(0,1fr))", gap: "clamp(16px,2.4vw,36px)" }}>
-          <div data-reveal style={{ gridColumn: "1 / span 2", ...label, paddingTop: 10 }}>No. 01<br />Mission</div>
-          <p data-reveal style={{ gridColumn: "4 / span 9", fontFamily: serif, fontWeight: 400, fontSize: "clamp(26px,3.6vw,46px)", lineHeight: 1.32, margin: 0, color: INK }}>To provide agents with superior service, personalized sales support and tailored business solutions that build <span style={{ fontStyle: "italic" }}>long-term relationships</span>.</p>
+          <div data-reveal style={{ gridColumn: "1 / span 2", ...label, paddingTop: 10 }}>N.º 01<br />Misión</div>
+          <p data-reveal style={{ gridColumn: "4 / span 9", fontFamily: serif, fontWeight: 400, fontSize: "clamp(26px,3.6vw,46px)", lineHeight: 1.32, margin: 0, color: INK }}>Brindar a los agentes un servicio superior, soporte de ventas personalizado y soluciones a medida que construyan <span style={{ fontStyle: "italic" }}>relaciones de largo plazo</span>.</p>
         </div>
       </div>
 
@@ -185,8 +185,8 @@ export default function ConceptI() {
       <div id="firm" style={{ padding: "0 clamp(20px,5vw,60px) clamp(60px,8vw,110px)" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <div data-reveal style={{ borderTop: `1px solid ${INK}`, paddingTop: 18, marginBottom: "clamp(44px,6vw,80px)", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-            <span style={label}>No. 02 — Chapitres</span>
-            <span style={label}>Four disciplines, one team</span>
+            <span style={label}>N.º 02 — Capítulos</span>
+            <span style={label}>Cuatro disciplinas, un equipo</span>
           </div>
 
           <div className={styles.tocGrid}>
@@ -215,7 +215,7 @@ export default function ConceptI() {
                       color: activeCh === i ? INK : "transparent",
                       WebkitTextStroke: activeCh === i ? "0px" : "1px rgba(26,24,20,0.3)",
                     }}>
-                      Chapitre 0{i + 1}
+                      Capítulo 0{i + 1}
                     </div>
                     <div style={{ ...label, fontSize: 10, marginTop: 6, color: activeCh === i ? INK : "rgba(26,24,20,0.35)", transition: "color 0.5s ease" }}>{o.title}</div>
                   </div>
@@ -228,10 +228,10 @@ export default function ConceptI() {
               {OFFERINGS.map((o, i) => (
                 <div key={o.n} ref={(el) => { chapterRefs.current[i] = el; }} data-reveal>
                   <ParallaxImg src={o.img} alt={o.title} range={28} photoSlot={`offer-${o.n}`} style={{ height: "clamp(260px,36vw,460px)", marginBottom: 26 }} imgClassName={styles.bw} />
-                  <div style={{ fontFamily: serif, fontStyle: "italic", fontSize: 20, color: MUTED, marginBottom: 12 }}>(Chapitre 0{i + 1})</div>
+                  <div style={{ fontFamily: serif, fontStyle: "italic", fontSize: 20, color: MUTED, marginBottom: 12 }}>(Capítulo 0{i + 1})</div>
                   <h3 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(26px,2.8vw,38px)", margin: "0 0 14px", color: INK, lineHeight: 1.12 }}>{o.title}</h3>
                   <p style={{ fontSize: 14.5, lineHeight: 1.75, color: MUTED, fontWeight: 400, margin: "0 0 16px", maxWidth: 560 }}>{o.blurb}</p>
-                  <a href="#contact" className={styles.lnk} style={{ fontSize: 11.5, letterSpacing: "0.24em", textTransform: "uppercase", color: INK }}>Learn more</a>
+                  <a href="#contact" className={styles.lnk} style={{ fontSize: 11.5, letterSpacing: "0.24em", textTransform: "uppercase", color: INK }}>Conocer más</a>
                 </div>
               ))}
             </div>
@@ -242,14 +242,14 @@ export default function ConceptI() {
       {/* FOREIGN NATIONAL — ink band, inverse */}
       <div id="foreign" style={{ padding: "clamp(90px,13vw,170px) clamp(20px,5vw,60px)", background: INK }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(12,minmax(0,1fr))", gap: "clamp(16px,2.4vw,36px)" }}>
-          <div data-reveal style={{ gridColumn: "1 / span 2", fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: "#948c7c", paddingTop: 12 }}>No. 03<br />Specialty</div>
+          <div data-reveal style={{ gridColumn: "1 / span 2", fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: "#948c7c", paddingTop: 12 }}>N.º 03<br />Especialidad</div>
           <div style={{ gridColumn: "4 / span 9" }}>
-            <h2 data-reveal style={{ fontFamily: serif, fontWeight: 400, fontSize: "clamp(34px,5.4vw,74px)", lineHeight: 1.04, margin: "0 0 34px", color: PAPER }}>The foreign national market — <span style={{ fontStyle: "italic" }}>we place the cases others turn away.</span></h2>
+            <h2 data-reveal style={{ fontFamily: serif, fontWeight: 400, fontSize: "clamp(34px,5.4vw,74px)", lineHeight: 1.04, margin: "0 0 34px", color: PAPER }}>El mercado de clientes extranjeros: <span style={{ fontStyle: "italic" }}>colocamos los casos que otros rechazan.</span></h2>
             <div data-reveal style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: "clamp(24px,3vw,44px)", maxWidth: 760 }}>
-              <p style={{ fontSize: 15, lineHeight: 1.8, color: "#b6ad9e", fontWeight: 400, margin: 0 }}>With over 50 years of experience, we are an industry leader in the foreign national market — devising customized sales strategies and wealth-management solutions for international clients.</p>
-              <p style={{ fontSize: 15, lineHeight: 1.8, color: "#b6ad9e", fontWeight: 400, margin: 0 }}>Open architecture. A variety of products and services to suit each client — always within carrier, state and federal guidelines.</p>
+              <p style={{ fontSize: 15, lineHeight: 1.8, color: "#b6ad9e", fontWeight: 400, margin: 0 }}>Con más de 50 años de experiencia, somos líderes del mercado de clientes extranjeros: diseñamos estrategias de venta y soluciones de wealth management a medida para clientes internacionales.</p>
+              <p style={{ fontSize: 15, lineHeight: 1.8, color: "#b6ad9e", fontWeight: 400, margin: 0 }}>Arquitectura abierta. Una variedad de productos y servicios para cada cliente, siempre dentro de las normas de cada aseguradora, estado y regulación federal.</p>
             </div>
-            <a data-reveal href="#contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaInverse}`} style={{ display: "inline-block", marginTop: 40, padding: "15px 34px", fontSize: 12.5, letterSpacing: "0.1em", textTransform: "uppercase" }}>Partner with us</a>
+            <a data-reveal href="#contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaInverse}`} style={{ display: "inline-block", marginTop: 40, padding: "15px 34px", fontSize: 12.5, letterSpacing: "0.1em", textTransform: "uppercase" }}>Trabajemos juntos</a>
           </div>
         </div>
       </div>
@@ -258,8 +258,8 @@ export default function ConceptI() {
       <div id="products" style={{ padding: "clamp(80px,11vw,150px) clamp(20px,5vw,60px)" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <div data-reveal style={{ borderTop: `1px solid ${INK}`, paddingTop: 18, marginBottom: "clamp(40px,5vw,64px)", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-            <span style={label}>No. 04 — Products</span>
-            <span style={label}>Backed by 30+ carriers</span>
+            <span style={label}>N.º 04 — Productos</span>
+            <span style={label}>Con el respaldo de más de 30 aseguradoras</span>
           </div>
           <div data-reveal>
             {PRODUCTS.map((p) => (
@@ -278,7 +278,7 @@ export default function ConceptI() {
             ))}
           </div>
           <div data-reveal style={{ marginTop: 44, display: "flex", flexWrap: "wrap", gap: "10px clamp(20px,2.6vw,36px)" }}>
-            <span style={label}>Carriers —</span>
+            <span style={label}>Aseguradoras —</span>
             {CARRIERS.map((c) => (
               <span key={c} style={{ fontSize: 13, color: "#8d8577", letterSpacing: "0.02em" }}>{c}</span>
             ))}
@@ -290,22 +290,22 @@ export default function ConceptI() {
       <div id="contact" style={{ padding: "0 clamp(20px,5vw,60px) clamp(80px,11vw,150px)" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", borderTop: `1px solid ${INK}`, paddingTop: "clamp(44px,6vw,80px)" }}>
           <h2 style={{ fontFamily: serif, fontWeight: 400, fontSize: "clamp(44px,8vw,120px)", lineHeight: 1.04, margin: "0 0 clamp(36px,5vw,60px)", color: INK, letterSpacing: "-0.015em" }}>
-            <MaskReveal inView duration={1.2}>Let&rsquo;s write more <span style={{ fontStyle: "italic" }}>business.</span></MaskReveal>
+            <MaskReveal inView duration={1.2}>Escribamos más <span style={{ fontStyle: "italic" }}>negocio.</span></MaskReveal>
           </h2>
           <div data-reveal style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: "clamp(24px,4vw,56px)", alignItems: "start" }}>
             <div>
-              <div style={{ ...label, marginBottom: 14 }}>Telephone</div>
+              <div style={{ ...label, marginBottom: 14 }}>Teléfono</div>
               <a href="tel:+13054447401" className={styles.lnk} style={{ fontFamily: serif, fontSize: "clamp(22px,2.4vw,30px)", color: INK }}>305-444-7401</a>
-              <div style={{ fontSize: 13.5, color: MUTED, marginTop: 8 }}>Toll-free 1-888-776-4678</div>
+              <div style={{ fontSize: 13.5, color: MUTED, marginTop: 8 }}>Línea gratuita 1-888-776-4678</div>
             </div>
             <div>
-              <div style={{ ...label, marginBottom: 14 }}>Office</div>
+              <div style={{ ...label, marginBottom: 14 }}>Oficina</div>
               <div style={{ fontFamily: serif, fontSize: "clamp(19px,1.9vw,24px)", color: INK, lineHeight: 1.4 }}>75 Valencia Avenue, Suite 200<br />Coral Gables, FL 33134</div>
             </div>
             <div>
-              <div style={{ ...label, marginBottom: 14 }}>Response</div>
-              <p style={{ fontSize: 14.5, lineHeight: 1.7, color: MUTED, margin: "0 0 22px" }}>A brokerage director responds within one business day.</p>
-              <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "14px 32px", fontSize: 12.5, letterSpacing: "0.1em", textTransform: "uppercase" }}>Partner with us</a>
+              <div style={{ ...label, marginBottom: 14 }}>Respuesta</div>
+              <p style={{ fontSize: 14.5, lineHeight: 1.7, color: MUTED, margin: "0 0 22px" }}>Un director de brokerage responde dentro de un día hábil.</p>
+              <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "14px 32px", fontSize: 12.5, letterSpacing: "0.1em", textTransform: "uppercase" }}>Trabajemos juntos</a>
             </div>
           </div>
         </div>
@@ -315,7 +315,7 @@ export default function ConceptI() {
       <div style={{ padding: "32px clamp(20px,5vw,60px)", borderTop: HAIR, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 21 }} />
-        <div style={{ fontSize: 12, color: MUTED }}>© 1970s–2026 Brandon Brokerage Group · For licensed agents &amp; advisors only</div>
+        <div style={{ fontSize: 12, color: MUTED }}>© 1970s–2026 Brandon Brokerage Group · Solo para agentes y asesores con licencia</div>
       </div>
 
     </div>
