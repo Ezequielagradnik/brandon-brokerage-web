@@ -1,43 +1,87 @@
+/* Boutique Latam — modeled on bblatam.com. Navy #14224a, gold #c2a15b, Lora serif. */
+
 .page {
   width: 100%;
   overflow-x: hidden;
   position: relative;
-  background: #fdfdfb;
-  color: #1c2635;
+  background: #ffffff;
+  color: #101828;
 }
 
 .page :where(a) {
-  color: #14263f;
+  color: #14224a;
   text-decoration: none;
 }
 .page ::selection {
-  background: #14263f;
-  color: #fdfdfb;
+  background: #14224a;
+  color: #ffffff;
+}
+
+/* Nav — transparent over the hero, solid navy after scroll */
+.headerBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: background 0.35s ease, border-color 0.35s ease, padding 0.35s ease, box-shadow 0.35s ease;
+}
+
+.headerNav {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2.2vw, 32px);
+  justify-content: flex-end;
+}
+
+@media (max-width: 900px) {
+  .headerNav {
+    display: none;
+  }
 }
 
 .nl {
-  color: #4d5a6c;
+  color: rgba(255, 255, 255, 0.85);
   transition: color 0.3s;
-  font-size: 13.5px;
-  letter-spacing: 0.02em;
+  font-size: 13px;
+  letter-spacing: 0.04em;
 }
 .nl:hover {
-  color: #14263f;
+  color: #d9c291;
 }
 
+.langBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  padding: 2px 4px;
+  color: rgba(255, 255, 255, 0.55);
+  transition: color 0.3s;
+}
+.langBtn:hover {
+  color: #d9c291;
+}
+.langActive {
+  color: #fff;
+  font-weight: 700;
+}
+
+/* CTA — gold fill sweeps from the cursor */
 .cta {
   position: relative;
   overflow: hidden;
   isolation: isolate;
   transition: color 0.3s;
-  background: #14263f;
-  color: #fdfdfb !important;
+  border: 1px solid rgba(194, 161, 91, 0.8);
+  color: #d9c291 !important;
 }
 .cta::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: #9d7c3a;
+  background: #c2a15b;
   clip-path: circle(0px at var(--mx, 50%) var(--my, 50%));
   transition: clip-path 0.55s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: -1;
@@ -45,17 +89,20 @@
 .cta:hover::after {
   clip-path: circle(160% at var(--mx, 50%) var(--my, 50%));
 }
+.cta:hover {
+  color: #14224a !important;
+}
 
-.ctaGhost {
-  background: transparent;
-  color: #14263f !important;
-  border: 1px solid rgba(20, 38, 63, 0.4);
+/* Navy-on-white variant for light sections */
+.ctaDark {
+  border-color: #14224a;
+  color: #14224a !important;
 }
-.ctaGhost:hover {
-  color: #fdfdfb !important;
+.ctaDark::after {
+  background: #14224a;
 }
-.ctaGhost::after {
-  background: #14263f;
+.ctaDark:hover {
+  color: #ffffff !important;
 }
 
 .lnk {
@@ -77,30 +124,7 @@
   transform: scaleX(1);
 }
 
-.headerBar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  background: rgba(253, 253, 251, 0.92);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(20, 38, 63, 0.08);
-}
-
-.headerNav {
-  display: flex;
-  align-items: center;
-  gap: clamp(14px, 2.4vw, 36px);
-  justify-content: flex-end;
-}
-
-@media (max-width: 900px) {
-  .headerNav {
-    display: none;
-  }
-}
-
-/* Solutions grid — bblatam-style photo cards */
+/* Solutions photo-cards — bblatam's signature block */
 .solGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -108,34 +132,51 @@
 }
 .solCard {
   display: block;
-  background: #fdfdfb;
+  color: inherit;
 }
 .solImgWrap {
   position: relative;
   height: 230px;
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 .solImg {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  filter: saturate(0.65) contrast(0.96);
+  filter: saturate(0.7) contrast(0.97);
   transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
 }
 .solCard:hover .solImg {
   transform: scale(1.03);
-  filter: saturate(0.9) contrast(1);
+  filter: saturate(0.95) contrast(1);
 }
+/* gold hairline that draws itself on hover */
+.solHair {
+  display: block;
+  height: 1px;
+  background: #c2a15b;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-bottom: 14px;
+}
+.solCard:hover .solHair {
+  transform: scaleX(1);
+}
+/* caption block rises on hover */
 .solBody {
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .solCard:hover .solBody {
   transform: translateY(-6px);
 }
+.solMore {
+  transition: color 0.3s;
+}
 .solCard:hover .solMore {
-  color: #9d7c3a;
+  color: #9a7b32;
 }
 
 @media (max-width: 1000px) {
@@ -149,21 +190,49 @@
   }
 }
 
-.solMore {
+/* Insights cards */
+.insGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(20px, 2.4vw, 32px);
+}
+.insCard {
+  display: block;
+  border-top: 1px solid rgba(20, 34, 74, 0.25);
+  padding-top: 20px;
+  color: inherit;
+}
+.insCard h3 {
   transition: color 0.3s;
 }
+.insCard:hover h3 {
+  color: #9a7b32;
+}
+.insMore {
+  display: inline-block;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s;
+}
+.insCard:hover .insMore {
+  transform: translateX(6px);
+  color: #9a7b32;
+}
 
-.prod {
-  transition: background 0.35s, padding-left 0.35s ease;
+@media (max-width: 1000px) {
+  .insGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
-.prod:hover {
-  background: rgba(20, 38, 63, 0.03);
-  padding-left: 16px;
+@media (max-width: 560px) {
+  .insGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
-.carrierCell {
-  transition: color 0.3s;
-}
-.carrierCell:hover {
-  color: #14263f;
+@media (prefers-reduced-motion: reduce) {
+  .solImg,
+  .solBody,
+  .solHair,
+  .insMore {
+    transition: none;
+  }
 }
