@@ -12,9 +12,11 @@ type MobileMenuProps = {
   panelBg: string;
   textColor: string;
   accentColor: string;
+  /* color of the hamburger button in the header; defaults to textColor */
+  toggleColor?: string;
 };
 
-export default function MobileMenu({ links, ctaLabel, ctaHref, panelBg, textColor, accentColor }: MobileMenuProps) {
+export default function MobileMenu({ links, ctaLabel, ctaHref, panelBg, textColor, accentColor, toggleColor }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -41,7 +43,7 @@ export default function MobileMenu({ links, ctaLabel, ctaHref, panelBg, textColo
         aria-expanded={open}
         onClick={() => setOpen(true)}
         className={styles.toggle}
-        style={{ color: textColor, ...(open ? { display: "none" } : {}) }}
+        style={{ color: toggleColor ?? textColor, ...(open ? { display: "none" } : {}) }}
       >
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8">
           <path d="M2 5h18M2 11h18M2 17h18" />

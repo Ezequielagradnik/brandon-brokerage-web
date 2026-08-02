@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
 import { ScrollProgress, MaskReveal, FadeIn, CountUp, GrowLine, ParallaxImg, Magnetic,  ctaFillFromCursor } from "@/components/motion";
@@ -291,7 +291,6 @@ export default function ConceptG() {
   const heroRef = useRef<HTMLDivElement>(null);
   const deckRef = useRef<HTMLDivElement>(null);
   const [lang, setLang] = useState<Lang>("en");
-  const [scrolled, setScrolled] = useState(false);
   const [deckHovered, setDeckHovered] = useState<number | null>(null);
   // the header's AI Assistant entry opens the tool modal directly
   const [tool, setTool] = useState<ToolId | null>(null);
@@ -319,9 +318,6 @@ export default function ConceptG() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
-  const { scrollY } = useScroll();
-  useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 40));
-
   const NAV_LINKS = [
     { href: "#solutions", label: t.nav.solutions },
     { href: "#firm", label: t.nav.firm },
@@ -333,12 +329,12 @@ export default function ConceptG() {
     <div ref={pageRef} className={styles.page} style={{ fontFamily: sans }}>
       <ScrollProgress color={GOLD} />
 
-      {/* NAV , a floating glass pill: dark over the hero photo, white on scroll */}
-      <div className={`${styles.headerBar} ${scrolled ? styles.headerSolid : ""}`}>
+      {/* NAV , a floating pill, always solid white */}
+      <div className={`${styles.headerBar} ${styles.headerSolid}`}>
         <a href="#top" style={{ display: "inline-flex", flexShrink: 0 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={scrolled ? "/assets/brandon-logo.png" : "/assets/brandon-logo-white.png"}
+            src="/assets/brandon-logo.png"
             alt="Brandon Brokerage Group"
             style={{ height: 26, width: "auto" }}
           />
@@ -373,6 +369,7 @@ export default function ConceptG() {
           panelBg={NAVY}
           textColor="#ffffff"
           accentColor={GOLD}
+          toggleColor={NAVY}
         />
       </div>
 
