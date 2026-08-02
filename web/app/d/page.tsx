@@ -1,31 +1,29 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { useScrollReveal } from "@/hooks/useReveals";
-import { useGlobe, GOLD_GLOBE } from "@/hooks/useGlobe";
+import GlobeArcs, { GOLD_ARCS } from "@/components/GlobeArcs";
 import MobileMenu from "@/components/MobileMenu";
-import { OFFERINGS } from "@/lib/offerings";
+import { COPY, OFFERINGS_I18N, type Lang } from "@/lib/copy";
+import LangToggle from "@/components/LangToggle";
+import AgentTools, { type ToolId } from "@/components/AgentTools";
 import { ScrollProgress, WordsReveal, FadeIn, CountUp, GrowLine, Magnetic, ctaFillFromCursor, EASE } from "@/components/motion";
 import { motion, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
+import { CTA_HREF, WHATSAPP_ENABLED } from "@/lib/contact";
 import styles from "./page.module.css";
 
-const NAV_LINKS = [
-  { href: "#why", label: "La Firma" },
-  { href: "#foreign", label: "Clientes Extranjeros" },
-  { href: "#products", label: "Productos" },
-  { href: "#contact", label: "Contacto" },
+const navLinks = (t: (typeof COPY)[Lang]) => [
+  { href: "#why", label: t.nav.firm },
+  { href: "#foreign", label: t.nav.foreign },
+  { href: "#products", label: t.nav.products },
+  { href: "#contact", label: t.nav.contact },
 ];
 
 const CARRIERS = ["Lincoln", "John Hancock", "AIG", "Nationwide", "Principal", "MassMutual", "Mutual of Omaha", "Protective", "Prudential", "Pacific Life", "Transamerica", "Symetra", "Global Atlantic", "Allianz"];
 
-const PRODUCTS = [
-  { n: "01", name: "Term Life", desc: "Protección de ingresos e hipoteca" },
-  { n: "02", name: "Vida Permanente", desc: "Whole, universal e IUL" },
-  { n: "03", name: "Anualidades", desc: "Renta fija e indexada" },
-  { n: "04", name: "Long-Term Care", desc: "Tradicional e híbrido" },
-  { n: "05", name: "Disability Income", desc: "Proteja su capacidad de ingreso" },
-];
+
 
 const NAVY = "#12294a";
 const GOLD = "#a9812f";
@@ -129,8 +127,11 @@ function useSilk(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
   }, []);
 }
 
-// ————— Signature scroll moment: the silk curtain reveals each pillar —————
-const D_CATS = ["Especialidad", "Soporte", "Operaciones", "Red"];
+// ----- Signature scroll moment: the silk curtain reveals each pillar -----
+const D_CATS = {
+  en: ["Specialty", "Support", "Operations", "Network"],
+  es: ["Especialidad", "Soporte", "Operaciones", "Red"],
+};
 
 const dSeg = (p: number, a: number, b: number) => Math.min(1, Math.max(0, (p - a) / (b - a)));
 
@@ -146,8 +147,8 @@ function sweepX(p: number) {
   return -120;
 }
 
-function SilkPanel({ i, progress, reduce }: { i: number; progress: MotionValue<number>; reduce: boolean }) {
-  const o = OFFERINGS[i];
+function SilkPanel({ i, progress, reduce, lang }: { i: number; progress: MotionValue<number>; reduce: boolean; lang: Lang }) {
+  const o = OFFERINGS_I18N[lang][i];
   const op = useTransform(progress, (p) => {
     if (reduce) return i === 3 ? 1 : 0;
     const fadeIn = i === 0 ? 1 : dSeg(p, i / 4 - 0.005, i / 4 + 0.012);
@@ -158,7 +159,7 @@ function SilkPanel({ i, progress, reduce }: { i: number; progress: MotionValue<n
   return (
     <motion.div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", opacity: op, y, pointerEvents: "none" }}>
       <div style={{ maxWidth: 860, padding: "0 clamp(20px,5vw,60px)", textAlign: "center" }}>
-        <div style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 11.5, letterSpacing: "0.26em", textTransform: "uppercase", color: GOLD, marginBottom: 24 }}>0{i + 1} / {D_CATS[i]}</div>
+        <div style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 11.5, letterSpacing: "0.26em", textTransform: "uppercase", color: GOLD, marginBottom: 24 }}>0{i + 1} / {D_CATS[lang][i]}</div>
         <h3 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(36px,5.5vw,84px)", lineHeight: 1.04, letterSpacing: "-0.01em", margin: "0 0 22px", color: NAVY }}>{o.title}</h3>
         <p style={{ fontSize: "clamp(15px,1.4vw,18px)", lineHeight: 1.65, color: BODY, margin: "0 auto", maxWidth: 520 }}>{o.blurb}</p>
       </div>
@@ -172,16 +173,20 @@ function SilkTick({ i, progress }: { i: number; progress: MotionValue<number> })
 }
 
 export default function ConceptD() {
+  const [lang, setLang] = useState<Lang>("en");
+  const t = COPY[lang];
+  const OFFERINGS = OFFERINGS_I18N[lang];
+  const NAV_LINKS = navLinks(t);
+  const [tool, setTool] = useState<ToolId | null>(null);
+  const [toolOrigin, setToolOrigin] = useState({ x: 50, y: 8 });
   const pageRef = useRef<HTMLDivElement>(null);
   const silkCanvas = useRef<HTMLCanvasElement>(null);
   const curtainCanvas = useRef<HTMLCanvasElement>(null);
-  const globeCanvas = useRef<HTMLCanvasElement>(null);
   const silkRevealRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
 
   useSilk(silkCanvas);
   useSilk(curtainCanvas);
-  useGlobe(globeCanvas, GOLD_GLOBE);
   useScrollReveal(pageRef);
 
   // scrub for the silk-curtain reveal
@@ -203,11 +208,24 @@ export default function ConceptD() {
           {NAV_LINKS.map((l) => (
             <a key={l.href} href={l.href} className={styles.nl}>{l.label}</a>
           ))}
-          <a href="#contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaGold}`} style={{ padding: "11px 22px", border: "1px solid #12294a", color: "#12294a", fontSize: 13, letterSpacing: "0.08em", textTransform: "uppercase" }}>Trabajemos Juntos</a>
+          <button
+            type="button"
+            className={`${styles.nl} ${styles.navTool}`}
+            onClick={(e) => {
+              const r = e.currentTarget.getBoundingClientRect();
+              setToolOrigin({ x: ((r.left + r.width / 2) / window.innerWidth) * 100, y: ((r.top + r.height / 2) / window.innerHeight) * 100 });
+              setTool("assistant");
+            }}
+          >
+            <span className={styles.navToolDot} aria-hidden="true" />
+            {t.nav.assistant}
+          </button>
+          <LangToggle lang={lang} setLang={setLang} color="rgba(18,41,74,0.55)" activeColor={NAVY} />
+          <a href="#contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaGold}`} style={{ padding: "11px 22px", border: "1px solid #12294a", color: "#12294a", fontSize: 13, letterSpacing: "0.08em", textTransform: "uppercase" }}>{t.cta.partnerCaps}</a>
         </div>
         <MobileMenu
-          links={NAV_LINKS}
-          ctaLabel="Trabajemos Juntos"
+          links={[{ href: "#tools", label: t.nav.assistant }, ...NAV_LINKS]}
+          ctaLabel={t.cta.partnerCaps}
           ctaHref="#contact"
           panelBg="#f3efe6"
           textColor="#12294a"
@@ -223,43 +241,46 @@ export default function ConceptD() {
           <div style={{ maxWidth: 760 }}>
             <FadeIn delay={0.1} style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 34 }}>
               <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.3, ease: EASE }} style={{ width: 44, height: 1, background: GOLD, transformOrigin: "0 50%" }} />
-              <span style={{ fontSize: 12, letterSpacing: "0.32em", textTransform: "uppercase", color: GOLD_DIM }}>Coral Gables · Desde los años 70</span>
+              <span style={{ fontSize: 12, letterSpacing: "0.32em", textTransform: "uppercase", color: GOLD_DIM }}>{t.heroKicker}</span>
             </FadeIn>
             <h1 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(38px,5.6vw,74px)", lineHeight: 1.08, margin: "0 0 30px", color: NAVY, letterSpacing: "-0.01em" }}>
               <WordsReveal
                 delay={0.25}
                 stagger={0.045}
                 segments={[
-                  { text: "Trabajamos junto a productores y asesores financieros para entregar soluciones de negocio a medida, con" },
-                  { text: "una ejecución impecable.", style: { fontStyle: "italic", color: GOLD } },
+                  { text: t.heroTitleA },
+                  { text: t.heroTitleB, style: { fontStyle: "italic", color: GOLD } },
                 ]}
               />
             </h1>
             <FadeIn delay={1.1}>
-              <p style={{ fontSize: "clamp(17px,1.5vw,20px)", lineHeight: 1.6, color: BODY, fontWeight: 400, maxWidth: 520, margin: "0 0 42px" }}>Desde hace más de cincuenta años, Brandon Brokerage Group combina soporte avanzado de ventas y gestión integral de casos con acceso a más de 30 aseguradoras de primer nivel, y un dominio poco común del mercado de clientes extranjeros.</p>
+              <p style={{ fontSize: "clamp(17px,1.5vw,20px)", lineHeight: 1.6, color: BODY, fontWeight: 400, maxWidth: 520, margin: "0 0 42px" }}>{t.heroSub}</p>
             </FadeIn>
             <FadeIn delay={1.3} style={{ display: "flex", gap: 26, alignItems: "center", flexWrap: "wrap" }}>
               <Magnetic>
-                <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "16px 34px", border: "1px solid #12294a", color: "#12294a", fontSize: 14, letterSpacing: "0.06em", textTransform: "uppercase" }}>Trabajemos juntos</a>
+                <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "16px 34px", border: "1px solid #12294a", color: "#12294a", fontSize: 14, letterSpacing: "0.06em", textTransform: "uppercase" }}>{t.cta.partner}</a>
               </Magnetic>
-              <a href="#products" className={styles.lnk} style={{ fontSize: 14, letterSpacing: "0.04em", color: NAVY }}>Ver productos</a>
+              <a href="#products" className={styles.lnk} style={{ fontSize: 14, letterSpacing: "0.04em", color: NAVY }}>{t.cta.explore}</a>
             </FadeIn>
           </div>
         </div>
         <div style={{ position: "absolute", bottom: 34, left: "50%", transform: "translateX(-50%)", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
-          <span style={{ fontSize: 10.5, letterSpacing: "0.3em", textTransform: "uppercase", color: "#8b8574" }}>Scroll</span>
+          <span style={{ fontSize: 10.5, letterSpacing: "0.3em", textTransform: "uppercase", color: "#8b8574" }}>{t.scroll}</span>
           <span style={{ width: 1, height: 38, background: "linear-gradient(#a9812f,transparent)" }} />
         </div>
       </div>
 
-      {/* STATS — drawn hairlines + count-up, /g structure */}
+      {/* AGENT TOOLS , the AI assistant and its two companions */}
+      <AgentTools lang={lang} id="tools" tone="sapphire" open={tool} origin={toolOrigin} onOpenChange={setTool} />
+
+      {/* STATS , drawn hairlines + count-up, /g structure */}
       <div data-reveal style={{ padding: "clamp(48px,6vw,72px) clamp(20px,5vw,60px)", background: "#f3efe6" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(170px,1fr))", gap: "28px clamp(24px,4vw,64px)" }}>
           {[
-            { num: 50, suffix: "+", label: "Años de experiencia" },
-            { num: 30, suffix: "+", label: "Aseguradoras top" },
-            { num: 5, suffix: "", label: "Líneas de producto" },
-            { num: null, text: "FN", label: "Líderes del mercado" },
+            { num: 60, suffix: "+", label: t.stats.years },
+            { num: 30, suffix: "+", label: t.stats.carriers },
+            { num: 5, suffix: "", label: t.stats.lines },
+            { num: null, text: "FN", label: t.stats.leader },
           ].map((s, i) => (
             <div key={s.label}>
               <GrowLine color={GOLD} delay={i * 0.12} />
@@ -274,32 +295,32 @@ export default function ConceptD() {
         </div>
       </div>
 
-      {/* MISSION — two-column band, /g structure */}
+      {/* MISSION , two-column band, /g structure */}
       <div style={{ padding: "clamp(70px,10vw,140px) clamp(20px,5vw,60px)", background: "#ece7db", borderTop: "1px solid rgba(18,41,74,0.12)", borderBottom: "1px solid rgba(18,41,74,0.12)" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,90px)" }}>
           <div data-reveal>
-            <div style={{ ...MONO_K, marginBottom: 14 }}>01 — Nuestra misión</div>
+            <div style={{ ...MONO_K, marginBottom: 14 }}>01 / {t.missionKicker}</div>
             <GrowLine color={D_HAIR} style={{ marginBottom: 24 }} />
-            <p style={{ fontFamily: serif, fontWeight: 400, fontSize: "clamp(22px,2.4vw,30px)", lineHeight: 1.42, margin: 0, color: "#1a2536" }}>Brindar a los agentes un servicio superior, soporte de ventas personalizado y soluciones a medida que <span style={{ fontStyle: "italic", color: GOLD }}>construyan relaciones de largo plazo</span>.</p>
+            <p style={{ fontFamily: serif, fontWeight: 400, fontSize: "clamp(22px,2.4vw,30px)", lineHeight: 1.42, margin: 0, color: "#1a2536" }}>{t.missionText}<span style={{ fontStyle: "italic", color: GOLD }}>{t.missionHighlight}</span>.</p>
           </div>
           <div data-reveal>
-            <div style={{ ...MONO_K, marginBottom: 14 }}>Nuestro enfoque</div>
+            <div style={{ ...MONO_K, marginBottom: 14 }}>{t.approachKicker}</div>
             <GrowLine color={D_HAIR} delay={0.12} style={{ marginBottom: 24 }} />
-            <p style={{ fontSize: 16, lineHeight: 1.75, color: BODY, fontWeight: 400, margin: 0 }}>Arquitectura abierta, atención individualizada y un estándar de calidad excepcional. Del diseño del caso a la entrega de la póliza, un mismo equipo sigue cada solicitud, para que usted esté frente a sus clientes y no detrás del papeleo.</p>
+            <p style={{ fontSize: 16, lineHeight: 1.75, color: BODY, fontWeight: 400, margin: 0 }}>{t.approachText}</p>
           </div>
         </div>
       </div>
 
-      {/* WHAT WE OFFER — signature scroll moment: the silk curtain reveals each pillar */}
+      {/* WHAT WE OFFER , signature scroll moment: the silk curtain reveals each pillar */}
       <div id="why" ref={silkRevealRef} className={styles.silkSection}>
         <div className={styles.silkPin}>
           <div style={{ position: "absolute", top: "clamp(24px,4vh,48px)", left: "clamp(20px,5vw,60px)", right: "clamp(20px,5vw,60px)" }}>
-            <div style={{ ...MONO_K, marginBottom: 14 }}>02 — Qué ofrecemos</div>
+            <div style={{ ...MONO_K, marginBottom: 14 }}>02 / {t.offerKicker}</div>
             <GrowLine color={D_HAIR} />
           </div>
 
           {OFFERINGS.map((_, i) => (
-            <SilkPanel key={i} i={i} progress={silkProgress} reduce={!!reduce} />
+            <SilkPanel key={i} i={i} progress={silkProgress} reduce={!!reduce} lang={lang} />
           ))}
 
           {/* the silk curtain that sweeps between pillars */}
@@ -307,7 +328,7 @@ export default function ConceptD() {
             <canvas ref={curtainCanvas} style={{ width: "100%", height: "100%", display: "block" }} />
           </motion.div>
 
-          <div style={{ position: "absolute", right: "clamp(20px,5vw,60px)", bottom: 24, fontFamily: "var(--font-plex-mono), monospace", fontSize: 10.5, letterSpacing: "0.3em", color: "#8b8574" }}>SCROLLEÁ PARA REVELAR</div>
+          <div style={{ position: "absolute", right: "clamp(20px,5vw,60px)", bottom: 24, fontFamily: "var(--font-plex-mono), monospace", fontSize: 10.5, letterSpacing: "0.3em", color: "#8b8574" }}>{lang === "es" ? "SCROLLEÁ PARA REVELAR" : "SCROLL TO REVEAL"}</div>
           {/* progress ticks */}
           <div style={{ position: "absolute", left: "clamp(20px,5vw,60px)", bottom: 24, display: "flex", gap: 10 }}>
             {OFFERINGS.map((_, i) => (
@@ -319,12 +340,12 @@ export default function ConceptD() {
         {/* mobile: plain stacked pillars, no pin */}
         <div className={styles.silkMobile}>
           <div data-reveal style={{ marginBottom: 32 }}>
-            <div style={{ ...MONO_K, marginBottom: 14 }}>02 — Qué ofrecemos</div>
+            <div style={{ ...MONO_K, marginBottom: 14 }}>02 / {t.offerKicker}</div>
             <GrowLine color={D_HAIR} />
           </div>
           {OFFERINGS.map((o, i) => (
             <div key={o.n} data-reveal style={{ padding: "26px 0", borderBottom: "1px solid rgba(18,41,74,0.14)" }}>
-              <div style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: GOLD, marginBottom: 12 }}>0{i + 1} / {D_CATS[i]}</div>
+              <div style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: GOLD, marginBottom: 12 }}>0{i + 1} / {D_CATS[lang][i]}</div>
               <h3 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(26px,6vw,36px)", margin: "0 0 10px", color: NAVY, lineHeight: 1.1 }}>{o.title}</h3>
               <p style={{ fontSize: 14.5, lineHeight: 1.6, color: BODY, margin: 0 }}>{o.blurb}</p>
             </div>
@@ -332,39 +353,51 @@ export default function ConceptD() {
         </div>
       </div>
 
-      {/* FOREIGN NATIONAL — the globe stays */}
-      <div id="foreign" style={{ position: "relative", padding: "clamp(90px,13vw,180px) clamp(20px,5vw,60px)", background: "#ece7db", borderTop: "1px solid rgba(18,41,74,0.12)", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: "50%", right: "clamp(-90px,-5vw,-50px)", transform: "translateY(-50%)", width: "clamp(260px,30vw,420px)", height: "clamp(260px,30vw,420px)", borderRadius: "50%", overflow: "hidden", background: "radial-gradient(circle at 38% 30%, #16304f, #081221 74%)", boxShadow: "0 30px 80px rgba(12,28,51,0.28)" }}>
-          <canvas ref={globeCanvas} style={{ width: "100%", height: "100%", display: "block" }} />
+      {/* PULL QUOTE , the quiet beat between the two pinned scenes */}
+      <div style={{ padding: "clamp(70px,10vw,140px) clamp(20px,5vw,60px)", background: "#f3efe6", textAlign: "center", borderTop: "1px solid rgba(18,41,74,0.1)" }}>
+        <div style={{ maxWidth: 840, margin: "0 auto" }}>
+          <GrowLine color={GOLD} origin="center" style={{ width: 44, margin: "0 auto 36px" }} />
+          <p data-reveal style={{ fontFamily: serif, fontWeight: 400, fontStyle: "italic", fontSize: "clamp(24px,3.2vw,40px)", lineHeight: 1.4, margin: 0, color: NAVY }}>{t.quote}</p>
+          <div data-reveal style={{ fontSize: 11.5, letterSpacing: "0.28em", textTransform: "uppercase", color: MUTED, marginTop: 32 }}>{t.quoteAttrib}</div>
         </div>
-        <div style={{ position: "relative", maxWidth: 1100, margin: "0 auto" }}>
-          <div data-reveal style={{ marginBottom: 34, maxWidth: 720 }}>
-            <div style={{ ...MONO_K, marginBottom: 14 }}>03 — Especialidad distintiva</div>
-            <GrowLine color={D_HAIR} />
+      </div>
+
+      {/* FOREIGN NATIONAL , the 3D globe, the signature of this concept */}
+      <div id="foreign" style={{ position: "relative", padding: "clamp(90px,13vw,180px) clamp(20px,5vw,60px)", background: "#ece7db", borderTop: "1px solid rgba(18,41,74,0.12)", overflow: "hidden" }}>
+        <div style={{ maxWidth: 1240, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))", gap: "clamp(40px,6vw,80px)", alignItems: "center" }}>
+          <div>
+            <div data-reveal style={{ marginBottom: 30, maxWidth: 720 }}>
+              <div style={{ ...MONO_K, marginBottom: 14 }}>{t.spcKicker}</div>
+              <GrowLine color={D_HAIR} />
+            </div>
+            <h2 data-reveal style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(32px,5vw,68px)", lineHeight: 1.04, margin: "0 0 32px", color: NAVY }}>
+              {t.spcTitle1} <span style={{ fontStyle: "italic", color: GOLD }}>{t.spcTitle2}</span>
+            </h2>
+            <p data-reveal style={{ fontSize: "clamp(15px,1.4vw,18px)", lineHeight: 1.7, color: BODY, margin: "0 0 20px", maxWidth: 560 }}>{t.spcBody1}</p>
+            <p data-reveal style={{ fontSize: "clamp(15px,1.4vw,18px)", lineHeight: 1.7, color: BODY, margin: "0 0 34px", maxWidth: 560 }}>{t.spcBody2}</p>
+            <a data-reveal href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "15px 34px", border: `1px solid ${NAVY}`, color: NAVY, fontSize: 13, letterSpacing: "0.08em", textTransform: "uppercase" }}>{t.cta.partner}</a>
           </div>
-          <h2 data-reveal style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(34px,6vw,76px)", lineHeight: 1.04, margin: "0 0 40px", color: NAVY, maxWidth: 760 }}>Colocamos los casos que <span style={{ fontStyle: "italic", color: GOLD }}>otros rechazan</span>.</h2>
-          <div data-reveal style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: "clamp(28px,3vw,48px)", alignItems: "start", maxWidth: 720 }}>
-            <p style={{ fontSize: "clamp(16px,1.5vw,19px)", lineHeight: 1.7, color: BODY, fontWeight: 400, margin: 0 }}>Con más de 50 años de experiencia, somos líderes del mercado de clientes extranjeros. Ayudamos a los agentes a diseñar estrategias de venta y soluciones de wealth management a medida para sus clientes internacionales.</p>
-            <p style={{ fontSize: "clamp(16px,1.5vw,19px)", lineHeight: 1.7, color: BODY, fontWeight: 400, margin: 0 }}>Nuestro enfoque de arquitectura abierta ofrece una variedad de productos y servicios para cubrir las necesidades de sus clientes, siempre dentro de las normas de cada aseguradora, estado y regulación federal. <a href="#contact" className={styles.lnk} style={{ color: GOLD }}>Trabajemos juntos</a>.</p>
+          <div data-reveal style={{ position: "relative", borderRadius: "50%", overflow: "hidden", background: "radial-gradient(circle at 38% 30%, #16304f, #081221 74%)", boxShadow: "0 34px 90px rgba(12,28,51,0.3)", maxWidth: 520, width: "100%", margin: "0 auto" }}>
+            <GlobeArcs palette={GOLD_ARCS} />
           </div>
         </div>
       </div>
 
-      {/* PRODUCTS — display serif for names only, sans numerals */}
+      {/* PRODUCTS , display serif for names only, sans numerals */}
       <div id="products" style={{ padding: "clamp(60px,8vw,110px) clamp(20px,5vw,60px)", background: "#f3efe6" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
           <div data-reveal style={{ marginBottom: 24 }}>
-            <div style={{ ...MONO_K, marginBottom: 14 }}>04 — Productos</div>
+            <div style={{ ...MONO_K, marginBottom: 14 }}>04 / {t.productsKicker}</div>
             <GrowLine color={D_HAIR} />
           </div>
           <div data-reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20, flexWrap: "wrap", marginBottom: 16 }}>
-            <h2 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(30px,4.4vw,56px)", margin: 0, color: NAVY }}>Productos</h2>
-            <span style={{ ...MONO_K, fontSize: 11.5 }}>Con el respaldo de más de 30 aseguradoras</span>
+            <h2 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(30px,4.4vw,56px)", margin: 0, color: NAVY }}>{t.productsKicker}</h2>
+            <span style={{ ...MONO_K, fontSize: 11.5 }}>{t.productsBacked}</span>
           </div>
           <div data-reveal style={{ borderTop: "1px solid rgba(18,41,74,0.18)" }}>
-            {PRODUCTS.map((p) => (
-              <a key={p.n} href="#contact" className={styles.prod} style={{ display: "grid", gridTemplateColumns: "60px 1fr auto", gap: "clamp(14px,3vw,40px)", alignItems: "center", padding: "34px 4px", borderBottom: "1px solid rgba(18,41,74,0.14)" }}>
-                <span style={{ fontSize: 11, letterSpacing: "0.2em", color: GOLD }}>{p.n}</span>
+            {t.products.map((p, i) => (
+              <a key={p.name} href="#contact" className={styles.prod} style={{ display: "grid", gridTemplateColumns: "60px 1fr auto", gap: "clamp(14px,3vw,40px)", alignItems: "center", padding: "34px 4px", borderBottom: "1px solid rgba(18,41,74,0.14)" }}>
+                <span style={{ fontSize: 11, letterSpacing: "0.2em", color: GOLD }}>0{i + 1}</span>
                 <span style={{ fontFamily: serif, fontSize: "clamp(24px,3vw,38px)", color: NAVY }}>{p.name}</span>
                 <span style={{ fontSize: 14, color: MUTED, textAlign: "right" }}>{p.desc}</span>
               </a>
@@ -373,19 +406,10 @@ export default function ConceptD() {
         </div>
       </div>
 
-      {/* PULL QUOTE — quiet manifesto band */}
-      <div style={{ padding: "clamp(70px,10vw,140px) clamp(20px,5vw,60px)", background: "#f3efe6", textAlign: "center", borderTop: "1px solid rgba(18,41,74,0.1)" }}>
-        <div style={{ maxWidth: 840, margin: "0 auto" }}>
-          <GrowLine color={GOLD} origin="center" style={{ width: 44, margin: "0 auto 36px" }} />
-          <p data-reveal style={{ fontFamily: serif, fontWeight: 400, fontStyle: "italic", fontSize: "clamp(24px,3.2vw,40px)", lineHeight: 1.4, margin: 0, color: NAVY }}>Atención individualizada y un estándar de calidad excepcional, detrás de cada caso que usted escribe.</p>
-          <div data-reveal style={{ fontSize: 11.5, letterSpacing: "0.28em", textTransform: "uppercase", color: MUTED, marginTop: 32 }}>El estándar Brandon</div>
-        </div>
-      </div>
-
       {/* CARRIERS MARQUEE */}
       <div data-reveal style={{ padding: "clamp(56px,7vw,90px) clamp(20px,5vw,60px)", background: "#f3efe6", borderTop: "1px solid rgba(18,41,74,0.1)" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
-          <div style={{ fontSize: 12, letterSpacing: "0.24em", textTransform: "uppercase", color: MUTED, marginBottom: 34 }}>Nuestras aseguradoras — firma líder de Tellus / Crump</div>
+          <div style={{ fontSize: 12, letterSpacing: "0.24em", textTransform: "uppercase", color: MUTED, marginBottom: 34 }}>{t.carriersLabel}</div>
           <div style={{ position: "relative", overflow: "hidden", WebkitMaskImage: "linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)", maskImage: "linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)" }}>
             <div className={styles.marquee} style={{ display: "flex", width: "max-content", alignItems: "center", columnGap: "clamp(30px,4vw,64px)", fontFamily: serif, fontSize: "clamp(19px,2vw,28px)", color: "#8b93a2", whiteSpace: "nowrap" }}>
               {[0, 1].map((rep) => (
@@ -406,17 +430,17 @@ export default function ConceptD() {
       <div id="contact" style={{ position: "relative", padding: "clamp(90px,13vw,180px) clamp(20px,5vw,60px)", background: "#ece7db" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,90px)", alignItems: "center" }}>
           <div data-reveal>
-            <div style={{ ...MONO_K, marginBottom: 14 }}>05 — Contacto</div>
+            <div style={{ ...MONO_K, marginBottom: 14 }}>05 / {t.contactKicker}</div>
             <GrowLine color={D_HAIR} style={{ marginBottom: 26 }} />
-            <h2 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(38px,5.5vw,72px)", lineHeight: 1.02, margin: "0 0 28px", color: NAVY }}>Escribamos más negocio, juntos.</h2>
-            <p style={{ fontSize: 17, lineHeight: 1.66, color: BODY, fontWeight: 400, margin: 0, maxWidth: 440 }}>Cuéntenos sobre su caso o su cartera. Un director de brokerage responde dentro de un día hábil.</p>
+            <h2 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(38px,5.5vw,72px)", lineHeight: 1.02, margin: "0 0 28px", color: NAVY }}>{t.contactTitle}</h2>
+            <p style={{ fontSize: 17, lineHeight: 1.66, color: BODY, fontWeight: 400, margin: 0, maxWidth: 440 }}>{t.contactBody}</p>
           </div>
           <div data-reveal style={{ borderTop: "1px solid rgba(169,129,47,0.5)" }}>
-            <a href="tel:+13054447401" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "26px 0", borderBottom: "1px solid rgba(18,41,74,0.14)" }}><span style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: MUTED }}>Teléfono</span><span style={{ fontFamily: serif, fontSize: "clamp(20px,2.4vw,28px)", color: NAVY }}>305-444-7401</span></a>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "26px 0", borderBottom: "1px solid rgba(18,41,74,0.14)" }}><span style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: MUTED }}>Línea gratuita</span><span style={{ fontFamily: serif, fontSize: "clamp(20px,2.4vw,28px)", color: NAVY }}>1-888-776-4678</span></div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "26px 0", borderBottom: "1px solid rgba(18,41,74,0.14)" }}><span style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: MUTED }}>Oficina</span><span style={{ fontFamily: serif, fontSize: "clamp(17px,1.8vw,22px)", color: NAVY, textAlign: "right" }}>75 Valencia Ave, Suite 200<br />Coral Gables, FL 33134</span></div>
+            <a href="tel:+13054447401" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "26px 0", borderBottom: "1px solid rgba(18,41,74,0.14)" }}><span style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: MUTED }}>{t.phone}</span><span style={{ fontFamily: serif, fontSize: "clamp(20px,2.4vw,28px)", color: NAVY }}>305-444-7401</span></a>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "26px 0", borderBottom: "1px solid rgba(18,41,74,0.14)" }}><span style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: MUTED }}>{t.tollFree}</span><span style={{ fontFamily: serif, fontSize: "clamp(20px,2.4vw,28px)", color: NAVY }}>1-888-776-4678</span></div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "26px 0", borderBottom: "1px solid rgba(18,41,74,0.14)" }}><span style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: MUTED }}>{t.office}</span><span style={{ fontFamily: serif, fontSize: "clamp(17px,1.8vw,22px)", color: NAVY, textAlign: "right" }}>75 Valencia Ave, Suite 200<br />Coral Gables, FL 33134</span></div>
             <Magnetic>
-              <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", marginTop: 34, padding: "16px 38px", border: "1px solid #12294a", color: "#12294a", fontSize: 14, letterSpacing: "0.08em", textTransform: "uppercase" }}>Trabajemos juntos</a>
+              <a href={CTA_HREF} {...(WHATSAPP_ENABLED ? { target: "_blank", rel: "noopener noreferrer" } : {})} onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-flex", alignItems: "center", marginTop: 34, padding: "16px 38px", border: "1px solid #12294a", color: "#12294a", fontSize: 14, letterSpacing: "0.08em", textTransform: "uppercase" }}>{WHATSAPP_ENABLED && <WhatsAppIcon />}{t.cta.partner}</a>
             </Magnetic>
           </div>
         </div>
@@ -428,7 +452,7 @@ export default function ConceptD() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 22 }} />
         </div>
-        <div style={{ fontSize: 12, color: "#8ea3c4" }}>© 1970s–2026 Brandon Brokerage Group · Solo para agentes y asesores con licencia</div>
+        <div style={{ fontSize: 12, color: "#8ea3c4" }}>{t.rights} · {t.licensed}</div>
       </div>
 
     </div>

@@ -1,0 +1,22 @@
+.wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  padding: 2px 3px;
+  transition: color 0.25s;
+}
+
+.sep {
+  font-size: 10px;
+  opacity: 0.5;
+  padding: 0 1px;
+}

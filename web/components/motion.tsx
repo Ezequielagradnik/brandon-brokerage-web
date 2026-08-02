@@ -105,7 +105,7 @@ export function LettersReveal({
   );
 }
 
-// A block that rises out of an overflow mask — one editorial line at a time.
+// A block that rises out of an overflow mask , one editorial line at a time.
 // The in-view observer watches the (unclipped) mask container: the inner span
 // starts fully clipped, so observing it directly would never fire.
 export function MaskReveal({
@@ -207,6 +207,8 @@ export function ParallaxImg({
       <motion.img
         src={src}
         alt={alt}
+        loading="lazy"
+        decoding="async"
         data-photo-slot={photoSlot}
         className={imgClassName}
         initial={reduce || !settle ? false : { scale: 1.05 }}
@@ -346,7 +348,7 @@ export function ClipReveal({
   );
 }
 
-// Very light 3D tilt on hover — capped at `max` degrees. For cards.
+// Very light 3D tilt on hover , capped at `max` degrees. For cards.
 export function Tilt({
   children,
   max = 2,

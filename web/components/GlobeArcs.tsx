@@ -170,15 +170,24 @@ export default function GlobeArcs({ palette }: { palette: ArcPalette }) {
       globe.add(mer);
     }
 
-    // Continent hint: coarse coastline dots
+    // Continent hint: the coastline resampled into an even dot run, so the
+    // globe reads as a dotted map rather than a sparse outline.
     const coastArr: number[] = [];
-    COAST.forEach(([lat, lon]) => {
-      const v = latLonToVec3(lat, lon, R * 1.002);
-      coastArr.push(v.x, v.y, v.z);
-    });
+    const STEP = 1.1; // degrees between dots
+    for (let i = 0; i < COAST.length - 1; i++) {
+      const [lat1, lon1] = COAST[i];
+      const [lat2, lon2] = COAST[i + 1];
+      const span = Math.hypot(lat2 - lat1, lon2 - lon1);
+      const steps = Math.max(1, Math.round(span / STEP));
+      for (let s = 0; s < steps; s++) {
+        const k = s / steps;
+        const v = latLonToVec3(lat1 + (lat2 - lat1) * k, lon1 + (lon2 - lon1) * k, R * 1.002);
+        coastArr.push(v.x, v.y, v.z);
+      }
+    }
     const coastGeo = new THREE.BufferGeometry();
     coastGeo.setAttribute("position", new THREE.Float32BufferAttribute(coastArr, 3));
-    globe.add(new THREE.Points(coastGeo, new THREE.PointsMaterial({ color: palette.coast, size: 0.028, transparent: true, opacity: 0.5 })));
+    globe.add(new THREE.Points(coastGeo, new THREE.PointsMaterial({ color: palette.coast, size: 0.022, transparent: true, opacity: 0.62 })));
 
     // City dots
     const cityVecs = CITIES.map((c) => latLonToVec3(c.lat, c.lon, R * 1.004));

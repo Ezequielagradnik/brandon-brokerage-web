@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useReveals";
 import MobileMenu from "@/components/MobileMenu";
-import { ScrollProgress, MaskReveal, FadeIn, CountUp, GrowLine, ParallaxImg, Magnetic, CursorDot, ctaFillFromCursor } from "@/components/motion";
-import GlobeArcs, { GOLD_ARCS } from "@/components/GlobeArcs";
+import { ScrollProgress, MaskReveal, FadeIn, CountUp, GrowLine, ParallaxImg, Magnetic,  ctaFillFromCursor } from "@/components/motion";
+import CaseJourney from "@/components/CaseJourney";
+import AgentTools, { type ToolId } from "@/components/AgentTools";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
+import { CTA_HREF, WHATSAPP_ENABLED } from "@/lib/contact";
 import styles from "./page.module.css";
 
 // Palette shared with Brandon Latam Network (sister firm)
@@ -19,7 +22,7 @@ const serif = "var(--font-lora), serif";
 const sans = "var(--font-manrope), sans-serif";
 const mono = "var(--font-plex-mono), monospace";
 
-// Editorial masthead scale — the page's typographic peaks
+// Editorial masthead scale , the page's typographic peaks
 const MASTHEAD: React.CSSProperties = {
   fontFamily: serif,
   fontWeight: 500,
@@ -34,16 +37,16 @@ type Lang = "en" | "es";
 
 const T = {
   en: {
-    nav: { solutions: "Solutions", firm: "The Firm", insights: "Insights", contact: "Contact", cta: "Partner with us" },
-    heroEyebrow: "Est. the 1970s · Coral Gables, Florida",
+    nav: { solutions: "Solutions", firm: "The Firm", insights: "Insights", contact: "Contact", assistant: "AI Assistant", cta: "Partner with us" },
+    heroEyebrow: "Est. the 1960s · Coral Gables, Florida",
     heroLines: ["The quiet partner", "behind", "extraordinary cases."],
-    heroSub: "Advanced sales support, full case management and 30+ top-rated carriers — for producers and financial advisors.",
+    heroSub: "Advanced sales support, full case management and 30+ top-rated carriers, for producers and financial advisors.",
     heroCta: "Partner with us",
     heroLink: "Our solutions",
-    trust: "A Tellus / Crump firm · Serving agents in 50 states · Coral Gables since the 1970s",
+    trust: "A Tellus / Crump firm · Serving agents in 50 states · Coral Gables since the 1960s",
     heads: { solutions: "Solutions", mission: "Mission", firm: "The Firm", specialty: "Specialty", insights: "Insights", contact: "Contact" },
     stats: [
-      { num: 50, suffix: "+", label: "Years of expertise" },
+      { num: 60, suffix: "+", label: "Years of expertise" },
       { num: 30, suffix: "+", label: "Top-rated carriers" },
       { num: 5, suffix: "", label: "Product lines" },
       { num: null, text: "FN", label: "Foreign national leader" },
@@ -54,7 +57,7 @@ const T = {
       seeAll: "See all solutions",
       hint: "SCROLL TO REVEAL",
       cards: [
-        { cat: "Specialty", title: "Foreign National", desc: "Industry leadership placing international clients — within every guideline." },
+        { cat: "Specialty", title: "Foreign National", desc: "Industry leadership placing international clients, within every guideline." },
         { cat: "Support", title: "Advanced Sales Support", desc: "Case design, sales concepts and point-of-sale backup on every line." },
         { cat: "Operations", title: "Full Case Management", desc: "Underwriting and paperwork, from application to policy delivery." },
         { cat: "Network", title: "Carriers & Products", desc: "A leading Tellus/Crump firm with 30+ top-rated carriers nationwide." },
@@ -63,20 +66,20 @@ const T = {
     missionText: "To provide agents with superior service, personalized sales support and tailored business solutions that build long-term relationships.",
     appTitle: "A family of firms, one standard.",
     appItems: [
-      { k: "Vision", t: "To be the brokerage partner of record for advisors serving domestic and international clients — pioneering custom solutions that reflect each client's values." },
-      { k: "Experience", t: "Five decades placing complex cases from the same Coral Gables office — alongside our sister firm, Brandon Latam, serving families across the Americas." },
+      { k: "Vision", t: "To be the brokerage partner of record for advisors serving domestic and international clients, pioneering custom solutions that reflect each client's values." },
+      { k: "Experience", t: "Six decades placing complex cases from the same Coral Gables office, alongside our sister firm, Brandon Latam, serving families across the Americas." },
     ],
     spcTitle1: "We place the cases",
     spcTitle2: "others turn away.",
-    spcBody: "With over 50 years of experience, we are an industry leader in the foreign national market. Customized sales strategies and wealth-management solutions for your international clients — always within carrier, state and federal guidelines.",
+    spcBody: "With over 60 years of experience, we are an industry leader in the foreign national market. Customized sales strategies and wealth-management solutions for your international clients, always within carrier, state and federal guidelines.",
     spcCta: "Partner with us",
-    carriersLabel: "Our carriers — a leading Tellus / Crump firm",
+    carriersLabel: "Our carriers, a leading Tellus / Crump firm",
     insTitle: "Ideas for the cases ahead.",
     insights: [
       { date: "April 2026", title: "Life insurance for foreign nationals: what to know in 2026", excerpt: "Carrier appetite, documentation and the questions to settle before the exam." },
       { date: "March 2026", title: "Term or permanent? Framing the choice for high-net-worth clients", excerpt: "A simple framework for positioning coverage as part of a wealth plan." },
-      { date: "February 2026", title: "Hybrid long-term care is winning the conversation", excerpt: "Why advisors lead with hybrid designs — and when traditional still fits." },
-      { date: "January 2026", title: "Underwriting the complex case: a producer's checklist", excerpt: "Packaging, medical records and timing — how to keep a hard case moving." },
+      { date: "February 2026", title: "Hybrid long-term care is winning the conversation", excerpt: "Why advisors lead with hybrid designs, and when traditional still fits." },
+      { date: "January 2026", title: "Underwriting the complex case: a producer's checklist", excerpt: "Packaging, medical records and timing: how to keep a hard case moving." },
     ],
     insMore: "Read more",
     ctaTitle: "Let's write more business, together.",
@@ -87,19 +90,19 @@ const T = {
     footNav: "Navigation",
     footContact: "Contact",
     disclaimer: "Brandon Brokerage Group is an insurance brokerage serving licensed agents and financial advisors. Products are subject to carrier approval and state availability. Nothing on this site constitutes legal, tax or investment advice.",
-    rights: "© 1970s–2026 Brandon Brokerage Group · For licensed agents & advisors only",
+    rights: "© 1960s-2026 Brandon Brokerage Group · For licensed agents & advisors only",
   },
   es: {
-    nav: { solutions: "Soluciones", firm: "La Firma", insights: "Insights", contact: "Contacto", cta: "Trabajemos juntos" },
-    heroEyebrow: "Desde los años 70 · Coral Gables, Florida",
+    nav: { solutions: "Soluciones", firm: "La Firma", insights: "Insights", contact: "Contacto", assistant: "Asistente IA", cta: "Trabajemos juntos" },
+    heroEyebrow: "Desde los años 60 · Coral Gables, Florida",
     heroLines: ["El socio silencioso", "detrás de", "casos extraordinarios."],
     heroSub: "Soporte avanzado de ventas, gestión integral de casos y más de 30 aseguradoras top, para productores y asesores financieros.",
     heroCta: "Trabajemos juntos",
     heroLink: "Nuestras soluciones",
-    trust: "Firma Tellus / Crump · Agentes en 50 estados · Coral Gables desde los años 70",
+    trust: "Firma Tellus / Crump · Agentes en 50 estados · Coral Gables desde los años 60",
     heads: { solutions: "Soluciones", mission: "Misión", firm: "La Firma", specialty: "Especialidad", insights: "Insights", contact: "Contacto" },
     stats: [
-      { num: 50, suffix: "+", label: "Años de experiencia" },
+      { num: 60, suffix: "+", label: "Años de experiencia" },
       { num: 30, suffix: "+", label: "Aseguradoras top" },
       { num: 5, suffix: "", label: "Líneas de producto" },
       { num: null, text: "FN", label: "Líder en foreign nationals" },
@@ -120,13 +123,13 @@ const T = {
     appTitle: "Una familia de firmas, un mismo estándar.",
     appItems: [
       { k: "Visión", t: "Ser el socio de brokerage de referencia para asesores con clientes locales e internacionales, creando soluciones que reflejen los valores de cada cliente." },
-      { k: "Experiencia", t: "Cinco décadas colocando casos complejos desde la misma oficina de Coral Gables, junto a nuestra firma hermana, Brandon Latam." },
+      { k: "Experiencia", t: "Seis décadas colocando casos complejos desde la misma oficina de Coral Gables, junto a nuestra firma hermana, Brandon Latam." },
     ],
     spcTitle1: "Colocamos los casos que",
     spcTitle2: "otros rechazan.",
-    spcBody: "Con más de 50 años de experiencia, somos líderes en el mercado de foreign nationals. Estrategias de venta y soluciones de wealth management a medida para sus clientes internacionales, siempre dentro de las normas de cada aseguradora, estado y regulación federal.",
+    spcBody: "Con más de 60 años de experiencia, somos líderes en el mercado de foreign nationals. Estrategias de venta y soluciones de wealth management a medida para sus clientes internacionales, siempre dentro de las normas de cada aseguradora, estado y regulación federal.",
     spcCta: "Trabajemos juntos",
-    carriersLabel: "Nuestras aseguradoras — firma líder de Tellus / Crump",
+    carriersLabel: "Nuestras aseguradoras, firma líder de Tellus / Crump",
     insTitle: "Ideas para los casos que vienen.",
     insights: [
       { date: "Abril 2026", title: "Seguros de vida para foreign nationals: claves 2026", excerpt: "Apetito de las aseguradoras, documentación y qué resolver antes del examen." },
@@ -143,7 +146,7 @@ const T = {
     footNav: "Navegación",
     footContact: "Contacto",
     disclaimer: "Brandon Brokerage Group es un brokerage de seguros que atiende a agentes y asesores financieros con licencia. Los productos están sujetos a la aprobación de cada aseguradora y a la disponibilidad por estado. Nada en este sitio constituye asesoramiento legal, impositivo o de inversión.",
-    rights: "© 1970s–2026 Brandon Brokerage Group · Solo para agentes y asesores con licencia",
+    rights: "© 1960s-2026 Brandon Brokerage Group · Solo para agentes y asesores con licencia",
   },
 } as const;
 
@@ -156,17 +159,17 @@ const monoEyebrow = (dark?: boolean): React.CSSProperties => ({
   color: dark ? "#d9c291" : GOLD_DEEP,
 });
 
-// Numbered section head: "01 — Label" in small mono + hairline drawn on entry
+// Numbered section head: "01 , Label" in small mono + hairline drawn on entry
 function SectionHead({ num, label, dark }: { num: string; label: string; dark?: boolean }) {
   return (
     <div data-reveal style={{ marginBottom: "clamp(36px,4.5vw,64px)" }}>
-      <div style={{ ...monoEyebrow(dark), marginBottom: 16 }}>{num} — {label}</div>
+      <div style={{ ...monoEyebrow(dark), marginBottom: 16 }}>{num} / {label}</div>
       <GrowLine color={dark ? "rgba(217,194,145,0.4)" : "rgba(154,123,50,0.45)"} />
     </div>
   );
 }
 
-// ————— Mission: progressive ink highlight, word by word on scroll —————
+// ----- Mission: progressive ink highlight, word by word on scroll -----
 function MissionWord({ progress, range, word }: { progress: MotionValue<number>; range: [number, number]; word: string }) {
   const opacity = useTransform(progress, range, [0.15, 1]);
   return <motion.span style={{ opacity }}>{word} </motion.span>;
@@ -188,8 +191,8 @@ function MissionHighlight({ text }: { text: string }) {
   );
 }
 
-// ————— Card deck (pinned, scroll-driven) —————
-const DECK_IMGS = ["/images/globe-gold.jpg", "/images/handshake-office.jpg", "/images/wwo-papers.jpg", "/images/miami-aerial-day.jpg"];
+// ----- Card deck (pinned, scroll-driven) -----
+const DECK_IMGS = ["/images/miami-palms-sunset.jpg", "/images/miami-aerial-day.jpg", "/images/miami-night.jpg", "/images/miami-sunset.jpg"];
 const DECK_ACCENTS = ["#c2a15b", "#3d7a64", "#4179ab", "#b26a4a"];
 // lighter tints for the mono label over the dark photo
 const DECK_ACCENTS_LIGHT = ["#e3c98f", "#8fd0b4", "#9cc4ec", "#e8a988"];
@@ -214,8 +217,9 @@ function DeckCardInner({ i, card }: { i: number; card: DeckCardData }) {
     <>
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: DECK_ACCENTS[i], zIndex: 2 }} />
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={DECK_IMGS[i]} alt={card.title} data-photo-slot={`pillar-0${i + 1}`} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(16,24,40,0.1) 30%, rgba(16,24,40,0.88) 82%)" }} />
+      <img src={DECK_IMGS[i]} alt={card.title} loading="lazy" decoding="async" data-photo-slot={`pillar-0${i + 1}`} className={styles.deckPhoto} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(146deg, #14224a, #2b3f6e 55%, #c2a15b)", mixBlendMode: "color" }} />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(16,24,40,0.12) 28%, rgba(16,24,40,0.9) 82%)" }} />
       <div style={{ position: "absolute", left: 20, right: 20, bottom: 20, zIndex: 2 }}>
         <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: "0.18em", textTransform: "uppercase", color: DECK_ACCENTS_LIGHT[i], marginBottom: 10 }}>0{i + 1} / {card.cat}</div>
         <div style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(19px,1.7vw,24px)", lineHeight: 1.15, color: "#fff", marginBottom: 8 }}>{card.title}</div>
@@ -286,9 +290,12 @@ export default function ConceptG() {
   const pageRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const deckRef = useRef<HTMLDivElement>(null);
-  const [lang, setLang] = useState<Lang>("es");
+  const [lang, setLang] = useState<Lang>("en");
   const [scrolled, setScrolled] = useState(false);
   const [deckHovered, setDeckHovered] = useState<number | null>(null);
+  // the header's AI Assistant entry opens the tool modal directly
+  const [tool, setTool] = useState<ToolId | null>(null);
+  const [toolOrigin, setToolOrigin] = useState({ x: 50, y: 8 });
   const reduce = useReducedMotion();
   const t = T[lang];
 
@@ -312,12 +319,8 @@ export default function ConceptG() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 40));
 
   const NAV_LINKS = [
     { href: "#solutions", label: t.nav.solutions },
@@ -329,34 +332,42 @@ export default function ConceptG() {
   return (
     <div ref={pageRef} className={styles.page} style={{ fontFamily: sans }}>
       <ScrollProgress color={GOLD} />
-      <CursorDot color={GOLD} />
 
-      {/* NAV — transparent over hero, solid navy + hairline on scroll */}
-      <div
-        className={styles.headerBar}
-        style={{
-          position: "fixed", top: 0, left: 0, right: 0, zIndex: 60,
-          padding: scrolled ? "14px clamp(20px,5vw,60px)" : "22px clamp(20px,5vw,60px)",
-          background: scrolled ? "rgba(20,34,74,0.96)" : "linear-gradient(180deg, rgba(16,24,40,0.78), rgba(16,24,40,0.35) 70%, transparent)",
-          backdropFilter: scrolled ? "blur(10px)" : "none",
-          borderBottom: scrolled ? "1px solid rgba(194,161,91,0.25)" : "1px solid transparent",
-        }}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <a href="#top" style={{ display: "inline-flex" }}><img src="/assets/brandon-logo-white.png" alt="Brandon Brokerage Group" style={{ height: scrolled ? 24 : 28, transition: "height 0.35s ease" }} /></a>
+      {/* NAV , a floating glass pill: dark over the hero photo, white on scroll */}
+      <div className={`${styles.headerBar} ${scrolled ? styles.headerSolid : ""}`}>
+        <a href="#top" style={{ display: "inline-flex", flexShrink: 0 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={scrolled ? "/assets/brandon-logo.png" : "/assets/brandon-logo-white.png"}
+            alt="Brandon Brokerage Group"
+            style={{ height: 26, width: "auto" }}
+          />
+        </a>
         <div className={styles.headerNav}>
           {NAV_LINKS.map((l) => (
             <a key={l.href} href={l.href} className={styles.nl}>{l.label}</a>
           ))}
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 1, marginRight: "clamp(6px,1vw,18px)" }}>
+          <button
+            type="button"
+            className={`${styles.nl} ${styles.navTool}`}
+            onClick={(e) => {
+              const r = e.currentTarget.getBoundingClientRect();
+              setToolOrigin({ x: ((r.left + r.width / 2) / window.innerWidth) * 100, y: ((r.top + r.height / 2) / window.innerHeight) * 100 });
+              setTool("assistant");
+            }}
+          >
+            <span className={styles.navToolDot} aria-hidden="true" />
+            {t.nav.assistant}
+          </button>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 1 }}>
             <button type="button" onClick={() => setLang("en")} className={`${styles.langBtn} ${lang === "en" ? styles.langActive : ""}`}>EN</button>
-            <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 10 }}>/</span>
+            <span className={styles.langSlash} style={{ fontSize: 10 }}>/</span>
             <button type="button" onClick={() => setLang("es")} className={`${styles.langBtn} ${lang === "es" ? styles.langActive : ""}`}>ES</button>
           </span>
-          <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ padding: "11px 24px", fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase" }}>{t.nav.cta}</a>
+          <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ padding: "11px 24px", fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", borderRadius: 999 }}>{t.nav.cta}</a>
         </div>
         <MobileMenu
-          links={NAV_LINKS}
+          links={[{ href: "#tools", label: t.nav.assistant }, ...NAV_LINKS]}
           ctaLabel={t.nav.cta}
           ctaHref="#contact"
           panelBg={NAVY}
@@ -365,7 +376,7 @@ export default function ConceptG() {
         />
       </div>
 
-      {/* HERO — full-screen photo, slow Ken Burns + parallax, 3-line masthead */}
+      {/* HERO , full-screen photo, slow Ken Burns + parallax, 3-line masthead */}
       <div id="top" ref={heroRef} style={{ position: "relative", minHeight: "100svh", display: "flex", alignItems: "flex-end", overflow: "hidden", padding: "clamp(120px,14vw,180px) clamp(20px,5vw,60px) clamp(60px,8vw,100px)" }}>
         <div style={{ position: "absolute", inset: 0 }}>
           <motion.img
@@ -405,7 +416,7 @@ export default function ConceptG() {
         </div>
       </div>
 
-      {/* TRUST BAR — one mono line with separators */}
+      {/* TRUST BAR , one mono line with separators */}
       <div data-reveal style={{ padding: "18px clamp(20px,5vw,60px)", background: "#fff", borderBottom: HAIR }}>
         <div style={{ maxWidth: 1240, margin: "0 auto", fontFamily: mono, fontSize: 11.5, letterSpacing: "0.14em", textTransform: "uppercase", color: GRAY, textAlign: "center" }}>
           {t.trust.split(" · ").map((part, i, arr) => (
@@ -417,7 +428,10 @@ export default function ConceptG() {
         </div>
       </div>
 
-      {/* STATS — giant numerals, drawn hairlines + count-up */}
+      {/* AGENT TOOLS , three demo tools, above the fold */}
+      <AgentTools lang={lang} id="tools" open={tool} origin={toolOrigin} onOpenChange={setTool} />
+
+      {/* STATS , giant numerals, drawn hairlines + count-up */}
       <div data-reveal style={{ padding: "clamp(56px,7vw,96px) clamp(20px,5vw,60px)", background: "#fff" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: "32px clamp(24px,4vw,64px)" }}>
           {t.stats.map((s, i) => (
@@ -434,13 +448,13 @@ export default function ConceptG() {
         </div>
       </div>
 
-      {/* 01 — SOLUTIONS: pinned card deck, scroll-driven */}
+      {/* 01 , SOLUTIONS: pinned card deck, scroll-driven */}
       <div id="solutions" ref={deckRef} className={styles.deckSection}>
         <div className={styles.deckPin} style={{ padding: "0 clamp(20px,5vw,60px)" }}>
 
-          {/* headline column — fades out as the deck fans over it */}
+          {/* headline column , fades out as the deck fans over it */}
           <motion.div style={{ position: "relative", zIndex: 1, maxWidth: 1240, margin: "0 auto", width: "100%", opacity: deckDesktop ? deckTitleFade : 1 }}>
-            <div data-reveal style={{ ...monoEyebrow(), marginBottom: 26 }}>01 — {t.heads.solutions} · Brandon Brokerage</div>
+            <div data-reveal style={{ ...monoEyebrow(), marginBottom: 26 }}>01 / {t.heads.solutions} · Brandon Brokerage</div>
             <h2 className={styles.deckHeadline} data-reveal>
               {t.deck.lines.map((l) => (
                 <span key={l} style={{ display: "block" }}>{l}</span>
@@ -469,7 +483,7 @@ export default function ConceptG() {
         </div>
       </div>
 
-      {/* 02 — MISSION: progressive ink highlight on scroll */}
+      {/* 02 , MISSION: progressive ink highlight on scroll */}
       <div style={{ padding: "clamp(80px,11vw,150px) clamp(20px,5vw,60px)", background: "#fff" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <SectionHead num="02" label={t.heads.mission} />
@@ -477,19 +491,19 @@ export default function ConceptG() {
         </div>
       </div>
 
-      {/* 03 — THE FIRM: side photo + vision/experience */}
+      {/* 03 , THE FIRM: side photo + vision/experience */}
       <div id="firm" style={{ padding: "clamp(70px,10vw,140px) clamp(20px,5vw,60px)", background: "#f9fafb", borderTop: HAIR, borderBottom: HAIR }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <SectionHead num="03" label={t.heads.firm} />
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,80px)", alignItems: "center" }}>
             <div data-reveal>
               <ParallaxImg
-                src="/images/handshake-clean.jpg"
-                alt="Brandon Brokerage Group"
+                src="/images/miami-palms-day.jpg"
+                alt="Brickell towers from the street, the neighbourhood the firm works in"
                 range={30}
                 photoSlot="approach"
                 style={{ height: "clamp(320px,44vw,540px)" }}
-                imgStyle={{ filter: "saturate(0.75)" }}
+                imgClassName={styles.deckPhoto}
               />
             </div>
             <div>
@@ -505,28 +519,17 @@ export default function ConceptG() {
         </div>
       </div>
 
-      {/* 04 — SPECIALTY: navy band, 3D globe with LatAm → Miami arcs */}
-      <div style={{ position: "relative", padding: "clamp(90px,12vw,160px) clamp(20px,5vw,60px)", background: NAVY, overflow: "hidden" }}>
-        <div className={styles.grain} aria-hidden="true" />
-        <div style={{ position: "relative", zIndex: 2, maxWidth: 1240, margin: "0 auto" }}>
-          <SectionHead num="04" label={t.heads.specialty} dark />
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,80px)", alignItems: "center" }}>
-            <div>
-              <h2 style={{ ...MASTHEAD, margin: "0 0 30px", color: "#fff" }}>
-                <MaskReveal inView delay={0.1}>{t.spcTitle1}</MaskReveal>
-                <MaskReveal inView delay={0.25}><span style={{ fontStyle: "italic", color: "#d9c291", fontSize: "0.9em" }}>{t.spcTitle2}</span></MaskReveal>
-              </h2>
-              <p data-reveal style={{ fontSize: "clamp(15.5px,1.4vw,18px)", lineHeight: 1.75, color: "rgba(255,255,255,0.82)", margin: "0 0 36px", maxWidth: 560 }}>{t.spcBody}</p>
-              <a data-reveal href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "15px 34px", fontSize: 12.5, letterSpacing: "0.12em", textTransform: "uppercase" }}>{t.spcCta}</a>
-            </div>
-            <div data-reveal style={{ maxWidth: 520, margin: "0 auto", width: "100%" }}>
-              <GlobeArcs palette={GOLD_ARCS} />
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* 04 , SPECIALTY: the journey of a case (pinned scene) */}
+      <CaseJourney
+        lang={lang}
+        num="04"
+        variant="gold"
+        cta={
+          <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "15px 34px", fontSize: 12.5, letterSpacing: "0.12em", textTransform: "uppercase" }}>{t.spcCta}</a>
+        }
+      />
 
-      {/* CARRIERS — slow infinite marquee */}
+      {/* CARRIERS , slow infinite marquee */}
       <div data-reveal style={{ padding: "clamp(56px,7vw,90px) 0", background: "#fff", borderBottom: HAIR }}>
         <div style={{ ...monoEyebrow(), textAlign: "center", marginBottom: 36 }}>{t.carriersLabel}</div>
         <div style={{ position: "relative", overflow: "hidden", WebkitMaskImage: "linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)", maskImage: "linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)" }}>
@@ -544,7 +547,7 @@ export default function ConceptG() {
         </div>
       </div>
 
-      {/* 05 — INSIGHTS: four article cards */}
+      {/* 05 , INSIGHTS: four article cards */}
       <div id="insights" style={{ padding: "clamp(64px,9vw,130px) clamp(20px,5vw,60px)", background: "#fff" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <SectionHead num="05" label={t.heads.insights} />
@@ -570,7 +573,7 @@ export default function ConceptG() {
         </div>
       </div>
 
-      {/* 06 — CONTACT: masthead close, giant clickable phone */}
+      {/* 06 , CONTACT: masthead close, giant clickable phone */}
       <div id="contact" style={{ position: "relative", padding: "clamp(80px,11vw,150px) clamp(20px,5vw,60px)", background: NAVY, overflow: "hidden" }}>
         <div className={styles.grain} aria-hidden="true" />
         <div style={{ position: "relative", zIndex: 2, maxWidth: 1240, margin: "0 auto" }}>
@@ -595,14 +598,14 @@ export default function ConceptG() {
             </div>
             <div style={{ marginLeft: "auto" }}>
               <Magnetic>
-                <a href="tel:+13054447401" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "16px 36px", fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase" }}>{t.ctaBtn}</a>
+                <a href={CTA_HREF} {...(WHATSAPP_ENABLED ? { target: "_blank", rel: "noopener noreferrer" } : {})} onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-flex", alignItems: "center", padding: "16px 36px", fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase" }}>{WHATSAPP_ENABLED && <WhatsAppIcon />}{t.ctaBtn}</a>
               </Magnetic>
             </div>
           </div>
         </div>
       </div>
 
-      {/* FOOTER — dark, with legal disclaimer */}
+      {/* FOOTER , dark, with legal disclaimer */}
       <footer style={{ background: "#0e1833", padding: "clamp(44px,6vw,64px) clamp(20px,5vw,60px) 0" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: "clamp(28px,4vw,56px)", paddingBottom: "clamp(32px,4vw,48px)" }}>
