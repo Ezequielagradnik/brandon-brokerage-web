@@ -230,49 +230,43 @@
 }
 
 /* ————— hero ————— */
-/* A navy plate the rest of the page emerges from. The foil only reads as foil
-   on a dark ground, and it keeps this hero off /d's cream. */
 .hero {
   position: relative;
   min-height: 100svh;
   display: flex;
-  align-items: flex-end;
-  padding: clamp(120px, 16vh, 180px) 0 clamp(48px, 6vh, 76px);
+  align-items: center;
+  padding: clamp(96px, 12vh, 128px) 0 clamp(56px, 7vh, 88px);
   overflow: hidden;
-  background: #14224a;
-  color: #f5f1e8;
 }
-
-/* headline, then a hairline, then the standfirst and buttons on one baseline */
-.heroFoot {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: clamp(24px, 4vw, 60px);
-  margin-top: clamp(30px, 4vh, 52px);
-  padding-top: clamp(24px, 3vh, 36px);
-  border-top: 1px solid rgba(194, 161, 91, 0.4);
-}
-/* the foil sheen fills the hero behind the type */
-.heroFoil {
+.heroGlow {
   position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-/* keeps the type off the foil no matter where the light lands */
-.heroScrim {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
+  width: 62vw;
+  height: 62vw;
+  max-width: 820px;
+  max-height: 820px;
+  right: -12vw;
+  top: -14vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(194, 161, 91, 0.38), rgba(194, 161, 91, 0) 62%);
   pointer-events: none;
-  background: linear-gradient(95deg, #14224a 12%, rgba(20, 34, 74, 0.88) 34%, rgba(20, 34, 74, 0.3) 58%, rgba(20, 34, 74, 0) 76%);
+  animation: nDrift 26s ease-in-out infinite alternate;
 }
-/* narrow viewports have no room to put the type beside the light, so the
-   scrim turns vertical: foil up top, solid navy under the headline */
-@media (max-width: 900px) {
-  .heroScrim {
-    background: linear-gradient(180deg, rgba(20, 34, 74, 0.35) 0%, rgba(20, 34, 74, 0.82) 42%, #14224a 68%);
-  }
+.heroGlow2 {
+  position: absolute;
+  width: 48vw;
+  height: 48vw;
+  max-width: 640px;
+  max-height: 640px;
+  left: -14vw;
+  bottom: -16vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(20, 34, 74, 0.18), rgba(20, 34, 74, 0) 64%);
+  pointer-events: none;
+  animation: nDrift 32s ease-in-out infinite alternate-reverse;
+}
+@keyframes nDrift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(-6%, 5%, 0) scale(1.14); }
 }
 
 .display {
@@ -292,18 +286,6 @@
   padding-bottom: 0.06em;
 }
 
-/* The firm's own headline is long, so the hero runs a step below the display
-   scale. Must stay after .display: same specificity, so source order decides
-   which font-size and colour win. */
-.heroTitle {
-  font-size: clamp(28px, 4.6vw, 56px);
-  line-height: 1.16;
-  color: #fbfaf7;
-  text-wrap: pretty;
-}
-.heroTitle .displayItalic {
-  color: #d8bd80;
-}
 
 .kicker {
   font-family: var(--font-plex-mono), monospace;
@@ -355,28 +337,6 @@
   border-color: rgba(20, 34, 74, 0.35);
 }
 
-/* the hero plate is navy, so its buttons invert: gold fill, cream outline */
-.ctaOnDark {
-  background: #c2a15b;
-  border-color: #c2a15b;
-  color: #14224a;
-}
-.ctaOnDark::after {
-  background: #f5f1e8;
-}
-@media (hover: hover) and (pointer: fine) {
-  .ctaOnDark:hover {
-    color: #14224a;
-  }
-}
-.ctaGhostOnDark {
-  background: none;
-  color: #f5f1e8;
-  border-color: rgba(245, 241, 232, 0.4);
-}
-.ctaGhostOnDark::after {
-  background: #f5f1e8;
-}
 
 /* ————— the platform band (links out to the real assistant) ————— */
 .aiBand {
@@ -1070,6 +1030,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .heroGlow,
+  .heroGlow2,
   .aiGlow,
   .aiPulse {
     animation: none;
