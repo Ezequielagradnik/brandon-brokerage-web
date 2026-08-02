@@ -63,34 +63,34 @@ void main() {
 
   float t = uTime * 0.05;
 
-  // stretched vertically: the grain reads as rolled metal, not clouds
-  vec2 q = vec2(p.x * 1.15, p.y * 3.4);
-  float warp = fbm(q + vec2(t, -t * 0.42));
-  float warp2 = fbm(q * 1.7 - vec2(t * 0.55, t * 0.18));
-
   // the light leans towards the cursor, a fraction of the way
-  float lean = uPointer.x * 0.55;
-  float rise = uPointer.y * 0.35;
+  float lean = uPointer.x * 0.4;
+  float rise = uPointer.y * 0.25;
 
-  // two bands crossing at different angles and speeds
-  float b1 = sin((p.x * 1.5 + p.y * 1.1 + lean) * 2.6 + warp * 3.4 + t * 1.7);
-  float b2 = sin((p.x * 0.8 - p.y * 1.6 - rise) * 3.1 - warp2 * 2.8 - t * 1.1);
+  // Brushed striation: the noise is stretched hard along x and packed along y,
+  // so it reads as the grain of rolled metal rather than as clouds.
+  float fine = fbm(vec2(p.x * 0.7, p.y * 30.0) + vec2(t * 0.5, 0.0));
+  float fine2 = fbm(vec2(p.x * 1.3, p.y * 58.0) - vec2(t * 0.32, 0.0));
+  float brush = fine * 0.64 + fine2 * 0.36;
 
-  float sheen = pow(max(b1, 0.0), 3.0) * 0.72 + pow(max(b2, 0.0), 4.0) * 0.42;
+  // broad lobes of light travelling across the plate, catching the grain
+  float lobe = sin((p.x * 1.1 + p.y * 0.8 + lean) * 2.0 + t * 1.2) * 0.5 + 0.5;
+  float lobe2 = sin((p.x * 0.7 - p.y * 1.3 - rise) * 2.7 - t * 0.8) * 0.5 + 0.5;
+  float light = pow(lobe, 2.6) * 0.95 + pow(lobe2, 4.0) * 0.5;
 
-  // a broad, soft pool so the foil has body between the bands
-  float pool = smoothstep(0.35, 0.95, warp * 0.7 + warp2 * 0.5);
-  sheen += pool * 0.18;
+  float sheen = pow(brush, 2.0) * light * 2.6;
 
-  // strongest behind the headline (lower left), gone at the far edges
-  float focus = smoothstep(1.25, 0.15, length((vUv - vec2(0.28, 0.42)) * vec2(aspect * 0.65, 1.0)));
-  float edge = smoothstep(0.0, 0.22, vUv.y) * smoothstep(1.0, 0.72, vUv.y);
+  // Pooled to the right of the plate: the headline sits left, and foil behind
+  // type is just glare. Falls off well before the edges.
+  float focus = smoothstep(0.78, 0.06, length((vUv - vec2(0.76, 0.52)) * vec2(aspect * 0.62, 1.0)));
+  float edge = smoothstep(0.0, 0.16, vUv.y) * smoothstep(1.0, 0.86, vUv.y);
 
-  float a = clamp(sheen, 0.0, 1.0) * focus * edge * 0.5 * uIntensity;
+  float a = clamp(sheen, 0.0, 1.0) * focus * edge * 0.85 * uIntensity;
 
-  vec3 gold = vec3(0.761, 0.631, 0.357);
-  vec3 hot = vec3(0.957, 0.882, 0.694);
-  vec3 col = mix(gold, hot, clamp(sheen * 0.85, 0.0, 1.0));
+  // never let the highlight reach cream: washed-out gold reads as grey fog
+  vec3 gold = vec3(0.60, 0.47, 0.22);
+  vec3 goldHi = vec3(0.91, 0.78, 0.45);
+  vec3 col = mix(gold, goldHi, clamp(sheen * 1.3, 0.0, 1.0));
 
   gl_FragColor = vec4(col, a);
 }
@@ -192,7 +192,7 @@ export default function FoilSheen({ className, intensity = 1 }: { className?: st
   }, [reduce, failed, intensity]);
 
   if (reduce || failed) {
-    return <div className={className} aria-hidden="true" style={{ background: `radial-gradient(60% 55% at 28% 42%, rgba(194,161,91,${0.26 * intensity}), rgba(194,161,91,0) 70%)`, pointerEvents: "none" }} />;
+    return <div className={className} aria-hidden="true" style={{ background: `radial-gradient(52% 48% at 76% 52%, rgba(194,161,91,${0.3 * intensity}), rgba(194,161,91,0) 72%)`, pointerEvents: "none" }} />;
   }
 
   return (

@@ -93,11 +93,12 @@ export default function ConceptN() {
 
       {/* ----- hero ----- */}
       <section id="top" ref={heroRef} className={styles.hero}>
-        <FoilSheen className={styles.heroFoil} intensity={1.7} />
-        <motion.div className={styles.wrap} style={{ position: "relative", width: "100%", opacity: reduce ? 1 : heroFade }}>
+        <FoilSheen className={styles.heroFoil} intensity={1.15} />
+        <div className={styles.heroScrim} aria-hidden="true" />
+        <motion.div className={styles.wrap} style={{ position: "relative", zIndex: 2, width: "100%", opacity: reduce ? 1 : heroFade }}>
           <FadeIn delay={0.1} style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 30 }}>
             <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.3, ease: EASE }} style={{ width: 40, height: 1, background: GOLD, transformOrigin: "0 50%" }} />
-            <span className={styles.kicker} style={{ color: GOLD_SOFT }}>{t.heroKicker}</span>
+            <span className={styles.kicker} style={{ color: "#dcc086" }}>{t.heroKicker}</span>
           </FadeIn>
 
           {/* the firm's own line, from brandonbrokerage.com; the two halves
