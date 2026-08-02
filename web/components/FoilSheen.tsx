@@ -27,6 +27,7 @@ precision highp float;
 uniform float uTime;
 uniform vec2 uPointer;
 uniform vec2 uRes;
+uniform float uIntensity;
 varying vec2 vUv;
 
 float hash(vec2 p) {
@@ -85,7 +86,7 @@ void main() {
   float focus = smoothstep(1.25, 0.15, length((vUv - vec2(0.28, 0.42)) * vec2(aspect * 0.65, 1.0)));
   float edge = smoothstep(0.0, 0.22, vUv.y) * smoothstep(1.0, 0.72, vUv.y);
 
-  float a = clamp(sheen, 0.0, 1.0) * focus * edge * 0.5;
+  float a = clamp(sheen, 0.0, 1.0) * focus * edge * 0.5 * uIntensity;
 
   vec3 gold = vec3(0.761, 0.631, 0.357);
   vec3 hot = vec3(0.957, 0.882, 0.694);
@@ -95,7 +96,7 @@ void main() {
 }
 `;
 
-export default function FoilSheen({ className }: { className?: string }) {
+export default function FoilSheen({ className, intensity = 1 }: { className?: string; intensity?: number }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reduce = useReducedMotion();
@@ -124,6 +125,7 @@ export default function FoilSheen({ className }: { className?: string }) {
       uTime: { value: 0 },
       uPointer: { value: new THREE.Vector2(0, 0) },
       uRes: { value: new THREE.Vector2(1, 1) },
+      uIntensity: { value: intensity },
     };
     const material = new THREE.ShaderMaterial({
       vertexShader: VERT,
@@ -187,10 +189,10 @@ export default function FoilSheen({ className }: { className?: string }) {
       material.dispose();
       renderer.dispose();
     };
-  }, [reduce, failed]);
+  }, [reduce, failed, intensity]);
 
   if (reduce || failed) {
-    return <div className={className} aria-hidden="true" style={{ background: "radial-gradient(60% 55% at 28% 42%, rgba(194,161,91,0.26), rgba(194,161,91,0) 70%)", pointerEvents: "none" }} />;
+    return <div className={className} aria-hidden="true" style={{ background: `radial-gradient(60% 55% at 28% 42%, rgba(194,161,91,${0.26 * intensity}), rgba(194,161,91,0) 70%)`, pointerEvents: "none" }} />;
   }
 
   return (

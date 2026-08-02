@@ -14,7 +14,7 @@ export const COPY = {
     heroSub: "For over sixty years, Brandon Brokerage Group has paired advanced sales support and full case management with access to 30+ top-rated carriers, and a rare command of the foreign national market.",
     scroll: "Scroll",
 
-    stats: { years: "Years of expertise", carriers: "Top-rated carriers", lines: "Product lines", leader: "Market leader", fnMarket: "Foreign national market" },
+    stats: { years: "Years of expertise", carriers: "Top-rated carriers", lines: "Product lines", states: "States licensed" },
 
     missionKicker: "Our mission",
     missionText: "To provide agents with superior service, personalized sales support and tailored business solutions that ",
@@ -72,7 +72,7 @@ export const COPY = {
     heroSub: "Desde hace más de sesenta años, Brandon Brokerage Group combina soporte avanzado de ventas y gestión integral de casos con acceso a más de 30 aseguradoras de primer nivel, y un dominio poco común del mercado de clientes extranjeros.",
     scroll: "Scroll",
 
-    stats: { years: "Años de experiencia", carriers: "Aseguradoras top", lines: "Líneas de producto", leader: "Líderes del mercado", fnMarket: "Mercado de extranjeros" },
+    stats: { years: "Años de experiencia", carriers: "Aseguradoras top", lines: "Líneas de producto", states: "Estados con licencia" },
 
     missionKicker: "Nuestra misión",
     missionText: "Brindar a los agentes un servicio superior, soporte de ventas personalizado y soluciones a medida que ",

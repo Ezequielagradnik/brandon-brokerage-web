@@ -87,35 +87,37 @@ export default function ConceptN() {
   return (
     <div ref={pageRef} className={styles.page}>
       <ScrollProgress color={GOLD} />
-      <NHeader lang={lang} setLang={setLang} />
+      {/* solid from the start: the hero is a navy plate, so a translucent pill
+          would sink into it */}
+      <NHeader lang={lang} setLang={setLang} solid />
 
       {/* ----- hero ----- */}
       <section id="top" ref={heroRef} className={styles.hero}>
-        <FoilSheen className={styles.heroFoil} />
+        <FoilSheen className={styles.heroFoil} intensity={1.7} />
         <motion.div className={styles.wrap} style={{ position: "relative", width: "100%", opacity: reduce ? 1 : heroFade }}>
           <FadeIn delay={0.1} style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 30 }}>
             <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.3, ease: EASE }} style={{ width: 40, height: 1, background: GOLD, transformOrigin: "0 50%" }} />
-            <span className={styles.kicker}>{t.heroKicker}</span>
+            <span className={styles.kicker} style={{ color: GOLD_SOFT }}>{t.heroKicker}</span>
           </FadeIn>
 
           {/* the firm's own line, from brandonbrokerage.com; the two halves
               drift apart on scroll , cheap depth, no extra paint */}
-          <h1 className={`${styles.display} ${styles.heroTitle}`} style={{ marginBottom: 32, maxWidth: 1000 }}>
+          <h1 className={`${styles.display} ${styles.heroTitle}`} style={{ margin: 0, maxWidth: 1040 }}>
             <motion.span style={{ display: "block", y: reduce ? 0 : lineY1 }}><MaskReveal delay={0.2}>{t.heroTitleA}</MaskReveal></motion.span>
             <motion.span style={{ display: "block", y: reduce ? 0 : lineY2 }}><MaskReveal delay={0.4}><span className={styles.displayItalic}>{t.heroTitleB}</span></MaskReveal></motion.span>
           </h1>
 
-          <FadeIn delay={0.7}>
-            <p style={{ fontSize: "clamp(16px,1.25vw,18.5px)", lineHeight: 1.7, color: INK_MUTED, maxWidth: 560, margin: "0 0 38px" }}>{x.heroSub}</p>
-          </FadeIn>
-
-          <FadeIn delay={0.85} style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
-            <Magnetic>
-              <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta}>{t.cta.partner}</a>
-            </Magnetic>
-            <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaGhost}`}>
-              {x.aiNav} ↗
-            </a>
+          {/* standfirst and buttons share one baseline under a gold hairline */}
+          <FadeIn delay={0.75} className={styles.heroFoot}>
+            <p style={{ fontSize: "clamp(15px,1.2vw,17.5px)", lineHeight: 1.7, color: "rgba(245,241,232,0.76)", maxWidth: 460, margin: 0, flex: "1 1 300px" }}>{x.heroSub}</p>
+            <span style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
+              <Magnetic>
+                <a href="#contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaOnDark}`}>{t.cta.partner}</a>
+              </Magnetic>
+              <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaGhostOnDark}`}>
+                {x.aiNav} ↗
+              </a>
+            </span>
           </FadeIn>
         </motion.div>
       </section>

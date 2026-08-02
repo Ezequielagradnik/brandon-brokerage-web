@@ -49,7 +49,7 @@ const T = {
       { num: 60, suffix: "+", label: "Years of expertise" },
       { num: 30, suffix: "+", label: "Top-rated carriers" },
       { num: 5, suffix: "", label: "Product lines" },
-      { num: null, text: "FN", label: "Foreign national leader" },
+      { num: 50, suffix: "", label: "States licensed" },
     ],
     deck: {
       eyebrow: "What we do · Brandon Brokerage",
@@ -102,7 +102,7 @@ const T = {
       { num: 60, suffix: "+", label: "Años de experiencia" },
       { num: 30, suffix: "+", label: "Aseguradoras top" },
       { num: 5, suffix: "", label: "Líneas de producto" },
-      { num: null, text: "FN", label: "Líder en foreign nationals" },
+      { num: 50, suffix: "", label: "Estados con licencia" },
     ],
     deck: {
       eyebrow: "Qué hacemos · Brandon Brokerage",
@@ -437,7 +437,7 @@ export default function ConceptG() {
               <GrowLine color={GOLD} delay={i * 0.12} />
               <div style={{ paddingTop: 22 }}>
                 <div style={{ fontFamily: serif, fontSize: "clamp(56px,6.5vw,110px)", fontWeight: 500, color: NAVY, lineHeight: 0.95, letterSpacing: "-0.03em" }}>
-                  {s.num !== null ? <CountUp to={s.num} suffix={s.suffix} /> : s.text}
+                  <CountUp to={s.num} suffix={s.suffix} />
                 </div>
                 <div style={{ fontFamily: mono, fontSize: 11.5, letterSpacing: "0.16em", textTransform: "uppercase", color: GRAY, marginTop: 14 }}>{s.label}</div>
               </div>

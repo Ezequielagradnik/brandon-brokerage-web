@@ -291,16 +291,19 @@ export function FadeIn({
   y = 24,
   duration = 0.9,
   style,
+  className,
 }: {
   children: ReactNode;
   delay?: number;
   y?: number;
   duration?: number;
   style?: CSSProperties;
+  className?: string;
 }) {
   const reduce = useReducedMotion();
   return (
     <motion.div
+      className={className}
       style={style}
       initial={reduce ? false : { opacity: 0, y }}
       animate={{ opacity: 1, y: 0 }}

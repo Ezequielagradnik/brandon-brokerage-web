@@ -280,13 +280,13 @@ export default function ConceptD() {
             { num: 60, suffix: "+", label: t.stats.years },
             { num: 30, suffix: "+", label: t.stats.carriers },
             { num: 5, suffix: "", label: t.stats.lines },
-            { num: null, text: "FN", label: t.stats.leader },
+            { num: 50, suffix: "", label: t.stats.states },
           ].map((s, i) => (
             <div key={s.label}>
               <GrowLine color={GOLD} delay={i * 0.12} />
               <div style={{ paddingTop: 20 }}>
-                <div style={{ fontFamily: serif, fontSize: "clamp(36px,4vw,54px)", fontWeight: 500, color: s.num === null ? GOLD : NAVY, lineHeight: 1, fontStyle: s.num === null ? "italic" : "normal" }}>
-                  {s.num !== null ? <CountUp to={s.num} suffix={s.suffix} /> : s.text}
+                <div style={{ fontFamily: serif, fontSize: "clamp(36px,4vw,54px)", fontWeight: 500, color: NAVY, lineHeight: 1 }}>
+                  <CountUp to={s.num} suffix={s.suffix} />
                 </div>
                 <div style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: MUTED, marginTop: 12 }}>{s.label}</div>
               </div>
