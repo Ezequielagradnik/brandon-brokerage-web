@@ -26,8 +26,6 @@ export const NAV = [
 export const EXTRA = {
   en: {
     nav: { firm: "Our Firm", products: "Products", foreign: "Foreign Nationals", forms: "Forms", contact: "Contact" },
-    heroLine1: "Sixty years placing the cases",
-    heroLine2: "others turn away.",
     heroSub: "Advanced sales support, full case management and 30+ top-rated carriers, from one Coral Gables desk.",
     statement: "Every case is built, presented and placed by the same desk that answers your call.",
     states: "States licensed",
@@ -138,8 +136,6 @@ export const EXTRA = {
 
   es: {
     nav: { firm: "La Firma", products: "Productos", foreign: "Clientes Extranjeros", forms: "Formularios", contact: "Contacto" },
-    heroLine1: "Sesenta años colocando los casos",
-    heroLine2: "que otros rechazan.",
     heroSub: "Soporte avanzado de ventas, gestión integral de casos y más de 30 aseguradoras top, desde una sola oficina en Coral Gables.",
     statement: "Cada caso se arma, se presenta y se coloca en la misma mesa que atiende su llamado.",
     states: "Estados con licencia",

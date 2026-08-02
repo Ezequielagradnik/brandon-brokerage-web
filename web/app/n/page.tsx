@@ -7,6 +7,7 @@ import { useScrollReveal } from "@/hooks/useReveals";
 import { COPY, OFFERINGS_I18N } from "@/lib/copy";
 import { CountUp, GrowLine, MaskReveal, FadeIn, Magnetic, ScrollProgress, ctaFillFromCursor } from "@/components/motion";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
+import FoilSheen from "@/components/FoilSheen";
 import { CTA_HREF, WHATSAPP_ENABLED, NETWORK_URL } from "@/lib/contact";
 import { NHeader, SectionMark, useLang } from "./chrome";
 import { CARRIERS, EASE, GOLD, GOLD_SOFT, GOLD_DEEP, HAIR, INK_MUTED, NAVY, EXTRA } from "./copy";
@@ -62,10 +63,7 @@ export default function ConceptN() {
 
   useScrollReveal(pageRef);
 
-  // hero glows drift with scroll on top of their own slow loop
   const { scrollYProgress: heroRaw } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const glowY = useTransform(heroRaw, [0, 1], ["0%", "26%"]);
-  const glowY2 = useTransform(heroRaw, [0, 1], ["0%", "-18%"]);
   const heroFade = useTransform(heroRaw, [0, 0.8], [1, 0.25]);
   const lineY1 = useTransform(heroRaw, [0, 1], [0, -30]);
   const lineY2 = useTransform(heroRaw, [0, 1], [0, -70]);
@@ -93,18 +91,18 @@ export default function ConceptN() {
 
       {/* ----- hero ----- */}
       <section id="top" ref={heroRef} className={styles.hero}>
-        <motion.div className={styles.heroGlow} style={{ y: reduce ? 0 : glowY }} aria-hidden="true" />
-        <motion.div className={styles.heroGlow2} style={{ y: reduce ? 0 : glowY2 }} aria-hidden="true" />
+        <FoilSheen className={styles.heroFoil} />
         <motion.div className={styles.wrap} style={{ position: "relative", width: "100%", opacity: reduce ? 1 : heroFade }}>
           <FadeIn delay={0.1} style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 30 }}>
             <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.3, ease: EASE }} style={{ width: 40, height: 1, background: GOLD, transformOrigin: "0 50%" }} />
             <span className={styles.kicker}>{t.heroKicker}</span>
           </FadeIn>
 
-          {/* the two lines drift apart on scroll , cheap depth, no extra paint */}
-          <h1 className={styles.display} style={{ marginBottom: 32, maxWidth: 940 }}>
-            <motion.span style={{ display: "block", y: reduce ? 0 : lineY1 }}><MaskReveal delay={0.2}>{x.heroLine1}</MaskReveal></motion.span>
-            <motion.span style={{ display: "block", y: reduce ? 0 : lineY2 }}><MaskReveal delay={0.35}><span className={styles.displayItalic}>{x.heroLine2}</span></MaskReveal></motion.span>
+          {/* the firm's own line, from brandonbrokerage.com; the two halves
+              drift apart on scroll , cheap depth, no extra paint */}
+          <h1 className={`${styles.display} ${styles.heroTitle}`} style={{ marginBottom: 32, maxWidth: 1000 }}>
+            <motion.span style={{ display: "block", y: reduce ? 0 : lineY1 }}><MaskReveal delay={0.2}>{t.heroTitleA}</MaskReveal></motion.span>
+            <motion.span style={{ display: "block", y: reduce ? 0 : lineY2 }}><MaskReveal delay={0.4}><span className={styles.displayItalic}>{t.heroTitleB}</span></MaskReveal></motion.span>
           </h1>
 
           <FadeIn delay={0.7}>
