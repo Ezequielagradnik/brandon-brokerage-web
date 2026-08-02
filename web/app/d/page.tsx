@@ -314,7 +314,8 @@ export default function ConceptD() {
       {/* WHAT WE OFFER , signature scroll moment: the silk curtain reveals each pillar */}
       <div id="why" ref={silkRevealRef} className={styles.silkSection}>
         <div className={styles.silkPin}>
-          <div style={{ position: "absolute", top: "clamp(24px,4vh,48px)", left: "clamp(20px,5vw,60px)", right: "clamp(20px,5vw,60px)" }}>
+          {/* clears the fixed header, which is ~74px tall over this pin */}
+          <div style={{ position: "absolute", top: "clamp(92px,13vh,124px)", left: "clamp(20px,5vw,60px)", right: "clamp(20px,5vw,60px)" }}>
             <div style={{ ...MONO_K, marginBottom: 14 }}>02 / {t.offerKicker}</div>
             <GrowLine color={D_HAIR} />
           </div>
