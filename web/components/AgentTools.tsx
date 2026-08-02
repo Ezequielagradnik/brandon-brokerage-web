@@ -99,10 +99,10 @@ A brokerage director responds within one business day.`,
   es: {
     kicker: "Herramientas para agentes",
     title: "Asistente de Casos IA",
-    desc: "Consultá cómo tratan las aseguradoras un perfil extranjero: apetito, documentación y próximos pasos.",
+    desc: "Consulte cómo tratan las aseguradoras un perfil extranjero: apetito, documentación y próximos pasos.",
     cta: "Probar",
     demoTag: "Demo",
-    intro: "Elegí un escenario común o escribí tu propia consulta.",
+    intro: "Elija un escenario común o escriba su propia consulta.",
     chips: [
       "Cliente venezolano, residente en Panamá, UL de US$5M: ¿qué aseguradoras?",
       "¿Qué documentación se pide para un ciudadano brasileño?",
@@ -143,7 +143,7 @@ Siguiente paso: envíenos los detalles del caso y un director responde dentro de
     fallback: `Para una consulta específica, hablá con nuestro equipo: este asistente cubre los escenarios más comunes.
 
 Un director de brokerage responde dentro de un día hábil.`,
-    placeholder: "Escribí tu consulta…",
+    placeholder: "Escriba su consulta…",
     send: "Enviar",
     disclaimer: "Orientación indicativa. Sujeta al underwriting de cada aseguradora.",
     contactCta: "Trabajemos juntos",

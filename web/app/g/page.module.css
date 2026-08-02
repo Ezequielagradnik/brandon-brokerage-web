@@ -17,6 +17,11 @@
   color: #ffffff;
 }
 
+/* anchor targets land below the floating nav pill */
+.page :where(#top, #tools, #solutions, #firm, #insights, #contact) {
+  scroll-margin-top: 96px;
+}
+
 /* Nav — a floating pill, always solid white */
 .headerBar {
   position: fixed;
@@ -43,7 +48,7 @@
   margin-left: auto;
 }
 
-@media (max-width: 980px) {
+@media (max-width: 900px) {
   .headerNav {
     display: none;
   }
@@ -53,42 +58,6 @@
   }
 }
 
-/* the pill goes light on scroll, so every child flips to navy ink */
-.headerSolid .nl {
-  color: rgba(20, 34, 74, 0.68);
-}
-.headerSolid .nl:hover {
-  color: #14224a;
-}
-.headerSolid .nl::after {
-  background: #c2a15b;
-}
-.headerSolid .navToolDot {
-  background: #9a7b32;
-}
-.headerSolid .langBtn {
-  color: rgba(20, 34, 74, 0.5);
-}
-.headerSolid .langBtn:hover {
-  color: #9a7b32;
-}
-.headerSolid .langActive {
-  color: #14224a;
-}
-.headerSolid .langSlash {
-  color: rgba(20, 34, 74, 0.3);
-}
-.headerSolid .cta {
-  border-color: #14224a;
-  color: #14224a !important;
-}
-.headerSolid .cta::after {
-  background: #14224a;
-}
-.headerSolid .cta:hover {
-  color: #ffffff !important;
-}
-
 /* one grade for every photo on the page */
 .deckPhoto {
   filter: grayscale(1) contrast(1.12) brightness(0.94);
@@ -96,10 +65,13 @@
 
 .nl {
   position: relative;
-  color: rgba(255, 255, 255, 0.85);
-  transition: color 0.3s;
+  color: rgba(20, 34, 74, 0.68);
+  transition: color 0.2s;
   font-size: 13px;
   letter-spacing: 0.04em;
+}
+.nl:hover {
+  color: #14224a;
 }
 .nl::after {
   content: "";
@@ -108,7 +80,7 @@
   bottom: -5px;
   width: 100%;
   height: 1px;
-  background: #d9c291;
+  background: #c2a15b;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -128,18 +100,18 @@
   font-size: 10.5px;
   letter-spacing: 0.08em;
   padding: 2px 3px;
-  color: rgba(255, 255, 255, 0.5);
-  transition: color 0.3s;
+  color: rgba(20, 34, 74, 0.5);
+  transition: color 0.2s;
 }
 .langBtn:hover {
-  color: #d9c291;
+  color: #7d6425;
 }
 .langActive {
-  color: #fff;
+  color: #14224a;
   font-weight: 700;
 }
 .langSlash {
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(20, 34, 74, 0.3);
 }
 
 /* CTA — gold fill sweeps from the cursor */
@@ -147,9 +119,25 @@
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  transition: color 0.3s;
+  transition: color 0.3s, transform 0.16s cubic-bezier(0.23, 1, 0.32, 1);
   border: 1px solid rgba(194, 161, 91, 0.8);
   color: #d9c291 !important;
+}
+.cta:active {
+  transform: scale(0.97);
+}
+
+/* Keyboard focus — the hover system is rich, give focus the same courtesy */
+.cta:focus-visible,
+.nl:focus-visible,
+.langBtn:focus-visible,
+.navTool:focus-visible,
+.lnk:focus-visible,
+.insCard:focus-visible,
+.phoneGiant:focus-visible {
+  outline: 2px solid #c2a15b;
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 .cta::after {
   content: "";
@@ -237,13 +225,20 @@
   background: #101828;
   box-shadow: 0 30px 60px rgba(16, 24, 40, 0.35);
   transition: box-shadow 0.4s ease;
-  cursor: pointer;
 }
 .deckCardHover {
   box-shadow: 0 44px 90px rgba(16, 24, 40, 0.5);
 }
 .deckMobile {
   display: none;
+}
+.deckHint {
+  position: absolute;
+  bottom: 26px;
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.3em;
+  color: rgba(20, 34, 74, 0.72);
 }
 
 @media (max-width: 900px) {
@@ -259,6 +254,9 @@
     padding-bottom: clamp(64px, 12vw, 110px);
   }
   .deckCards {
+    display: none;
+  }
+  .deckHint {
     display: none;
   }
   .deckMobile {
@@ -333,7 +331,7 @@
   transition: color 0.3s;
 }
 .insCard:hover h3 {
-  color: #9a7b32;
+  color: #7d6425;
 }
 .insMore {
   display: inline-block;
@@ -341,7 +339,7 @@
 }
 .insCard:hover .insMore {
   transform: translateX(6px);
-  color: #9a7b32;
+  color: #7d6425;
 }
 
 @media (max-width: 1000px) {
@@ -384,7 +382,7 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #c2a15b;
+  background: #9a7b32;
   box-shadow: 0 0 0 0 rgba(194, 161, 91, 0.7);
   animation: gPulse 2.6s ease-out infinite;
 }

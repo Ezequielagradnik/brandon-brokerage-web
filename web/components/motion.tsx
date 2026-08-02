@@ -17,6 +17,8 @@ export const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 // Sets --mx/--my on the event target so a CTA's ::after can fill from the
 // cursor with a circular clip-path. Attach as onPointerEnter on the anchor.
 export function ctaFillFromCursor(e: ReactPointerEvent<HTMLElement>) {
+  // touch fires pointerenter on tap from a corner; the fill only makes sense for a real cursor
+  if (e.pointerType !== "mouse") return;
   const el = e.currentTarget;
   const r = el.getBoundingClientRect();
   el.style.setProperty("--mx", `${e.clientX - r.left}px`);
@@ -266,7 +268,7 @@ export function Magnetic({
       ref={ref}
       style={{ display: "inline-block", x, y }}
       onPointerMove={(e) => {
-        if (reduce) return;
+        if (reduce || e.pointerType !== "mouse") return;
         const r = ref.current?.getBoundingClientRect();
         if (!r) return;
         x.set(((e.clientX - r.left - r.width / 2) / (r.width / 2)) * max);
@@ -367,7 +369,7 @@ export function Tilt({
       ref={ref}
       style={{ rotateX: rx, rotateY: ry, transformPerspective: 900, ...style }}
       onPointerMove={(e) => {
-        if (reduce) return;
+        if (reduce || e.pointerType !== "mouse") return;
         const r = ref.current?.getBoundingClientRect();
         if (!r) return;
         ry.set(((e.clientX - r.left - r.width / 2) / (r.width / 2)) * max);
