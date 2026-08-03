@@ -1,20 +1,21 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import styles from "./MobileMenu.module.css";
 
 type NavLink = { href: string; label: string };
 
 // Routes get a client transition; anchors and outside links stay plain <a>.
-function NavItem({ href, className, style, onClick, children }: { href: string; className?: string; style?: React.CSSProperties; onClick: () => void; children: ReactNode }) {
+function NavItem({ href, className, style, onClick, tabIndex, children }: { href: string; className?: string; style?: React.CSSProperties; onClick: () => void; tabIndex?: number; children: ReactNode }) {
   const internal = href.startsWith("/") && !href.startsWith("//");
   if (internal) {
-    return <Link href={href} className={className} style={style} onClick={onClick}>{children}</Link>;
+    return <Link href={href} className={className} style={style} onClick={onClick} tabIndex={tabIndex}>{children}</Link>;
   }
   const external = href.startsWith("http");
   return (
-    <a href={href} className={className} style={style} onClick={onClick} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+    <a href={href} className={className} style={style} onClick={onClick} tabIndex={tabIndex} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
       {children}
     </a>
   );
@@ -33,6 +34,13 @@ type MobileMenuProps = {
 
 export default function MobileMenu({ links, ctaLabel, ctaHref, panelBg, textColor, accentColor, toggleColor }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
+  // The panel is portalled to <body>. Every concept's header is a pill centred
+  // with transform: translateX(-50%), and a transformed ancestor becomes the
+  // containing block for position: fixed , so rendering the panel in place
+  // anchored it to the pill instead of the viewport and left a slice of it
+  // hanging off the right edge of the page.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -65,39 +73,47 @@ export default function MobileMenu({ links, ctaLabel, ctaHref, panelBg, textColo
         </svg>
       </button>
 
-      {open && <div className={styles.backdrop} onClick={() => setOpen(false)} />}
+      {mounted && createPortal(
+        <>
+          {open && <div className={styles.backdrop} onClick={() => setOpen(false)} />}
 
-      <div
-        className={`${styles.panel} ${open ? styles.panelOpen : styles.panelClosed}`}
-        style={{ background: panelBg }}
-      >
-        <button
-          type="button"
-          aria-label="Close menu"
-          onClick={() => setOpen(false)}
-          className={styles.close}
-          style={{ color: textColor }}
-        >
-          <svg width="24" height="24" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8">
-            <path d="M2 2l18 18M20 2L2 20" />
-          </svg>
-        </button>
-        <nav className={styles.nav}>
-          {links.map((l) => (
-            <NavItem key={l.href} href={l.href} onClick={() => setOpen(false)} className={styles.link} style={{ color: textColor }}>
-              {l.label}
-            </NavItem>
-          ))}
-          <NavItem
-            href={ctaHref}
-            onClick={() => setOpen(false)}
-            className={styles.cta}
-            style={{ borderColor: accentColor, color: textColor }}
+          <div
+            className={`${styles.panel} ${open ? styles.panelOpen : styles.panelClosed}`}
+            style={{ background: panelBg }}
+            aria-hidden={!open}
           >
-            {ctaLabel}
-          </NavItem>
-        </nav>
-      </div>
+            <button
+              type="button"
+              aria-label="Close menu"
+              onClick={() => setOpen(false)}
+              className={styles.close}
+              style={{ color: textColor }}
+              tabIndex={open ? 0 : -1}
+            >
+              <svg width="24" height="24" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M2 2l18 18M20 2L2 20" />
+              </svg>
+            </button>
+            <nav className={styles.nav}>
+              {links.map((l) => (
+                <NavItem key={l.href} href={l.href} onClick={() => setOpen(false)} className={styles.link} style={{ color: textColor }} tabIndex={open ? 0 : -1}>
+                  {l.label}
+                </NavItem>
+              ))}
+              <NavItem
+                href={ctaHref}
+                onClick={() => setOpen(false)}
+                className={styles.cta}
+                style={{ borderColor: accentColor, color: textColor }}
+                tabIndex={open ? 0 : -1}
+              >
+                {ctaLabel}
+              </NavItem>
+            </nav>
+          </div>
+        </>,
+        document.body
+      )}
     </>
   );
 }

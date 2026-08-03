@@ -27,7 +27,6 @@
   position: fixed;
   top: 0;
   right: 0;
-  bottom: 0;
   height: 100dvh;
   width: min(320px, 84vw);
   z-index: 201;
@@ -35,16 +34,34 @@
   flex-direction: column;
   padding: 26px 28px;
   overflow-y: auto;
-  box-shadow: -10px 0 50px rgba(0, 0, 0, 0.35);
-  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  overscroll-behavior: contain;
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), visibility 0s linear 0.35s;
 }
 
+/* Closed it is parked off the right edge, and taken out of the layout
+   entirely: visible off-screen boxes let mobile browsers pan sideways, and a
+   drop shadow on a parked panel bleeds back over the page as a dark seam. */
 .panelClosed {
   transform: translateX(100%);
+  visibility: hidden;
+  pointer-events: none;
+  box-shadow: none;
 }
 
 .panelOpen {
   transform: translateX(0);
+  visibility: visible;
+  box-shadow: -10px 0 50px rgba(0, 0, 0, 0.35);
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), visibility 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: visibility 0s linear 0.01s;
+  }
+  .panelOpen {
+    transition: visibility 0s;
+  }
 }
 
 @media (min-width: 901px) {
