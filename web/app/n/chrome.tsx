@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, useReducedMotion, useScroll, useMotionValueEvent, useTransform } from "framer-motion";
@@ -9,28 +9,11 @@ import LangToggle from "@/components/LangToggle";
 import { COPY, type Lang } from "@/lib/copy";
 import { ctaFillFromCursor, GrowLine, MaskReveal } from "@/components/motion";
 import { NETWORK_URL } from "@/lib/contact";
+import { useLang } from "@/hooks/useLang";
+
+export { useLang };
 import { BEIGE, EXTRA, GOLD, GOLD_DEEP, HAIR, INK_MUTED, NAVY, deepNav } from "./copy";
 import styles from "./page.module.css";
-
-const LANG_KEY = "bbg-lang";
-
-// One language for the whole /n family: it survives navigation between pages
-// and drives <html lang> so screen readers switch phonetics with the copy.
-export function useLang(): [Lang, (l: Lang) => void] {
-  const [lang, setLang] = useState<Lang>("en");
-
-  useEffect(() => {
-    const stored = window.localStorage.getItem(LANG_KEY);
-    if (stored === "es" || stored === "en") setLang(stored);
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.lang = lang;
-    window.localStorage.setItem(LANG_KEY, lang);
-  }, [lang]);
-
-  return [lang, setLang];
-}
 
 /* The floating pill. On the landing it starts translucent over the hero and
    firms up on scroll; on the inner pages there is no hero, so it starts solid. */

@@ -1,189 +1,23 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { motion, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useReveals";
-import MobileMenu from "@/components/MobileMenu";
-import { ScrollProgress, MaskReveal, FadeIn, CountUp, GrowLine, ParallaxImg, Magnetic,  ctaFillFromCursor } from "@/components/motion";
-import CaseJourney from "@/components/CaseJourney";
+import { ScrollProgress, MaskReveal, FadeIn, CountUp, GrowLine, Magnetic, ctaFillFromCursor } from "@/components/motion";
 import AgentTools, { type ToolId } from "@/components/AgentTools";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
+import { COPY } from "@/lib/copy";
 import { CTA_HREF, WHATSAPP_ENABLED } from "@/lib/contact";
+import { GHeader, SectionHead, useLang } from "./chrome";
+import { CARRIERS, EASE, EXTRA, G, GOLD, GRAY, HAIR, MASTHEAD, NAVY, OFFWHITE, deepLinks, deepNav, mono, monoEyebrow, sans, serif } from "./copy";
 import styles from "./page.module.css";
 
-// Palette shared with Brandon Latam Network (sister firm)
-const NAVY = "#14224a";
-const GRAY = "#475467";
-const GOLD = "#c2a15b";
-const GOLD_DEEP = "#7d6425";
-const HAIR = "1px solid rgba(20,34,74,0.14)";
-
-const serif = "var(--font-lora), serif";
-const sans = "var(--font-manrope), sans-serif";
-const mono = "var(--font-plex-mono), monospace";
-
-// Editorial masthead scale , the page's typographic peaks
-const MASTHEAD: React.CSSProperties = {
-  fontFamily: serif,
-  fontWeight: 500,
-  fontSize: "clamp(52px,7.5vw,120px)",
-  lineHeight: 0.98,
-  letterSpacing: "-0.03em",
-};
-
-const CARRIERS = ["Lincoln", "John Hancock", "AIG", "Nationwide", "Principal", "MassMutual", "Mutual of Omaha", "Protective", "Prudential", "Pacific Life", "Transamerica", "Symetra", "Global Atlantic", "Allianz"];
-
-type Lang = "en" | "es";
-
-const T = {
-  en: {
-    nav: { solutions: "Solutions", firm: "The Firm", insights: "Insights", contact: "Contact", assistant: "AI Assistant", cta: "Partner with us" },
-    heroEyebrow: "Est. the 1960s · Coral Gables, Florida",
-    heroLines: ["The quiet partner", "behind", "extraordinary cases."],
-    heroSub: "Advanced sales support, full case management and 30+ top-rated carriers, for producers and financial advisors.",
-    heroCta: "Partner with us",
-    heroLink: "Our solutions",
-    trust: "A Tellus / Crump firm · Serving agents in 50 states · Coral Gables since the 1960s",
-    heads: { solutions: "Solutions", mission: "Mission", firm: "The Firm", specialty: "Specialty", insights: "Insights", contact: "Contact" },
-    stats: [
-      { num: 60, suffix: "+", label: "Years of expertise" },
-      { num: 30, suffix: "+", label: "Top-rated carriers" },
-      { num: 5, suffix: "", label: "Product lines" },
-      { num: 50, suffix: "", label: "States licensed" },
-    ],
-    deck: {
-      eyebrow: "What we do · Brandon Brokerage",
-      lines: ["Four", "pillars", "behind", "every case."],
-      seeAll: "Discuss a case with us",
-      hint: "SCROLL TO REVEAL",
-      cards: [
-        { cat: "Specialty", title: "Foreign National", desc: "Industry leadership placing international clients, within every guideline." },
-        { cat: "Support", title: "Advanced Sales Support", desc: "Case design, sales concepts and point-of-sale backup on every line." },
-        { cat: "Operations", title: "Full Case Management", desc: "Underwriting and paperwork, from application to policy delivery." },
-        { cat: "Network", title: "Carriers & Products", desc: "A leading Tellus/Crump firm with 30+ top-rated carriers nationwide." },
-      ],
-    },
-    missionText: "To provide agents with superior service, personalized sales support and tailored business solutions that build long-term relationships.",
-    appTitle: "A family of firms, one standard.",
-    appItems: [
-      { k: "Vision", t: "To be the brokerage partner of record for advisors serving domestic and international clients, pioneering custom solutions that reflect each client's values." },
-      { k: "Experience", t: "Six decades placing complex cases from the same Coral Gables office, alongside our sister firm, Brandon Latam, serving families across the Americas." },
-    ],
-    spcCta: "Partner with us",
-    carriersLabel: "Our carriers, a leading Tellus / Crump firm",
-    insTitle: "Ideas for the cases ahead.",
-    insights: [
-      { date: "April 2026", title: "Life insurance for foreign nationals: what to know in 2026", excerpt: "Carrier appetite, documentation and the questions to settle before the exam." },
-      { date: "March 2026", title: "Term or permanent? Framing the choice for high-net-worth clients", excerpt: "A simple framework for positioning coverage as part of a wealth plan." },
-      { date: "February 2026", title: "Hybrid long-term care is winning the conversation", excerpt: "Why advisors lead with hybrid designs, and when traditional still fits." },
-      { date: "January 2026", title: "Underwriting the complex case: a producer's checklist", excerpt: "Packaging, medical records and timing: how to keep a hard case moving." },
-    ],
-    insMore: "Discuss this with us",
-    ctaTitle: "Let's write more business, together.",
-    ctaBody: "Tell us about your case or your book of business. A brokerage director responds within one business day.",
-    ctaBtn: "Partner with us",
-    tollFree: "Toll-free",
-    office: "Office",
-    footNav: "Navigation",
-    footContact: "Contact",
-    disclaimer: "Brandon Brokerage Group is an insurance brokerage serving licensed agents and financial advisors. Products are subject to carrier approval and state availability. Nothing on this site constitutes legal, tax or investment advice.",
-    rights: "© 1960s-2026 Brandon Brokerage Group · For licensed agents & advisors only",
-  },
-  es: {
-    nav: { solutions: "Soluciones", firm: "La Firma", insights: "Insights", contact: "Contacto", assistant: "Asistente IA", cta: "Trabajemos juntos" },
-    heroEyebrow: "Desde los años 60 · Coral Gables, Florida",
-    heroLines: ["El socio silencioso", "detrás de", "casos extraordinarios."],
-    heroSub: "Soporte avanzado de ventas, gestión integral de casos y más de 30 aseguradoras top, para productores y asesores financieros.",
-    heroCta: "Trabajemos juntos",
-    heroLink: "Nuestras soluciones",
-    trust: "Firma Tellus / Crump · Agentes en 50 estados · Coral Gables desde los años 60",
-    heads: { solutions: "Soluciones", mission: "Misión", firm: "La Firma", specialty: "Especialidad", insights: "Insights", contact: "Contacto" },
-    stats: [
-      { num: 60, suffix: "+", label: "Años de experiencia" },
-      { num: 30, suffix: "+", label: "Aseguradoras top" },
-      { num: 5, suffix: "", label: "Líneas de producto" },
-      { num: 50, suffix: "", label: "Estados con licencia" },
-    ],
-    deck: {
-      eyebrow: "Qué hacemos · Brandon Brokerage",
-      lines: ["Cuatro", "pilares", "detrás de", "cada caso."],
-      seeAll: "Consulte su caso con nosotros",
-      hint: "DESLICE PARA REVELAR",
-      cards: [
-        { cat: "Especialidad", title: "Foreign National", desc: "Liderazgo colocando clientes internacionales, dentro de cada norma." },
-        { cat: "Soporte", title: "Soporte Avanzado de Ventas", desc: "Diseño de casos, conceptos de venta y apoyo en el punto de venta." },
-        { cat: "Operaciones", title: "Gestión Integral de Casos", desc: "Underwriting y documentación, de la solicitud a la entrega de la póliza." },
-        { cat: "Red", title: "Aseguradoras y Productos", desc: "Firma líder de Tellus/Crump con más de 30 aseguradoras top." },
-      ],
-    },
-    missionText: "Brindar a los agentes un servicio superior, soporte de ventas personalizado y soluciones a medida que construyan relaciones de largo plazo.",
-    appTitle: "Una familia de firmas, un mismo estándar.",
-    appItems: [
-      { k: "Visión", t: "Ser el socio de brokerage de referencia para asesores con clientes locales e internacionales, creando soluciones que reflejen los valores de cada cliente." },
-      { k: "Experiencia", t: "Seis décadas colocando casos complejos desde la misma oficina de Coral Gables, junto a nuestra firma hermana, Brandon Latam." },
-    ],
-    spcCta: "Trabajemos juntos",
-    carriersLabel: "Nuestras aseguradoras, firma líder de Tellus / Crump",
-    insTitle: "Ideas para los casos que vienen.",
-    insights: [
-      { date: "Abril 2026", title: "Seguros de vida para foreign nationals: claves 2026", excerpt: "Apetito de las aseguradoras, documentación y qué resolver antes del examen." },
-      { date: "Marzo 2026", title: "¿Term o permanente? Cómo plantear la decisión", excerpt: "Un marco simple para posicionar la cobertura dentro del plan patrimonial." },
-      { date: "Febrero 2026", title: "Long-term care híbrido: por qué lidera la conversación", excerpt: "Por qué los asesores proponen diseños híbridos, y cuándo conviene el tradicional." },
-      { date: "Enero 2026", title: "Underwriting de casos complejos: checklist del productor", excerpt: "Armado del expediente, historia médica y tiempos: cómo destrabar un caso difícil." },
-    ],
-    insMore: "Consúltenos",
-    ctaTitle: "Escribamos más negocio, juntos.",
-    ctaBody: "Cuéntenos sobre su caso o su cartera. Un director de brokerage responde dentro de un día hábil.",
-    ctaBtn: "Trabajemos juntos",
-    tollFree: "Línea gratuita",
-    office: "Oficina",
-    footNav: "Navegación",
-    footContact: "Contacto",
-    disclaimer: "Brandon Brokerage Group es un brokerage de seguros que atiende a agentes y asesores financieros con licencia. Los productos están sujetos a la aprobación de cada aseguradora y a la disponibilidad por estado. Nada en este sitio constituye asesoramiento legal, impositivo o de inversión.",
-    rights: "© 1960s-2026 Brandon Brokerage Group · Solo para agentes y asesores con licencia",
-  },
-} as const;
-
-// Mono/caps eyebrow with subtle gold accent
-const monoEyebrow = (dark?: boolean): React.CSSProperties => ({
-  fontFamily: mono,
-  fontSize: 11,
-  letterSpacing: "0.22em",
-  textTransform: "uppercase",
-  color: dark ? "#d9c291" : GOLD_DEEP,
-});
-
-// Numbered section head: "01 , Label" in small mono + hairline drawn on entry
-function SectionHead({ num, label, dark }: { num: string; label: string; dark?: boolean }) {
-  return (
-    <div data-reveal style={{ marginBottom: "clamp(36px,4.5vw,64px)" }}>
-      <div style={{ ...monoEyebrow(dark), marginBottom: 16 }}>{num} / {label}</div>
-      <GrowLine color={dark ? "rgba(217,194,145,0.4)" : "rgba(154,123,50,0.45)"} />
-    </div>
-  );
-}
-
-// ----- Mission: progressive ink highlight, word by word on scroll -----
-function MissionWord({ progress, range, word }: { progress: MotionValue<number>; range: [number, number]; word: string }) {
-  const opacity = useTransform(progress, range, [0.15, 1]);
-  return <motion.span style={{ opacity }}>{word} </motion.span>;
-}
-
-function MissionHighlight({ text }: { text: string }) {
-  const ref = useRef<HTMLParagraphElement>(null);
-  const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "end 0.45"] });
-  const words = text.split(" ");
-  const style: React.CSSProperties = { fontFamily: serif, fontWeight: 500, fontSize: "clamp(28px,3.8vw,56px)", lineHeight: 1.3, letterSpacing: "-0.01em", margin: 0, color: NAVY };
-  if (reduce) return <p style={style}>{text}</p>;
-  return (
-    <p ref={ref} style={style}>
-      {words.map((w, i) => (
-        <MissionWord key={`${i}-${w}`} progress={scrollYProgress} range={[i / words.length, Math.min(1, (i + 1.5) / words.length)]} word={w} />
-      ))}
-    </p>
-  );
-}
+// Boutique Latam , white canvas, navy and gold, Lora on Plex Mono. The landing
+// carries the argument and nothing else: the hero, the assistant, the four
+// pillars fanning out of a pinned deck, the numbers, a short word on the
+// specialty and the phone number. Our Firm, Products, Foreign Nationals and
+// Forms each live on their own page, the way the real site splits it.
 
 // ----- Card deck (pinned, scroll-driven) -----
 const DECK_IMGS = ["/images/miami-palms-sunset.jpg", "/images/miami-aerial-day.jpg", "/images/miami-night.jpg", "/images/miami-sunset.jpg"];
@@ -284,18 +118,15 @@ export default function ConceptG() {
   const pageRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const deckRef = useRef<HTMLDivElement>(null);
-  const [lang, setLang] = useState<Lang>("en");
+  const [lang, setLang] = useLang();
   const [deckHovered, setDeckHovered] = useState<number | null>(null);
   // the header's AI Assistant entry opens the tool modal directly
   const [tool, setTool] = useState<ToolId | null>(null);
   const [toolOrigin, setToolOrigin] = useState({ x: 50, y: 8 });
   const reduce = useReducedMotion();
-  const t = T[lang];
-
-  // Screen readers should get Spanish phonetics when the ES copy is up
-  useEffect(() => {
-    document.documentElement.lang = lang;
-  }, [lang]);
+  const t = COPY[lang];
+  const x = EXTRA[lang];
+  const g = G[lang];
 
   useScrollReveal(pageRef);
 
@@ -319,60 +150,18 @@ export default function ConceptG() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
-  const NAV_LINKS = [
-    { href: "#solutions", label: t.nav.solutions },
-    { href: "#firm", label: t.nav.firm },
-    { href: "#insights", label: t.nav.insights },
-    { href: "#contact", label: t.nav.contact },
-  ];
-
   return (
     <div ref={pageRef} className={styles.page} style={{ fontFamily: sans }}>
       <ScrollProgress color={GOLD} />
 
-      {/* NAV , a floating pill, always solid white */}
-      <div className={styles.headerBar}>
-        <a href="#top" style={{ display: "inline-flex", flexShrink: 0 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/assets/brandon-logo.png"
-            alt="Brandon Brokerage Group"
-            style={{ height: 26, width: "auto" }}
-          />
-        </a>
-        <div className={styles.headerNav}>
-          {NAV_LINKS.map((l) => (
-            <a key={l.href} href={l.href} className={styles.nl}>{l.label}</a>
-          ))}
-          <button
-            type="button"
-            className={`${styles.nl} ${styles.navTool}`}
-            onClick={(e) => {
-              const r = e.currentTarget.getBoundingClientRect();
-              setToolOrigin({ x: ((r.left + r.width / 2) / window.innerWidth) * 100, y: ((r.top + r.height / 2) / window.innerHeight) * 100 });
-              setTool("assistant");
-            }}
-          >
-            <span className={styles.navToolDot} aria-hidden="true" />
-            {t.nav.assistant}
-          </button>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 1 }}>
-            <button type="button" onClick={() => setLang("en")} className={`${styles.langBtn} ${lang === "en" ? styles.langActive : ""}`}>EN</button>
-            <span className={styles.langSlash} style={{ fontSize: 10 }}>/</span>
-            <button type="button" onClick={() => setLang("es")} className={`${styles.langBtn} ${lang === "es" ? styles.langActive : ""}`}>ES</button>
-          </span>
-          <a href="#contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaDark}`} style={{ padding: "11px 24px", fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", borderRadius: 999 }}>{t.nav.cta}</a>
-        </div>
-        <MobileMenu
-          links={[{ href: "#tools", label: t.nav.assistant }, ...NAV_LINKS]}
-          ctaLabel={t.nav.cta}
-          ctaHref="#contact"
-          panelBg={NAVY}
-          textColor="#ffffff"
-          accentColor={GOLD}
-          toggleColor={NAVY}
-        />
-      </div>
+      <GHeader
+        lang={lang}
+        setLang={setLang}
+        onAssistant={(origin) => {
+          setToolOrigin(origin);
+          setTool("assistant");
+        }}
+      />
 
       {/* HERO , full-screen photo, slow Ken Burns + parallax, 3-line masthead */}
       <div id="top" ref={heroRef} style={{ position: "relative", minHeight: "100svh", display: "flex", alignItems: "flex-end", overflow: "hidden", padding: "clamp(120px,14vw,180px) clamp(20px,5vw,60px) clamp(60px,8vw,100px)" }}>
@@ -391,22 +180,22 @@ export default function ConceptG() {
         </div>
         <div style={{ position: "relative", zIndex: 2, maxWidth: 1240, margin: "0 auto", width: "100%" }}>
           <FadeIn delay={0.1} style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 26 }}>
-            <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }} style={{ width: 42, height: 1, background: GOLD, transformOrigin: "0 50%" }} />
-            <span style={{ ...monoEyebrow(true), letterSpacing: "0.3em" }}>{t.heroEyebrow}</span>
+            <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.25, ease: EASE }} style={{ width: 42, height: 1, background: GOLD, transformOrigin: "0 50%" }} />
+            <span style={{ ...monoEyebrow(true), letterSpacing: "0.3em" }}>{g.heroEyebrow}</span>
           </FadeIn>
           <h1 style={{ ...MASTHEAD, margin: "0 0 clamp(30px,3.4vw,44px)", color: "#ffffff" }}>
-            <MaskReveal delay={0.2}>{t.heroLines[0]}</MaskReveal>
-            <MaskReveal delay={0.35}>{t.heroLines[1]}</MaskReveal>
-            <MaskReveal delay={0.5}><span style={{ fontStyle: "italic", color: "#d9c291", fontSize: "0.9em" }}>{t.heroLines[2]}</span></MaskReveal>
+            <MaskReveal delay={0.2}>{g.heroLines[0]}</MaskReveal>
+            <MaskReveal delay={0.35}>{g.heroLines[1]}</MaskReveal>
+            <MaskReveal delay={0.5}><span style={{ fontStyle: "italic", color: "#d9c291", fontSize: "0.9em" }}>{g.heroLines[2]}</span></MaskReveal>
           </h1>
           <FadeIn delay={0.65}>
-            <p style={{ fontSize: 19, lineHeight: 1.65, color: "rgba(255,255,255,0.87)", fontWeight: 400, maxWidth: 520, margin: "0 0 38px" }}>{t.heroSub}</p>
+            <p style={{ fontSize: 19, lineHeight: 1.65, color: "rgba(255,255,255,0.87)", fontWeight: 400, maxWidth: 520, margin: "0 0 38px" }}>{g.heroSub}</p>
           </FadeIn>
           <FadeIn delay={0.78} style={{ display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap" }}>
             <Magnetic>
-              <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "16px 36px", fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase" }}>{t.heroCta}</a>
+              <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "16px 36px", fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase" }}>{g.heroCta}</a>
             </Magnetic>
-            <a href="#solutions" className={styles.lnk} style={{ fontSize: 13.5, letterSpacing: "0.04em", color: "rgba(255,255,255,0.9)" }}>{t.heroLink}</a>
+            <a href="#solutions" className={styles.lnk} style={{ fontSize: 13.5, letterSpacing: "0.04em", color: "rgba(255,255,255,0.9)" }}>{g.heroLink}</a>
           </FadeIn>
         </div>
         <div style={{ position: "absolute", bottom: 26, left: "50%", transform: "translateX(-50%)", zIndex: 2 }}>
@@ -417,7 +206,7 @@ export default function ConceptG() {
       {/* TRUST BAR , one mono line with separators */}
       <div data-reveal style={{ padding: "18px clamp(20px,5vw,60px)", background: "#fff", borderBottom: HAIR }}>
         <div style={{ maxWidth: 1240, margin: "0 auto", fontFamily: mono, fontSize: 11.5, letterSpacing: "0.14em", textTransform: "uppercase", color: GRAY, textAlign: "center" }}>
-          {t.trust.split(" · ").map((part, i, arr) => (
+          {g.trust.split(" · ").map((part, i, arr) => (
             <span key={part}>
               {part}
               {i < arr.length - 1 && <span style={{ color: GOLD, margin: "0 14px" }}>·</span>}
@@ -426,13 +215,48 @@ export default function ConceptG() {
         </div>
       </div>
 
-      {/* AGENT TOOLS , three demo tools, above the fold */}
+      {/* AGENT TOOLS , the assistant, above the fold */}
       <AgentTools lang={lang} id="tools" open={tool} origin={toolOrigin} onOpenChange={setTool} />
+
+      {/* 01 , SOLUTIONS: pinned card deck, scroll-driven */}
+      <div id="solutions" ref={deckRef} className={styles.deckSection}>
+        <div className={styles.deckPin} style={{ padding: "0 clamp(20px,5vw,60px)" }}>
+
+          {/* headline column , fades out as the deck fans over it */}
+          <motion.div style={{ position: "relative", zIndex: 1, maxWidth: 1240, margin: "0 auto", width: "100%", opacity: deckDesktop ? deckTitleFade : 1 }}>
+            <div data-reveal style={{ ...monoEyebrow(), marginBottom: 26 }}>01 / {g.heads.solutions} · Brandon Brokerage</div>
+            <h2 className={styles.deckHeadline} data-reveal>
+              {g.deck.lines.map((l) => (
+                <span key={l} style={{ display: "block" }}>{l}</span>
+              ))}
+            </h2>
+            <a data-reveal href="#contact" className={styles.lnk} style={{ display: "inline-block", marginTop: 34, fontSize: 13, letterSpacing: "0.1em", textTransform: "uppercase", color: NAVY, fontWeight: 700 }}>{g.deck.seeAll} →</a>
+          </motion.div>
+
+          {/* the deck (desktop) */}
+          <div className={styles.deckCards}>
+            {g.deck.cards.map((c, i) => (
+              <DeckCard key={c.title} i={i} progress={deckProgress} hovered={deckHovered} setHovered={setDeckHovered} card={c} />
+            ))}
+          </div>
+
+          {/* mobile: plain column, no pin */}
+          <div className={styles.deckMobile}>
+            {g.deck.cards.map((c, i) => (
+              <div key={c.title} data-reveal className={styles.deckCard} style={{ position: "relative", aspectRatio: "3 / 4", width: "100%" }}>
+                <DeckCardInner i={i} card={c} />
+              </div>
+            ))}
+          </div>
+
+          <motion.div className={styles.deckHint} style={{ right: "clamp(20px,5vw,60px)", opacity: deckHintFade }}>{g.deck.hint}</motion.div>
+        </div>
+      </div>
 
       {/* STATS , giant numerals, drawn hairlines + count-up */}
       <div data-reveal style={{ padding: "clamp(56px,7vw,96px) clamp(20px,5vw,60px)", background: "#fff" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: "32px clamp(24px,4vw,64px)" }}>
-          {t.stats.map((s, i) => (
+          {g.stats.map((s, i) => (
             <div key={s.label}>
               <GrowLine color={GOLD} delay={i * 0.12} />
               <div style={{ paddingTop: 22 }}>
@@ -446,94 +270,30 @@ export default function ConceptG() {
         </div>
       </div>
 
-      {/* 01 , SOLUTIONS: pinned card deck, scroll-driven */}
-      <div id="solutions" ref={deckRef} className={styles.deckSection}>
-        <div className={styles.deckPin} style={{ padding: "0 clamp(20px,5vw,60px)" }}>
-
-          {/* headline column , fades out as the deck fans over it */}
-          <motion.div style={{ position: "relative", zIndex: 1, maxWidth: 1240, margin: "0 auto", width: "100%", opacity: deckDesktop ? deckTitleFade : 1 }}>
-            <div data-reveal style={{ ...monoEyebrow(), marginBottom: 26 }}>01 / {t.heads.solutions} · Brandon Brokerage</div>
-            <h2 className={styles.deckHeadline} data-reveal>
-              {t.deck.lines.map((l) => (
-                <span key={l} style={{ display: "block" }}>{l}</span>
-              ))}
-            </h2>
-            <a data-reveal href="#contact" className={styles.lnk} style={{ display: "inline-block", marginTop: 34, fontSize: 13, letterSpacing: "0.1em", textTransform: "uppercase", color: NAVY, fontWeight: 700 }}>{t.deck.seeAll} →</a>
-          </motion.div>
-
-          {/* the deck (desktop) */}
-          <div className={styles.deckCards}>
-            {t.deck.cards.map((c, i) => (
-              <DeckCard key={c.title} i={i} progress={deckProgress} hovered={deckHovered} setHovered={setDeckHovered} card={c} />
-            ))}
-          </div>
-
-          {/* mobile: plain column, no pin */}
-          <div className={styles.deckMobile}>
-            {t.deck.cards.map((c, i) => (
-              <div key={c.title} data-reveal className={styles.deckCard} style={{ position: "relative", aspectRatio: "3 / 4", width: "100%" }}>
-                <DeckCardInner i={i} card={c} />
-              </div>
-            ))}
-          </div>
-
-          <motion.div className={styles.deckHint} style={{ right: "clamp(20px,5vw,60px)", opacity: deckHintFade }}>{t.deck.hint}</motion.div>
-        </div>
-      </div>
-
-      {/* 02 , MISSION: progressive ink highlight on scroll */}
-      <div style={{ padding: "clamp(80px,11vw,150px) clamp(20px,5vw,60px)", background: "#fff" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <SectionHead num="02" label={t.heads.mission} />
-          <MissionHighlight text={t.missionText} />
-        </div>
-      </div>
-
-      {/* 03 , THE FIRM: side photo + vision/experience */}
-      <div id="firm" style={{ padding: "clamp(70px,10vw,140px) clamp(20px,5vw,60px)", background: "#f9fafb", borderTop: HAIR, borderBottom: HAIR }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-          <SectionHead num="03" label={t.heads.firm} />
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,80px)", alignItems: "center" }}>
-            <div data-reveal>
-              <ParallaxImg
-                src="/images/miami-palms-day.jpg"
-                alt="Brickell towers from the street, the neighbourhood the firm works in"
-                range={30}
-                photoSlot="approach"
-                style={{ height: "clamp(320px,44vw,540px)" }}
-                imgClassName={styles.deckPhoto}
-              />
-            </div>
-            <div>
-              <h2 data-reveal style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(30px,3.8vw,48px)", lineHeight: 1.1, letterSpacing: "-0.02em", margin: "0 0 clamp(28px,3vw,40px)", color: NAVY }}>{t.appTitle}</h2>
-              {t.appItems.map((it) => (
-                <div key={it.k} data-reveal style={{ borderTop: "1px solid rgba(194,161,91,0.45)", padding: "22px 0" }}>
-                  <div style={{ ...monoEyebrow(), marginBottom: 10 }}>{it.k}</div>
-                  <p style={{ fontSize: 15, lineHeight: 1.72, color: GRAY, margin: 0 }}>{it.t}</p>
-                </div>
-              ))}
-            </div>
+      {/* 02 , SPECIALTY: a short word, the case flow lives on its own page */}
+      <div id="foreign" style={{ padding: "clamp(70px,10vw,140px) clamp(20px,5vw,60px)", background: OFFWHITE, borderTop: HAIR, borderBottom: HAIR }}>
+        <div className={styles.wrap}>
+          <SectionHead num="02" label={g.heads.specialty} />
+          <h2 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(30px,4.2vw,62px)", lineHeight: 1.04, letterSpacing: "-0.02em", color: NAVY, margin: "0 0 26px", maxWidth: 900 }}>
+            <MaskReveal inView delay={0.08}>{x.fnTitle1}</MaskReveal>
+            <MaskReveal inView delay={0.22}><span className={styles.titleItalic}>{x.fnTitle2}</span></MaskReveal>
+          </h2>
+          <p data-reveal style={{ fontSize: "clamp(15.5px,1.35vw,18px)", lineHeight: 1.68, color: GRAY, margin: "0 0 clamp(30px,3.4vw,44px)", maxWidth: 720 }}>{x.fnTeaser}</p>
+          <div data-reveal>
+            <Magnetic>
+              <Link href="/g/foreign-nationals" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaDark}`} style={{ display: "inline-block", padding: "15px 34px", fontSize: 12.5, letterSpacing: "0.12em", textTransform: "uppercase" }}>{x.fnTeaserCta} →</Link>
+            </Magnetic>
           </div>
         </div>
       </div>
-
-      {/* 04 , SPECIALTY: the journey of a case (pinned scene) */}
-      <CaseJourney
-        lang={lang}
-        num="04"
-        variant="gold"
-        cta={
-          <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "15px 34px", fontSize: 12.5, letterSpacing: "0.12em", textTransform: "uppercase" }}>{t.spcCta}</a>
-        }
-      />
 
       {/* CARRIERS , slow infinite marquee */}
       <div data-reveal style={{ padding: "clamp(56px,7vw,90px) 0", background: "#fff", borderBottom: HAIR }}>
-        <div style={{ ...monoEyebrow(), textAlign: "center", marginBottom: 36 }}>{t.carriersLabel}</div>
+        <div style={{ ...monoEyebrow(), textAlign: "center", marginBottom: 36 }}>{g.carriersLabel}</div>
         <div style={{ position: "relative", overflow: "hidden", WebkitMaskImage: "linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)", maskImage: "linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)" }}>
           <div className={styles.marquee} style={{ display: "flex", width: "max-content", alignItems: "center", columnGap: "clamp(34px,4.4vw,70px)", fontFamily: serif, fontSize: "clamp(19px,2vw,27px)", color: "#5f6b7d", whiteSpace: "nowrap" }}>
             {[0, 1].map((rep) => (
-              <span key={rep} style={{ display: "flex", alignItems: "center", columnGap: "clamp(34px,4.4vw,70px)" }}>
+              <span key={rep} style={{ display: "flex", alignItems: "center", columnGap: "clamp(34px,4.4vw,70px)" }} aria-hidden={rep === 1}>
                 {CARRIERS.map((c) => (
                   <span key={c} style={{ display: "flex", alignItems: "center", columnGap: "clamp(34px,4.4vw,70px)" }}>
                     <span>{c}</span><span style={{ color: GOLD, fontSize: 12 }}>◆</span>
@@ -545,41 +305,39 @@ export default function ConceptG() {
         </div>
       </div>
 
-      {/* 05 , INSIGHTS: four article cards */}
-      <div id="insights" style={{ padding: "clamp(64px,9vw,130px) clamp(20px,5vw,60px)", background: "#fff" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-          <SectionHead num="05" label={t.heads.insights} />
-          <h2 data-reveal style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(30px,3.8vw,48px)", lineHeight: 1.1, letterSpacing: "-0.02em", margin: "0 0 clamp(36px,4vw,56px)", color: NAVY }}>{t.insTitle}</h2>
-          <div className={styles.insGrid}>
-            {t.insights.map((a, i) => (
-              <motion.a
-                key={i}
-                href="#contact"
-                className={styles.insCard}
-                initial={{ opacity: 0, y: 24 }}
+      {/* 03 , GO DEEPER: the signposts into the four pages */}
+      <div id="deeper" style={{ padding: "clamp(64px,9vw,120px) clamp(20px,5vw,60px)", background: "#fff" }}>
+        <div className={styles.wrap}>
+          <SectionHead num="03" label={x.moreKicker} />
+          <div className={styles.moreGrid}>
+            {deepLinks("/g", lang).map((m, i) => (
+              <motion.div
+                key={m.href}
+                initial={reduce ? false : { opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.9, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.9, delay: i * 0.08, ease: EASE }}
               >
-                <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: GOLD_DEEP, marginBottom: 14 }}>{a.date}</div>
-                <h3 style={{ fontFamily: serif, fontWeight: 500, fontSize: 20, lineHeight: 1.3, margin: "0 0 12px", color: NAVY }}>{a.title}</h3>
-                <p style={{ fontSize: 13.5, lineHeight: 1.65, color: GRAY, margin: "0 0 16px" }}>{a.excerpt}</p>
-                <span className={styles.insMore} style={{ fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: NAVY, fontWeight: 600 }}>{t.insMore} →</span>
-              </motion.a>
+                <Link href={m.href} className={styles.moreCard}>
+                  <h3>{m.title}</h3>
+                  <p style={{ fontSize: 13.5, lineHeight: 1.65, color: GRAY, margin: "0 0 18px" }}>{m.body}</p>
+                  <span className={styles.moreArrow}>→</span>
+                </Link>
+              </motion.div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* 06 , CONTACT: masthead close, giant clickable phone */}
+      {/* 04 , CONTACT: masthead close, giant clickable phone */}
       <div id="contact" style={{ position: "relative", padding: "clamp(80px,11vw,150px) clamp(20px,5vw,60px)", background: NAVY, overflow: "hidden" }}>
         <div className={styles.grain} aria-hidden="true" />
         <div style={{ position: "relative", zIndex: 2, maxWidth: 1240, margin: "0 auto" }}>
-          <SectionHead num="06" label={t.heads.contact} dark />
+          <SectionHead num="04" label={g.heads.contact} dark />
           <h2 style={{ ...MASTHEAD, margin: "0 0 30px", color: "#fff", maxWidth: 1050 }}>
-            <MaskReveal inView delay={0.1}>{t.ctaTitle}</MaskReveal>
+            <MaskReveal inView delay={0.1}>{t.contactTitle}</MaskReveal>
           </h2>
-          <p data-reveal style={{ fontSize: 16, lineHeight: 1.7, color: "rgba(255,255,255,0.78)", margin: "0 0 clamp(40px,5vw,64px)", maxWidth: 480 }}>{t.ctaBody}</p>
+          <p data-reveal style={{ fontSize: 16, lineHeight: 1.7, color: "rgba(255,255,255,0.78)", margin: "0 0 clamp(40px,5vw,64px)", maxWidth: 480 }}>{t.contactBody}</p>
 
           <div data-reveal>
             <a href="tel:+13054447401" className={styles.phoneGiant} style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(44px,7vw,112px)", lineHeight: 1, letterSpacing: "-0.02em" }}>305-444-7401</a>
@@ -596,7 +354,7 @@ export default function ConceptG() {
             </div>
             <div style={{ marginLeft: "auto" }}>
               <Magnetic>
-                <a href={CTA_HREF} {...(WHATSAPP_ENABLED ? { target: "_blank", rel: "noopener noreferrer" } : {})} onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-flex", alignItems: "center", padding: "16px 36px", fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase" }}>{WHATSAPP_ENABLED && <WhatsAppIcon />}{t.ctaBtn}</a>
+                <a href={CTA_HREF} {...(WHATSAPP_ENABLED ? { target: "_blank", rel: "noopener noreferrer" } : {})} onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-flex", alignItems: "center", padding: "16px 36px", fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase" }}>{WHATSAPP_ENABLED && <WhatsAppIcon />}{g.ctaBtn}</a>
               </Magnetic>
             </div>
           </div>
@@ -610,18 +368,19 @@ export default function ConceptG() {
             <div>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/assets/brandon-logo-white.png" alt="Brandon Brokerage Group" style={{ height: 24, marginBottom: 18, opacity: 0.9 }} />
-              <p style={{ fontSize: 13, lineHeight: 1.65, color: "rgba(255,255,255,0.55)", margin: 0, maxWidth: 300 }}>{t.disclaimer}</p>
+              <p style={{ fontSize: 13, lineHeight: 1.65, color: "rgba(255,255,255,0.55)", margin: 0, maxWidth: 300 }}>{g.disclaimer}</p>
             </div>
             <div>
-              <div style={{ fontSize: 11.5, letterSpacing: "0.2em", textTransform: "uppercase", color: "#c2a15b", fontWeight: 700, marginBottom: 16 }}>{t.footNav}</div>
+              <div style={{ fontSize: 11.5, letterSpacing: "0.2em", textTransform: "uppercase", color: "#c2a15b", fontWeight: 700, marginBottom: 16 }}>{g.footNav}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {[...NAV_LINKS, { href: "#tools", label: t.nav.assistant }].map((l) => (
-                  <a key={l.href} href={l.href} style={{ fontSize: 13.5, color: "rgba(255,255,255,0.75)" }}>{l.label}</a>
+                {deepNav("/g", lang).map((l) => (
+                  <Link key={l.href} href={l.href} style={{ fontSize: 13.5, color: "rgba(255,255,255,0.75)" }}>{l.label}</Link>
                 ))}
+                <a href="#tools" style={{ fontSize: 13.5, color: "rgba(255,255,255,0.75)" }}>{g.nav.assistant}</a>
               </div>
             </div>
             <div>
-              <div style={{ fontSize: 11.5, letterSpacing: "0.2em", textTransform: "uppercase", color: "#c2a15b", fontWeight: 700, marginBottom: 16 }}>{t.footContact}</div>
+              <div style={{ fontSize: 11.5, letterSpacing: "0.2em", textTransform: "uppercase", color: "#c2a15b", fontWeight: 700, marginBottom: 16 }}>{g.footContact}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 13.5, color: "rgba(255,255,255,0.75)" }}>
                 <a href="tel:+13054447401" style={{ color: "rgba(255,255,255,0.75)" }}>305-444-7401</a>
                 <a href="tel:+18887764678" style={{ color: "rgba(255,255,255,0.75)" }}>1-888-776-4678</a>
@@ -630,7 +389,7 @@ export default function ConceptG() {
             </div>
           </div>
           <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", padding: "22px 0", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
-            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.45)" }}>{t.rights}</span>
+            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.45)" }}>{g.rights}</span>
             <span style={{ fontSize: 12, color: "rgba(255,255,255,0.45)" }}>brandonbrokerage.com</span>
           </div>
         </div>

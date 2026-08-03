@@ -137,40 +137,6 @@
   }
 }
 
-/* Editorial offer layout — alternating asymmetric rows */
-.offRow {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: clamp(16px, 2.4vw, 36px);
-  align-items: center;
-}
-.offImgA {
-  grid-column: 1 / span 6;
-}
-.offTextA {
-  grid-column: 8 / span 5;
-}
-.offImgB {
-  grid-column: 7 / span 6;
-}
-.offTextB {
-  grid-column: 1 / span 5;
-  grid-row: 1;
-}
-
-@media (max-width: 860px) {
-  .offRow {
-    grid-template-columns: 1fr;
-  }
-  .offImgA,
-  .offTextA,
-  .offImgB,
-  .offTextB {
-    grid-column: 1 / -1;
-    grid-row: auto;
-  }
-}
-
 /* Signature scroll moment: sticky chapter index */
 .tocGrid {
   display: grid;
@@ -224,4 +190,484 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .navToolDot { animation: none; }
+}
+
+/* ————— the measure: one padded column, 1280px of content at most ————— */
+.wrap {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 60px);
+}
+
+/* ————— header (shared by the landing and the four inner pages) ————— */
+.headerBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  padding: 18px clamp(20px, 5vw, 60px);
+}
+.headerLogo {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+/* the nav is long now — five routes, the assistant, the language and the CTA */
+.nl {
+  white-space: nowrap;
+}
+.navOn {
+  color: #1a1814;
+}
+.navOn::after {
+  transform: scaleX(1);
+}
+.headerCta {
+  padding: 10px 22px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+@media (max-width: 1180px) {
+  .headerCta {
+    display: none;
+  }
+}
+@media (max-width: 1060px) {
+  .headerNav {
+    gap: 14px;
+  }
+  .nl {
+    font-size: 12px;
+  }
+}
+
+/* the two CTA scales used across the concept */
+.ctaLarge {
+  display: inline-block;
+  padding: 15px 34px;
+  font-size: 12.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ————— editorial furniture: running heads, figure captions, chapter rules ————— */
+.runningHeads {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 18px;
+}
+.figCap {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0 2px;
+}
+.chapHead {
+  border-top: 1px solid #1a1814;
+  padding-top: 18px;
+  margin-bottom: clamp(40px, 5vw, 64px);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ————— inner-page masthead ————— */
+.pageHero {
+  padding-top: clamp(126px, 17vh, 190px);
+  padding-bottom: clamp(20px, 3vw, 40px);
+}
+.pageTitle {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 400;
+  font-size: clamp(40px, 7vw, 104px);
+  line-height: 1;
+  letter-spacing: -0.015em;
+  color: #1a1814;
+  margin: clamp(30px, 4vw, 54px) 0 0;
+  max-width: 15ch;
+}
+/* a whole sentence set as a masthead: one notch down, a wider measure.
+   Declared after .pageTitle so the override wins. */
+.pageTitleText {
+  font-size: clamp(30px, 4.6vw, 64px);
+  line-height: 1.06;
+  max-width: 26ch;
+}
+@media (max-width: 700px) {
+  .pageTitle,
+  .pageTitleText {
+    max-width: none;
+  }
+}
+.standfirst {
+  font-size: clamp(15px, 1.4vw, 17px);
+  line-height: 1.8;
+  color: #6a6357;
+  margin: clamp(24px, 3vw, 34px) 0 0;
+  max-width: 620px;
+}
+
+/* ————— the ledger of numbers, the mission pull quote ————— */
+.ledger {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 28px clamp(24px, 4vw, 64px);
+}
+.quoteGrid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(16px, 2.4vw, 36px);
+}
+.quoteMark {
+  grid-column: 1 / span 2;
+  padding-top: 10px;
+}
+.quoteText {
+  grid-column: 4 / span 9;
+  font-weight: 400;
+  font-size: clamp(26px, 3.6vw, 46px);
+  line-height: 1.32;
+  color: #1a1814;
+  margin: 0;
+}
+@media (max-width: 760px) {
+  .quoteGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .quoteMark,
+  .quoteText {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ————— an editorial spread: text left, one figure right ————— */
+.fnSpread {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(24px, 3vw, 48px) clamp(16px, 2.4vw, 36px);
+  align-items: start;
+}
+.fnText {
+  grid-column: 1 / span 7;
+}
+.fnFig {
+  grid-column: 9 / span 4;
+}
+@media (max-width: 900px) {
+  .fnSpread {
+    grid-template-columns: 1fr;
+  }
+  .fnText,
+  .fnFig {
+    grid-column: 1 / -1;
+  }
+  .fnFig {
+    max-width: 460px;
+  }
+}
+
+/* ————— the catalogue index on the landing ————— */
+.prodRow {
+  display: grid;
+  grid-template-columns: clamp(64px, 8vw, 110px) 1fr auto;
+  gap: clamp(14px, 3vw, 40px);
+  align-items: baseline;
+  padding: 26px 2px;
+  border-bottom: 1px solid rgba(26, 24, 20, 0.16);
+}
+@media (max-width: 620px) {
+  .prodRow {
+    grid-template-columns: 54px 1fr;
+    gap: 12px;
+  }
+  .prodRow > span:last-child {
+    grid-column: 2;
+    text-align: left !important;
+  }
+}
+
+/* ————— the contents index: one row per page ————— */
+.idxRow {
+  display: grid;
+  grid-template-columns: 54px 1fr 24px;
+  gap: clamp(14px, 3vw, 40px);
+  align-items: start;
+  padding: clamp(22px, 2.6vw, 32px) 2px;
+  border-bottom: 1px solid rgba(26, 24, 20, 0.16);
+  transition: padding-left 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.idxRow > span:first-child {
+  padding-top: 8px;
+}
+.idxArrow {
+  display: inline-block;
+  color: #1a1814;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .idxRow:hover {
+    padding-left: 14px;
+  }
+  .idxRow:hover .idxArrow {
+    transform: translateX(6px);
+  }
+}
+@media (max-width: 520px) {
+  .idxRow {
+    grid-template-columns: 36px 1fr;
+    gap: 14px;
+  }
+  .idxRow > span:last-child {
+    display: none;
+  }
+}
+
+/* ————— our firm: who we serve, capabilities, the networks ————— */
+.serveList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0 clamp(20px, 3vw, 40px);
+}
+.serveRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 0;
+  border-top: 1px solid rgba(26, 24, 20, 0.16);
+}
+.svcCols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0 clamp(24px, 4vw, 64px);
+}
+.svcRow {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 14px;
+  align-items: baseline;
+  padding: 18px 0;
+  border-top: 1px solid rgba(26, 24, 20, 0.16);
+}
+.showBlock {
+  margin-top: clamp(50px, 6vw, 84px);
+  padding-left: clamp(0px, 8vw, 150px);
+}
+.showList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.showItem {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: clamp(14px, 2vw, 28px);
+  align-items: baseline;
+  padding: clamp(18px, 2.2vw, 26px) 0;
+  border-top: 1px solid rgba(26, 24, 20, 0.16);
+}
+@media (max-width: 620px) {
+  .showItem {
+    grid-template-columns: 44px 1fr;
+    gap: 12px;
+  }
+}
+.netCols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: clamp(32px, 5vw, 80px);
+}
+
+/* ————— the masthead of credits: five departments, thirteen people ————— */
+.credits {
+  column-count: 3;
+  column-gap: clamp(28px, 4vw, 64px);
+  column-rule: 1px solid rgba(26, 24, 20, 0.14);
+}
+@media (max-width: 1000px) {
+  .credits {
+    column-count: 2;
+  }
+}
+@media (max-width: 640px) {
+  .credits {
+    column-count: 1;
+  }
+}
+.creditGroup {
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  margin-bottom: clamp(30px, 3.6vw, 48px);
+}
+.creditLabel {
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #1a1814;
+}
+.creditCard {
+  padding: 11px 0 13px;
+}
+.creditCard + .creditCard {
+  border-top: 1px solid rgba(26, 24, 20, 0.12);
+}
+.creditName {
+  font-family: var(--font-cormorant), serif;
+  font-size: clamp(20px, 1.9vw, 26px);
+  line-height: 1.15;
+  color: #1a1814;
+  margin-bottom: 5px;
+  text-wrap: balance;
+}
+.creditRole {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #6a6357;
+}
+
+/* ————— products in full: one entry per line ————— */
+.prodEntry {
+  padding-bottom: clamp(50px, 6vw, 86px);
+}
+.prodSpread {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(24px, 4vw, 64px);
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .prodSpread {
+    grid-template-columns: 1fr;
+  }
+}
+.prodSub {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.prodSub li {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 12px;
+  align-items: baseline;
+  padding: 14px 0;
+  border-top: 1px solid rgba(26, 24, 20, 0.16);
+}
+
+/* ————— the five stages of a foreign-national case ————— */
+.twoCol {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: clamp(24px, 4vw, 64px);
+}
+.stageList {
+  border-top: 1px solid rgba(26, 24, 20, 0.16);
+}
+.stageRow {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: clamp(16px, 2.6vw, 40px);
+  align-items: start;
+  padding: clamp(26px, 3.2vw, 44px) 0;
+  border-bottom: 1px solid rgba(26, 24, 20, 0.16);
+}
+@media (max-width: 620px) {
+  .stageRow {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+/* ————— the agent desk: every line is a call ————— */
+.resList {
+  border-top: 1px solid rgba(26, 24, 20, 0.16);
+}
+.resItem {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  padding: clamp(18px, 2.2vw, 26px) 2px;
+  border-bottom: 1px solid rgba(26, 24, 20, 0.16);
+  transition: padding-left 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.resAside {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+@media (hover: hover) and (pointer: fine) {
+  .resItem:hover {
+    padding-left: 14px;
+  }
+  .resItem:hover .idxArrow {
+    transform: translateX(6px);
+  }
+}
+@media (max-width: 520px) {
+  .resItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+/* ————— inner-page closing band ————— */
+.innerFoot {
+  padding-top: clamp(30px, 4vw, 50px);
+  padding-bottom: clamp(50px, 7vw, 90px);
+}
+.innerFootInner {
+  border-top: 1px solid #1a1814;
+  padding-top: clamp(40px, 5vw, 70px);
+}
+.innerFootTitle {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 400;
+  font-size: clamp(34px, 6vw, 84px);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: #1a1814;
+  margin: 0 0 clamp(32px, 4.5vw, 56px);
+  max-width: 20ch;
+}
+.footGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: clamp(24px, 4vw, 56px);
+  align-items: start;
+}
+.footBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 32px clamp(20px, 5vw, 60px);
+  border-top: 1px solid rgba(26, 24, 20, 0.16);
+}
+
+/* keyboard focus stays visible everywhere on the paper */
+.page :where(a, button, [tabindex]):focus-visible {
+  outline: 1px solid #1a1814;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bw,
+  .cta::after,
+  .lnk::after,
+  .idxRow,
+  .idxArrow,
+  .resItem,
+  .prod {
+    transition: none;
+  }
 }

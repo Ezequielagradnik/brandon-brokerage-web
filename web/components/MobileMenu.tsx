@@ -1,9 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import Link from "next/link";
 import styles from "./MobileMenu.module.css";
 
 type NavLink = { href: string; label: string };
+
+// Routes get a client transition; anchors and outside links stay plain <a>.
+function NavItem({ href, className, style, onClick, children }: { href: string; className?: string; style?: React.CSSProperties; onClick: () => void; children: ReactNode }) {
+  const internal = href.startsWith("/") && !href.startsWith("//");
+  if (internal) {
+    return <Link href={href} className={className} style={style} onClick={onClick}>{children}</Link>;
+  }
+  const external = href.startsWith("http");
+  return (
+    <a href={href} className={className} style={style} onClick={onClick} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+      {children}
+    </a>
+  );
+}
 
 type MobileMenuProps = {
   links: NavLink[];
@@ -69,18 +84,18 @@ export default function MobileMenu({ links, ctaLabel, ctaHref, panelBg, textColo
         </button>
         <nav className={styles.nav}>
           {links.map((l) => (
-            <a key={l.href} href={l.href} onClick={() => setOpen(false)} className={styles.link} style={{ color: textColor }}>
+            <NavItem key={l.href} href={l.href} onClick={() => setOpen(false)} className={styles.link} style={{ color: textColor }}>
               {l.label}
-            </a>
+            </NavItem>
           ))}
-          <a
+          <NavItem
             href={ctaHref}
             onClick={() => setOpen(false)}
             className={styles.cta}
             style={{ borderColor: accentColor, color: textColor }}
           >
             {ctaLabel}
-          </a>
+          </NavItem>
         </nav>
       </div>
     </>
