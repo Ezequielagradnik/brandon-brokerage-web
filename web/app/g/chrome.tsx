@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import MobileMenu from "@/components/MobileMenu";
 import { GrowLine, MaskReveal, ctaFillFromCursor } from "@/components/motion";
+import { NETWORK_URL } from "@/lib/contact";
 import { COPY, type Lang } from "@/lib/copy";
 import { useLang } from "@/hooks/useLang";
 
@@ -14,17 +15,15 @@ import styles from "./page.module.css";
 // Chrome shared by the /g landing and its four inner pages: the floating white
 // pill, the inner-page masthead and the closing band. The nav is the real
 // site's , Our Firm / Products / Foreign Nationals / Forms / Contact , with the
-// AI Assistant sitting beside it. On the landing that entry opens the assistant
-// modal; on an inner page it points back at the band that holds it.
+// AI Assistant sitting beside it. That entry hands off to the group's platform
+// at Brandon Latam Network, on every page.
 
 export function GHeader({
   lang,
   setLang,
-  onAssistant,
 }: {
   lang: Lang;
   setLang: (l: Lang) => void;
-  onAssistant?: (origin: { x: number; y: number }) => void;
 }) {
   const t = COPY[lang];
   const g = G[lang];
@@ -55,27 +54,10 @@ export function GHeader({
           );
         })}
 
-        {onAssistant ? (
-          <button
-            type="button"
-            className={`${styles.nl} ${styles.navTool}`}
-            onClick={(e) => {
-              const r = e.currentTarget.getBoundingClientRect();
-              onAssistant({
-                x: ((r.left + r.width / 2) / window.innerWidth) * 100,
-                y: ((r.top + r.height / 2) / window.innerHeight) * 100,
-              });
-            }}
-          >
-            <span className={styles.navToolDot} aria-hidden="true" />
-            {g.nav.assistant}
-          </button>
-        ) : (
-          <Link href="/g#tools" className={`${styles.nl} ${styles.navTool}`}>
-            <span className={styles.navToolDot} aria-hidden="true" />
-            {g.nav.assistant}
-          </Link>
-        )}
+        <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" className={`${styles.nl} ${styles.navTool}`}>
+          <span className={styles.navToolDot} aria-hidden="true" />
+          {g.nav.assistant}
+        </a>
       </div>
 
       {/* the toggle sits outside the nav, so language stays switchable on mobile */}
@@ -94,7 +76,7 @@ export function GHeader({
       </Link>
 
       <MobileMenu
-        links={[...links, { href: "/g#tools", label: g.nav.assistant }]}
+        links={[...links, { href: NETWORK_URL, label: g.nav.assistant }]}
         ctaLabel={t.cta.partner}
         ctaHref="/g#contact"
         panelBg={NAVY}

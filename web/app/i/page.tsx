@@ -5,16 +5,15 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useReveals";
 import { COPY, OFFERINGS_I18N } from "@/lib/copy";
-import AgentTools, { type ToolId } from "@/components/AgentTools";
 import { ScrollProgress, MaskReveal, LettersReveal, FadeIn, CountUp, ParallaxImg, ClipReveal, GrowLine, Magnetic, ctaFillFromCursor } from "@/components/motion";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
-import { CTA_HREF, WHATSAPP_ENABLED } from "@/lib/contact";
+import { CTA_HREF, NETWORK_URL, WHATSAPP_ENABLED } from "@/lib/contact";
 import { ChapterHead, FootBar, IHeader, useLang } from "./chrome";
 import { CARRIERS, EXTRA, FAINT, INK, LABEL, MUTED, SERIF, deepLinks, numeral } from "./copy";
 import styles from "./page.module.css";
 
 // Maison Editorial. The landing carries the argument and nothing else: the
-// masthead, the assistant, the ledger of numbers, the mission, the four
+// masthead, the platform, the ledger of numbers, the mission, the four
 // numbered chapters, the specialty in brief and the catalogue index. Our Firm,
 // Products, Foreign Nationals and Forms each open onto their own page, the way
 // brandonbrokerage.com splits it.
@@ -22,14 +21,20 @@ import styles from "./page.module.css";
 /* Each chapter cross-references the page where it is treated in full. */
 const CHAPTER_HREF = ["/i/foreign-nationals", "/i/firm", "/i/firm", "/i/products"];
 
+/* The masthead titles set the last word in italic, the way the hero does. */
+function titleItalicTail(title: string) {
+  const at = title.lastIndexOf(" ");
+  if (at < 0) return { head: "", tail: title };
+  return { head: title.slice(0, at + 1), tail: title.slice(at + 1) };
+}
+
 export default function ConceptI() {
   const [lang, setLang] = useLang();
   const t = COPY[lang];
   const x = EXTRA[lang];
   const OFFERINGS = OFFERINGS_I18N[lang];
   const no = numeral(lang);
-  const [tool, setTool] = useState<ToolId | null>(null);
-  const [toolOrigin, setToolOrigin] = useState({ x: 50, y: 8 });
+  const ai = titleItalicTail(x.aiTitle);
   const pageRef = useRef<HTMLDivElement>(null);
 
   useScrollReveal(pageRef);
@@ -66,14 +71,7 @@ export default function ConceptI() {
   return (
     <div ref={pageRef} className={styles.page}>
       <ScrollProgress color={INK} />
-      <IHeader
-        lang={lang}
-        setLang={setLang}
-        onAssistant={(origin) => {
-          setToolOrigin(origin);
-          setTool("assistant");
-        }}
-      />
+      <IHeader lang={lang} setLang={setLang} />
 
       {/* HERO , oversized editorial masthead */}
       <div id="top" className={styles.wrap} style={{ paddingTop: "clamp(140px,18vh,200px)" }}>
@@ -131,8 +129,29 @@ export default function ConceptI() {
         </div>
       </div>
 
-      {/* AGENT TOOLS , the AI assistant and its two companions */}
-      <AgentTools lang={lang} id="tools" tone="editorial" open={tool} origin={toolOrigin} onOpenChange={setTool} />
+      {/* THE PLATFORM , the group's own network; the whole block leaves the site */}
+      <div id="network" className={styles.wrap} style={{ paddingTop: "clamp(70px,9vw,120px)" }}>
+        <ChapterHead num={`${no} 01`} title={x.aiKicker} note="brandonlatamnetwork.com" />
+        <a
+          data-reveal
+          href={NETWORK_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.netRow}
+        >
+          <span className={styles.netTitle} style={{ fontFamily: SERIF }}>
+            {ai.head}
+            <span style={{ fontStyle: "italic" }}>{ai.tail}</span>
+          </span>
+          <span className={styles.netAside}>
+            <span className={styles.netBody}>{x.aiBody}</span>
+            <span className={styles.netCta}>
+              {x.aiCta}
+              <span className={styles.netArrow} aria-hidden="true">↗</span>
+            </span>
+          </span>
+        </a>
+      </div>
 
       {/* STATS , editorial ledger row */}
       <div data-reveal className={styles.wrap} style={{ paddingTop: "clamp(56px,7vw,90px)" }}>
@@ -159,14 +178,14 @@ export default function ConceptI() {
       {/* MISSION , indented editorial pull quote */}
       <div className={styles.wrap} style={{ paddingTop: "clamp(90px,13vw,170px)", paddingBottom: "clamp(90px,13vw,170px)" }}>
         <div className={styles.quoteGrid}>
-          <div data-reveal className={styles.quoteMark} style={LABEL}>{no} 01<br />{t.missionKicker.replace(/^(Our|Nuestra) /, "")}</div>
+          <div data-reveal className={styles.quoteMark} style={LABEL}>{no} 02<br />{t.missionKicker.replace(/^(Our|Nuestra) /, "")}</div>
           <p data-reveal className={styles.quoteText} style={{ fontFamily: SERIF }}>{t.missionText}<span style={{ fontStyle: "italic" }}>{t.missionHighlight}</span>.</p>
         </div>
       </div>
 
       {/* THE FIRM , signature scroll moment: the chapter index marks itself */}
       <div id="firm" className={styles.wrap} style={{ paddingBottom: "clamp(60px,8vw,110px)" }}>
-        <ChapterHead num={`${no} 02`} title={lang === "es" ? "Capítulos" : "Chapters"} note={t.offerNote} />
+        <ChapterHead num={`${no} 03`} title={lang === "es" ? "Capítulos" : "Chapters"} note={t.offerNote} />
 
         <div className={styles.tocGrid}>
           {/* sticky table of contents , marks itself as you read */}
@@ -219,7 +238,7 @@ export default function ConceptI() {
 
       {/* FOREIGN NATIONALS , the specialty in brief; the case flow has its own page */}
       <div id="foreign" className={styles.wrap} style={{ paddingBottom: "clamp(70px,9vw,130px)" }}>
-        <ChapterHead num={`${no} 03`} title={x.fnKicker} note={x.fnFlowTitle} />
+        <ChapterHead num={`${no} 04`} title={x.fnKicker} note={x.fnFlowTitle} />
         <div className={styles.fnSpread}>
           <div className={styles.fnText}>
             <h2 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: "clamp(34px,5.4vw,76px)", lineHeight: 1.02, letterSpacing: "-0.015em", margin: "0 0 clamp(24px,3vw,36px)", color: INK }}>
@@ -252,7 +271,7 @@ export default function ConceptI() {
 
       {/* PRODUCTS , the catalogue index; every line opens on its own page */}
       <div id="products" className={styles.wrap} style={{ paddingBottom: "clamp(70px,9vw,130px)" }}>
-        <ChapterHead num={`${no} 04`} title={t.productsKicker} note={t.productsBacked} />
+        <ChapterHead num={`${no} 05`} title={t.productsKicker} note={t.productsBacked} />
         <div data-reveal>
           {t.products.map((p, i) => (
             <motion.div
@@ -278,7 +297,7 @@ export default function ConceptI() {
 
       {/* CONTENTS , the four pages this landing hands off to */}
       <div className={styles.wrap} style={{ paddingBottom: "clamp(70px,9vw,120px)" }}>
-        <ChapterHead num={`${no} 05`} title={x.moreKicker} note={lang === "es" ? "Tres páginas" : "Three pages"} />
+        <ChapterHead num={`${no} 06`} title={x.moreKicker} note={lang === "es" ? "Tres páginas" : "Three pages"} />
         <div>
           {deepLinks("/i", lang).map((m, i) => (
             <Link key={m.href} data-reveal href={m.href} className={styles.idxRow}>

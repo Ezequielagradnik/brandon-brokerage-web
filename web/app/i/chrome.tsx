@@ -8,6 +8,7 @@ import MobileMenu from "@/components/MobileMenu";
 import LangToggle from "@/components/LangToggle";
 import { FadeIn, MaskReveal, ctaFillFromCursor } from "@/components/motion";
 import { COPY, type Lang } from "@/lib/copy";
+import { NETWORK_URL } from "@/lib/contact";
 import { useLang } from "@/hooks/useLang";
 
 export { useLang };
@@ -15,28 +16,18 @@ import { EXTRA, INK, LABEL, MUTED, PAPER, SERIF, deepNav } from "./copy";
 import styles from "./page.module.css";
 
 /* The paper bar. Same on the landing and on the four inner pages: logo, the
-   real site's nav, the assistant, the language and the one CTA. */
+   real site's nav, the assistant, the language and the one CTA. The assistant
+   is the group's own platform, so the entry leaves the site. */
 export function IHeader({
   lang,
   setLang,
-  onAssistant,
 }: {
   lang: Lang;
   setLang: (l: Lang) => void;
-  /* the landing owns the assistant modal, so it passes a handler; the inner
-     pages send the reader back to the tools band instead */
-  onAssistant?: (origin: { x: number; y: number }) => void;
 }) {
   const t = COPY[lang];
   const pathname = usePathname();
   const links = deepNav("/i", lang);
-
-  const assistant = (
-    <>
-      <span className={styles.navToolDot} aria-hidden="true" />
-      {t.nav.assistant}
-    </>
-  );
 
   return (
     <div className={styles.headerBar}>
@@ -55,22 +46,10 @@ export function IHeader({
           );
         })}
 
-        {onAssistant ? (
-          <button
-            type="button"
-            className={`${styles.nl} ${styles.navTool}`}
-            onClick={(e) => {
-              const r = e.currentTarget.getBoundingClientRect();
-              onAssistant({ x: ((r.left + r.width / 2) / window.innerWidth) * 100, y: ((r.top + r.height / 2) / window.innerHeight) * 100 });
-            }}
-          >
-            {assistant}
-          </button>
-        ) : (
-          <Link href="/i#tools" className={`${styles.nl} ${styles.navTool}`}>
-            {assistant}
-          </Link>
-        )}
+        <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" className={`${styles.nl} ${styles.navTool}`}>
+          <span className={styles.navToolDot} aria-hidden="true" />
+          {t.nav.assistant}
+        </a>
 
         <LangToggle lang={lang} setLang={setLang} color="rgba(26,24,20,0.5)" activeColor={INK} />
 
@@ -80,7 +59,7 @@ export function IHeader({
       </div>
 
       <MobileMenu
-        links={[{ href: "/i#tools", label: t.nav.assistant }, ...links]}
+        links={[{ href: NETWORK_URL, label: t.nav.assistant }, ...links]}
         ctaLabel={t.cta.partner}
         ctaHref="/i#contact"
         panelBg={PAPER}

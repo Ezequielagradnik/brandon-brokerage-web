@@ -671,3 +671,70 @@
     transition: none;
   }
 }
+
+/* ————— the platform hand-off: the whole row leaves the site ————— */
+.netRow {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(20px, 4vw, 64px);
+  align-items: baseline;
+  padding: clamp(26px, 3vw, 40px) 2px clamp(30px, 3.4vw, 46px);
+  border-bottom: 1px solid rgba(26, 24, 20, 0.16);
+  color: #1a1814;
+}
+.netTitle {
+  display: block;
+  font-size: clamp(30px, 4.6vw, 62px);
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+  color: #1a1814;
+  text-wrap: balance;
+}
+.netAside {
+  display: block;
+  padding-top: 6px;
+}
+.netBody {
+  display: block;
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: #6a6357;
+  max-width: 46ch;
+}
+.netCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: clamp(18px, 2vw, 26px);
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #1a1814;
+  border-bottom: 1px solid rgba(26, 24, 20, 0.32);
+  padding-bottom: 5px;
+  transition: border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.netArrow {
+  display: inline-block;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .netRow:hover .netCta {
+    border-color: #1a1814;
+  }
+  .netRow:hover .netArrow {
+    transform: translate(3px, -3px);
+  }
+}
+@media (max-width: 820px) {
+  .netRow {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .netCta,
+  .netArrow {
+    transition: none;
+  }
+}

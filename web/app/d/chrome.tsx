@@ -17,18 +17,16 @@ import styles from "./page.module.css";
 
 /* The header runs the length of the page: transparent over the silk hero, cream
    glass once you scroll, always solid on an inner page where there is no hero.
-   `onAssistant` is only passed on the landing, the one page that mounts
-   AgentTools; everywhere else the entry hands off to the real platform. */
+   The assistant entry hands off to the group's real platform on every page,
+   landing included , nothing about it is simulated here. */
 export function DHeader({
   lang,
   setLang,
   solid = false,
-  onAssistant,
 }: {
   lang: Lang;
   setLang: (l: Lang) => void;
   solid?: boolean;
-  onAssistant?: (origin: { x: number; y: number }) => void;
 }) {
   const t = COPY[lang];
   const pathname = usePathname();
@@ -63,24 +61,10 @@ export function DHeader({
           );
         })}
 
-        {onAssistant ? (
-          <button
-            type="button"
-            className={`${styles.nl} ${styles.navTool}`}
-            onClick={(e) => {
-              const r = e.currentTarget.getBoundingClientRect();
-              onAssistant({ x: ((r.left + r.width / 2) / window.innerWidth) * 100, y: ((r.top + r.height / 2) / window.innerHeight) * 100 });
-            }}
-          >
-            <span className={styles.navToolDot} aria-hidden="true" />
-            {t.nav.assistant}
-          </button>
-        ) : (
-          <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" className={`${styles.nl} ${styles.navTool}`}>
-            <span className={styles.navToolDot} aria-hidden="true" />
-            {t.nav.assistant}
-          </a>
-        )}
+        <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" className={`${styles.nl} ${styles.navTool}`}>
+          <span className={styles.navToolDot} aria-hidden="true" />
+          {t.nav.assistant}
+        </a>
 
         <LangToggle lang={lang} setLang={setLang} color="rgba(18,41,74,0.55)" activeColor={NAVY} />
 
@@ -90,7 +74,7 @@ export function DHeader({
       </nav>
 
       <MobileMenu
-        links={[{ href: onAssistant ? "#tools" : NETWORK_URL, label: t.nav.assistant }, ...links]}
+        links={[{ href: NETWORK_URL, label: t.nav.assistant }, ...links]}
         ctaLabel={t.cta.partnerCaps}
         ctaHref="/d#contact"
         panelBg={CREAM}

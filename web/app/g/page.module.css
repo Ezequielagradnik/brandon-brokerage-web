@@ -18,7 +18,7 @@
 }
 
 /* anchor targets land below the floating nav pill */
-.page :where(#top, #tools, #solutions, #foreign, #deeper, #firm, #insights, #team, #contact) {
+.page :where(#top, #solutions, #foreign, #deeper, #firm, #insights, #team, #contact) {
   scroll-margin-top: 96px;
 }
 
@@ -956,6 +956,145 @@
   .resItem,
   .resArrow,
   .backLink {
+    transition: none;
+  }
+}
+
+/* ————— the platform band: the whole navy block links out to Brandon Latam
+   Network, where the assistant actually lives. Appended last on purpose, so the
+   .cta overrides below beat the base .cta rules earlier in this file. ————— */
+.platform {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: #14224a;
+  padding: clamp(52px, 6.5vw, 96px) clamp(20px, 5vw, 60px);
+}
+/* a gold hairline draws across the top edge as the block is hovered */
+.platform::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #c2a15b;
+  z-index: 3;
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .platform:hover::before {
+    width: 100%;
+  }
+}
+.platform:focus-visible {
+  outline: 2px solid #c2a15b;
+  outline-offset: -6px;
+}
+.platformInner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: clamp(28px, 4vw, 64px);
+}
+.platformMain {
+  flex: 1 1 420px;
+  min-width: 0;
+}
+.platformKicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #d9c291;
+  margin-bottom: clamp(16px, 2vw, 22px);
+}
+.platformDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #d9c291;
+  animation: gPulse 2.6s ease-out infinite;
+}
+.platformTitle {
+  font-family: var(--font-lora), serif;
+  font-weight: 500;
+  font-size: clamp(30px, 4.2vw, 62px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0 0 clamp(16px, 2vw, 24px);
+}
+.platformTitleItalic {
+  font-style: italic;
+  color: #d9c291;
+}
+.platformBody {
+  font-size: clamp(14.5px, 1.25vw, 16px);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.74);
+  margin: 0;
+  max-width: 640px;
+}
+.platformAside {
+  flex-shrink: 0;
+  padding-bottom: 6px;
+}
+.platformCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  padding: 16px 34px;
+  font-size: 12.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+/* the gold sweep and the arrow answer to the whole block, not just the pill */
+.platform:hover .platformCta::after {
+  clip-path: circle(160% at 50% 50%);
+}
+.platform:hover .platformCta {
+  color: #14224a !important;
+}
+.platformArrow {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.platform:hover .platformArrow {
+  transform: translate(4px, -4px);
+}
+@media (max-width: 620px) {
+  .platformInner {
+    align-items: stretch;
+  }
+  .platformAside {
+    width: 100%;
+    padding-bottom: 0;
+  }
+  .platformCta {
+    width: 100%;
+    justify-content: center;
+    padding: 15px 22px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .platformDot {
+    animation: none;
+  }
+  .platform::before,
+  .platformArrow,
+  .platformCta,
+  .platformCta::after {
     transition: none;
   }
 }

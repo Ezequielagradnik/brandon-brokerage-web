@@ -5,19 +5,18 @@ import Link from "next/link";
 import { motion, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useReveals";
 import { ScrollProgress, MaskReveal, FadeIn, CountUp, GrowLine, Magnetic, ctaFillFromCursor } from "@/components/motion";
-import AgentTools, { type ToolId } from "@/components/AgentTools";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { COPY } from "@/lib/copy";
-import { CTA_HREF, WHATSAPP_ENABLED } from "@/lib/contact";
+import { CTA_HREF, NETWORK_URL, WHATSAPP_ENABLED } from "@/lib/contact";
 import { GHeader, SectionHead, useLang } from "./chrome";
 import { CARRIERS, EASE, EXTRA, G, GOLD, GRAY, HAIR, MASTHEAD, NAVY, OFFWHITE, deepLinks, deepNav, mono, monoEyebrow, sans, serif } from "./copy";
 import styles from "./page.module.css";
 
 // Boutique Latam , white canvas, navy and gold, Lora on Plex Mono. The landing
-// carries the argument and nothing else: the hero, the assistant, the four
-// pillars fanning out of a pinned deck, the numbers, a short word on the
-// specialty and the phone number. Our Firm, Products, Foreign Nationals and
-// Forms each live on their own page, the way the real site splits it.
+// carries the argument and nothing else: the hero, the hand-off to the group's
+// platform, the four pillars fanning out of a pinned deck, the numbers, a short
+// word on the specialty and the phone number. Our Firm, Products, Foreign
+// Nationals and Forms each live on their own page, the way the real site splits it.
 
 // ----- Card deck (pinned, scroll-driven) -----
 const DECK_IMGS = ["/images/miami-palms-sunset.jpg", "/images/miami-aerial-day.jpg", "/images/miami-night.jpg", "/images/miami-sunset.jpg"];
@@ -120,9 +119,6 @@ export default function ConceptG() {
   const deckRef = useRef<HTMLDivElement>(null);
   const [lang, setLang] = useLang();
   const [deckHovered, setDeckHovered] = useState<number | null>(null);
-  // the header's AI Assistant entry opens the tool modal directly
-  const [tool, setTool] = useState<ToolId | null>(null);
-  const [toolOrigin, setToolOrigin] = useState({ x: 50, y: 8 });
   const reduce = useReducedMotion();
   const t = COPY[lang];
   const x = EXTRA[lang];
@@ -154,14 +150,7 @@ export default function ConceptG() {
     <div ref={pageRef} className={styles.page} style={{ fontFamily: sans }}>
       <ScrollProgress color={GOLD} />
 
-      <GHeader
-        lang={lang}
-        setLang={setLang}
-        onAssistant={(origin) => {
-          setToolOrigin(origin);
-          setTool("assistant");
-        }}
-      />
+      <GHeader lang={lang} setLang={setLang} />
 
       {/* HERO , full-screen photo, slow Ken Burns + parallax, 3-line masthead */}
       <div id="top" ref={heroRef} style={{ position: "relative", minHeight: "100svh", display: "flex", alignItems: "flex-end", overflow: "hidden", padding: "clamp(120px,14vw,180px) clamp(20px,5vw,60px) clamp(60px,8vw,100px)" }}>
@@ -215,8 +204,29 @@ export default function ConceptG() {
         </div>
       </div>
 
-      {/* AGENT TOOLS , the assistant, above the fold */}
-      <AgentTools lang={lang} id="tools" open={tool} origin={toolOrigin} onOpenChange={setTool} />
+      {/* THE PLATFORM , the assistant itself lives on Brandon Latam Network */}
+      <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" className={styles.platform}>
+        <div className={styles.grain} aria-hidden="true" />
+        <div className={styles.platformInner}>
+          <div className={styles.platformMain}>
+            <div data-reveal className={styles.platformKicker}>
+              <span className={styles.platformDot} aria-hidden="true" />
+              {x.aiKicker}
+            </div>
+            <h2 data-reveal className={styles.platformTitle}>
+              {x.aiTitle.split(" ").slice(0, -1).join(" ")}{" "}
+              <span className={styles.platformTitleItalic}>{x.aiTitle.split(" ").slice(-1)}</span>
+            </h2>
+            <p data-reveal className={styles.platformBody}>{x.aiBody}</p>
+          </div>
+          <div data-reveal className={styles.platformAside}>
+            <span className={`${styles.cta} ${styles.platformCta}`}>
+              {x.aiCta}
+              <span className={styles.platformArrow} aria-hidden="true">↗</span>
+            </span>
+          </div>
+        </div>
+      </a>
 
       {/* 01 , SOLUTIONS: pinned card deck, scroll-driven */}
       <div id="solutions" ref={deckRef} className={styles.deckSection}>
@@ -376,7 +386,7 @@ export default function ConceptG() {
                 {deepNav("/g", lang).map((l) => (
                   <Link key={l.href} href={l.href} style={{ fontSize: 13.5, color: "rgba(255,255,255,0.75)" }}>{l.label}</Link>
                 ))}
-                <a href="#tools" style={{ fontSize: 13.5, color: "rgba(255,255,255,0.75)" }}>{g.nav.assistant}</a>
+                <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" style={{ fontSize: 13.5, color: "rgba(255,255,255,0.75)" }}>{g.nav.assistant} ↗</a>
               </div>
             </div>
             <div>

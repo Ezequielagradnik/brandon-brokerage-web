@@ -1,22 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import * as THREE from "three";
 import { useScrollReveal } from "@/hooks/useReveals";
 import GlobeArcs, { GOLD_ARCS } from "@/components/GlobeArcs";
 import { COPY, OFFERINGS_I18N, type Lang } from "@/lib/copy";
-import AgentTools, { type ToolId } from "@/components/AgentTools";
 import { ScrollProgress, WordsReveal, FadeIn, CountUp, GrowLine, Magnetic, MaskReveal, ctaFillFromCursor } from "@/components/motion";
 import { motion, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
-import { CTA_HREF, WHATSAPP_ENABLED } from "@/lib/contact";
+import { CTA_HREF, NETWORK_URL, WHATSAPP_ENABLED } from "@/lib/contact";
 import { DHeader, SectionHead, useLang } from "./chrome";
-import { BODY, CARRIERS, EASE, GOLD, GOLD_DIM, HAIR, MONO_K, MUTED, NAVY, SERIF, EXTRA, deepLinks } from "./copy";
+import { BODY, CARRIERS, EASE, GOLD, GOLD_DIM, GOLD_SOFT, HAIR, MONO_K, MUTED, NAVY, SERIF, EXTRA, deepLinks } from "./copy";
 import styles from "./page.module.css";
 
-// Ivory & Sapphire. The landing carries the argument: the silk hero, the agent
-// tools, the four pillars behind the silk curtain, the specialty in one
+// Ivory & Sapphire. The landing carries the argument: the silk hero, the
+// platform hand-off, the four pillars behind the silk curtain, the specialty in one
 // paragraph and the phone number. Everything that needs room , the firm, the
 // products, the foreign-national case flow, the forms desk , lives on its own
 // page, the way brandonbrokerage.com splits it.
@@ -164,8 +163,6 @@ export default function ConceptD() {
   const t = COPY[lang];
   const x = EXTRA[lang];
   const OFFERINGS = OFFERINGS_I18N[lang];
-  const [tool, setTool] = useState<ToolId | null>(null);
-  const [toolOrigin, setToolOrigin] = useState({ x: 50, y: 8 });
   const pageRef = useRef<HTMLDivElement>(null);
   const silkCanvas = useRef<HTMLCanvasElement>(null);
   const curtainCanvas = useRef<HTMLCanvasElement>(null);
@@ -185,14 +182,7 @@ export default function ConceptD() {
     <div ref={pageRef} className={styles.page}>
       <ScrollProgress color={GOLD} />
 
-      <DHeader
-        lang={lang}
-        setLang={setLang}
-        onAssistant={(origin) => {
-          setToolOrigin(origin);
-          setTool("assistant");
-        }}
-      />
+      <DHeader lang={lang} setLang={setLang} />
 
       {/* HERO with shader silk */}
       <div id="top" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", padding: "120px clamp(20px,5vw,60px) 80px", background: "#f3efe6" }}>
@@ -231,8 +221,27 @@ export default function ConceptD() {
         </div>
       </div>
 
-      {/* AGENT TOOLS , the AI assistant and its two companions */}
-      <AgentTools lang={lang} id="tools" tone="sapphire" open={tool} origin={toolOrigin} onOpenChange={setTool} />
+      {/* THE PLATFORM , the assistant is not demoed here, it is handed over */}
+      <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" className={styles.platBand}>
+        <span className={styles.platGlow} aria-hidden="true" />
+        <span className={styles.platInner}>
+          <span className={styles.platCopy}>
+            <span style={{ ...MONO_K, color: GOLD_SOFT, display: "block", marginBottom: 14 }}>{x.aiKicker}</span>
+            <GrowLine color="rgba(169,129,47,0.6)" style={{ marginBottom: "clamp(20px,2.6vw,32px)" }} />
+            <span className={styles.platTitle}>
+              <MaskReveal inView delay={0.05}>{x.aiTitle}</MaskReveal>
+            </span>
+            <span data-reveal className={styles.platBody}>{x.aiBody}</span>
+          </span>
+          <span className={styles.platAside}>
+            <span className={styles.platCta}>
+              {x.aiCta}
+              <span className={styles.platArrow} aria-hidden="true">↗</span>
+            </span>
+            <span className={styles.platHost}>brandonlatamnetwork.com</span>
+          </span>
+        </span>
+      </a>
 
       {/* STATS , drawn hairlines + count-up */}
       <div data-reveal style={{ padding: "clamp(48px,6vw,72px) clamp(20px,5vw,60px)", background: "#f3efe6" }}>
