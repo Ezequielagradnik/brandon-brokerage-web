@@ -9,7 +9,7 @@ import LangToggle from "@/components/LangToggle";
 import { COPY, type Lang } from "@/lib/copy";
 import { ctaFillFromCursor, GrowLine, MaskReveal } from "@/components/motion";
 import { NETWORK_URL } from "@/lib/contact";
-import { BEIGE, EXTRA, GOLD, GOLD_DEEP, HAIR, INK_MUTED, NAV, NAVY } from "./copy";
+import { BEIGE, EXTRA, GOLD, GOLD_DEEP, HAIR, INK_MUTED, NAVY, deepNav } from "./copy";
 import styles from "./page.module.css";
 
 const LANG_KEY = "bbg-lang";
@@ -44,7 +44,7 @@ export function NHeader({ lang, setLang, solid = false }: { lang: Lang; setLang:
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 40));
   const firm = solid || scrolled;
 
-  const links = NAV.map((n) => ({ href: n.href, label: x.nav[n.key] }));
+  const links = deepNav("/n", lang);
 
   return (
     <header className={`${styles.header} ${firm ? styles.headerSolid : ""}`}>

@@ -9,7 +9,7 @@ import { CountUp, GrowLine, MaskReveal, FadeIn, Magnetic, ScrollProgress, ctaFil
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { CTA_HREF, WHATSAPP_ENABLED, NETWORK_URL } from "@/lib/contact";
 import { NHeader, SectionMark, useLang } from "./chrome";
-import { CARRIERS, EASE, GOLD, GOLD_SOFT, GOLD_DEEP, HAIR, INK_MUTED, NAVY, EXTRA } from "./copy";
+import { CARRIERS, EASE, GOLD, GOLD_SOFT, GOLD_DEEP, HAIR, INK_MUTED, NAVY, EXTRA, deepLinks } from "./copy";
 import styles from "./page.module.css";
 
 // Network , beige canvas, navy depth, Brandon gold. The landing carries the
@@ -214,7 +214,7 @@ export default function ConceptN() {
         <div className={styles.wrap}>
           <div data-reveal className={styles.kicker} style={{ color: INK_MUTED, marginBottom: 26, fontSize: 10.5 }}>{x.moreKicker}</div>
           <div className={styles.moreGrid}>
-            {x.more.map((m, i) => (
+            {deepLinks("/n", lang).map((m, i) => (
               <motion.div
                 key={m.href}
                 initial={reduce ? false : { opacity: 0, y: 16 }}
