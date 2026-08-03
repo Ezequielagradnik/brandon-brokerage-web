@@ -69,20 +69,9 @@ export default function Home() {
         <div className={styles.grid}>
 
           <Link href="/n" className={styles.card} style={{ position: "relative", border: "2px solid #9a7b32", borderRadius: 12, overflow: "hidden", background: CARD_BG, boxShadow: "0 14px 40px rgba(154,123,50,0.3)" }}>
-            <div style={{ position: "relative", height: 190, overflow: "hidden", background: "#f5f1e8", padding: "44px 20px 0" }}>
+            <div style={{ position: "relative", height: 190, overflow: "hidden", background: "#f5f1e8", padding: "0 20px", display: "flex", alignItems: "center" }}>
               <div style={{ position: "absolute", right: -34, top: -44, width: 170, height: 170, borderRadius: "50%", background: "radial-gradient(circle, rgba(194,161,91,0.42), transparent 65%)" }} />
               <div style={{ position: "absolute", left: -40, bottom: -60, width: 150, height: 150, borderRadius: "50%", background: "radial-gradient(circle, rgba(20,34,74,0.14), transparent 66%)" }} />
-              {/* floating glass header */}
-              <div style={{ position: "absolute", top: 12, left: 14, right: 14, display: "flex", alignItems: "center", gap: 8, padding: "6px 6px 6px 10px", borderRadius: 999, border: "1px solid rgba(194,161,91,0.4)", background: "rgba(255,255,255,0.62)", backdropFilter: "blur(6px)", boxShadow: "0 6px 18px rgba(20,34,74,0.1)" }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/assets/brandon-logo.png" alt="" style={{ height: 13, width: "auto" }} />
-                <span style={{ display: "flex", gap: 5, marginLeft: 4 }}>
-                  {[0, 1, 2, 3].map((i) => (
-                    <span key={i} style={{ height: 5, width: i === 1 ? 22 : 15, borderRadius: 999, background: i === 1 ? "rgba(194,161,91,0.72)" : "rgba(20,34,74,0.18)" }} />
-                  ))}
-                </span>
-                <span style={{ marginLeft: "auto", height: 15, width: 40, borderRadius: 999, background: "#14224a" }} />
-              </div>
               <div style={{ position: "relative", fontFamily: "var(--font-bodoni), serif", fontSize: 26, lineHeight: 1.04, color: "#14224a", letterSpacing: "-0.02em" }}>
                 Sixty years placing<br /><span style={{ fontStyle: "italic", color: "#b89a5e" }}>the cases others<br />turn away.</span>
               </div>
