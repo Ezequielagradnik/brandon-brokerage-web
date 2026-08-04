@@ -1169,6 +1169,9 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
+  /* the frame carries the radius too: rounding only the inner map left this
+     square outline showing at the corners */
+  border-radius: 14px;
   height: clamp(300px, 40vw, 470px);
   background: #e9e3d6;
 }

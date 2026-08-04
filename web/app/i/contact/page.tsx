@@ -141,6 +141,8 @@ export default function ContactPage() {
               alone reads as breath. */}
           <DeviceCall
             palette={DEVICE}
+            number={OFFICE.phone}
+            callLabel={c.callLabel}
             className={styles.ctcDevice}
             lean={false}
           />

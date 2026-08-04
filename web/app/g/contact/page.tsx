@@ -155,7 +155,7 @@ export default function ContactPage() {
             </div>
 
             {/* decorative , the number above is the affordance */}
-            <DeviceCall palette={DEVICE} className={styles.deviceWrap} />
+            <DeviceCall palette={DEVICE} number={OFFICE.phone} callLabel={c.callLabel} className={styles.deviceWrap} />
           </div>
         </div>
       </div>
