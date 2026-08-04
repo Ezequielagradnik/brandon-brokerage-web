@@ -293,11 +293,31 @@ export default function ConceptI() {
             </motion.div>
           ))}
         </div>
-        <div data-reveal style={{ marginTop: 44, display: "flex", flexWrap: "wrap", gap: "10px clamp(20px,2.6vw,36px)" }}>
-          <span style={LABEL}>{lang === "es" ? "Aseguradoras" : "Carriers"}</span>
-          {CARRIERS.map((c) => (
-            <span key={c} style={{ fontSize: 13, color: FAINT, letterSpacing: "0.02em" }}>{c}</span>
-          ))}
+      </div>
+
+      {/* THE SHELF , the carriers running as a set rather than sitting as a
+          paragraph of names. Full bleed and ruled top and bottom, so it reads
+          as a plate between two chapters. */}
+      <div className={styles.carSection}>
+        <div className={styles.wrap}>
+          <div data-reveal style={{ ...LABEL, marginBottom: 16, display: "flex", gap: 16 }}>
+            <span>{lang === "es" ? "Aseguradoras" : "Carriers"}</span>
+            <span style={{ color: FAINT }}>{CARRIERS.length}</span>
+          </div>
+        </div>
+        <div className={styles.carViewport}>
+          <div className={styles.carTrack}>
+            {[0, 1].map((rep) => (
+              <div key={rep} className={styles.carRun} aria-hidden={rep === 1}>
+                {CARRIERS.map((c) => (
+                  <span key={c} className={styles.carItem}>
+                    {c}
+                    <span className={styles.carDot} aria-hidden="true">·</span>
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

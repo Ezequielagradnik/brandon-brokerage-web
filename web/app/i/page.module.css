@@ -918,3 +918,65 @@
     transition: none;
   }
 }
+
+/* ————— the carrier shelf, running —————
+   Twenty-nine names set as a paragraph read as a block of text, not as a
+   collection. Here they run instead: Cormorant at reading size, one plate
+   between two rules, full bleed. Two identical copies, so wrapping the track
+   over 50% is seamless. No colour: this concept has none. */
+.carSection {
+  padding: clamp(8px, 1.2vw, 18px) 0 clamp(70px, 9vw, 130px);
+}
+.carViewport {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(26, 24, 20, 0.16);
+  border-bottom: 1px solid rgba(26, 24, 20, 0.16);
+  padding: clamp(16px, 1.9vw, 26px) 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.carTrack {
+  display: flex;
+  width: max-content;
+  animation: iShelf 84s linear infinite;
+}
+.carRun {
+  display: flex;
+  align-items: baseline;
+}
+.carItem {
+  display: inline-flex;
+  align-items: baseline;
+  font-family: var(--font-cormorant), serif;
+  font-size: clamp(19px, 2vw, 28px);
+  line-height: 1.2;
+  color: #6a6357;
+  white-space: nowrap;
+}
+.carDot {
+  margin: 0 clamp(16px, 2vw, 32px);
+  color: #8d8577;
+  font-size: 0.72em;
+}
+@keyframes iShelf {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (hover: hover) and (pointer: fine) {
+  .carViewport:hover .carTrack {
+    animation-play-state: paused;
+  }
+}
+/* Reduced motion parks it. The track is wider than the screen, so it becomes
+   scrollable by hand rather than leaving names unreachable. */
+@media (prefers-reduced-motion: reduce) {
+  .carTrack {
+    animation: none;
+  }
+  .carViewport {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
