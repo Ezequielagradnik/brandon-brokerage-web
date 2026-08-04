@@ -142,7 +142,10 @@ export default function ContactPage() {
           <DeviceCall
             palette={DEVICE}
             number={OFFICE.phone}
+            href={OFFICE.phoneHref}
             callLabel={c.callLabel}
+            serif="var(--font-cormorant), serif"
+            mono="var(--font-plex-mono), monospace"
             className={styles.ctcDevice}
             lean={false}
           />

@@ -144,7 +144,7 @@ export default function ContactPage() {
               <div data-reveal className={styles.callCap}>{c.tapToCall}</div>
             </div>
 
-            <DeviceCall palette={DEVICE} number={OFFICE.phone} callLabel={c.callLabel} className={styles.callCanvas} />
+            <DeviceCall palette={DEVICE} number={OFFICE.phone} href={OFFICE.phoneHref} callLabel={c.callLabel} serif="var(--font-bodoni), serif" mono="var(--font-plex-mono), monospace" className={styles.callCanvas} />
           </div>
         </div>
       </section>

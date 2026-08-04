@@ -2,432 +2,121 @@
 
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
-import { useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import { worldPoints } from "@/lib/world";
 
-// A phone standing on the contact page with the Brandon globe turning inside it.
+// The phone on the contact pages: a real element, not a picture of one.
 //
-// The screen is a second scene rendered to a texture every frame, so the globe
-// is genuinely inside the display rather than a sphere parked in front of it ,
-// it clips at the bezel and tilts with the device, which is the whole point.
+// Built in DOM rather than WebGL on purpose. CSS draws bezels, rails, glass and
+// shadows better than a hand-lit box ever will, and, more importantly, the call
+// button is then a genuine <a href="tel:">: tapping it dials, exactly like the
+// number set large beside it. A canvas can only ever look like a button.
 //
-// The body is one rounded box in matte graphite with a lighter rail, a dynamic
-// island, and three side buttons. Those details are what separate a phone from
-// a black rectangle.
-//
-// It is decorative: the number beside it on the page is the real affordance, so
-// this returns null under reduced motion or without WebGL, and it stops
-// rendering when it scrolls out of view or the tab is hidden.
+// The only WebGL left is the globe in the logo lockup , a sphere with the world
+// dotted onto it, turning. If WebGL is missing it simply does not draw and the
+// lockup falls back to the wordmark, which is why nothing depends on it.
 
 export type DevicePalette = {
   /** screen background */
   screen: string;
   /** wordmark, status bar and UI ink */
   ink: string;
-  /** the ocean sphere, the rule under the wordmark, the hub dot */
+  /** the ocean sphere and the rule under the wordmark */
   accent: string;
 };
 
 type Props = {
   palette: DevicePalette;
-  /** the number printed on the call button */
+  /** number printed on the call button */
   number: string;
-  /** label on the call button */
+  /** where the button dials, normally OFFICE.phoneHref */
+  href: string;
+  /** label under the button */
   callLabel: string;
+  /** the concept's display face, for the wordmark */
+  serif?: string;
+  /** the concept's mono face, for the small caps */
+  mono?: string;
   className?: string;
   /**
-   * Whether the phone leans towards the cursor. On concepts whose motion is all
-   * one-shot reveals, a thing that keeps answering the pointer is a different
-   * category of movement and reads as a demo dropped into the page. Turn it off
-   * and the slow float alone reads as breath.
+   * Whether the phone leans towards the cursor on top of its float. On concepts
+   * whose motion is all one-shot reveals, a thing that keeps answering the
+   * pointer is a different category of movement and reads as a demo dropped
+   * into the page.
    */
   lean?: boolean;
 };
 
-// iPhone proportions: 19.5:9, so the body is 2.06 wide by 4.46 tall.
-const W = 2.06;
-const H = 4.46;
-const D = 0.23;
-const BODY_R = 0.3;
-const BEZEL = 0.052;
-const SW = W - BEZEL * 2;
-const SH = H - BEZEL * 2;
-const SCREEN_R = BODY_R - BEZEL;
-
-/**
- * Mix two CSS colours the way they look, not the way three stores them. Colour
- * management converts to linear on parse, so lerping a navy 15% toward cream in
- * three's own space lands on mid grey rather than a slightly lighter navy.
- */
-function mix(a: string, b: string, t: number) {
-  const ha = new THREE.Color(a).getHex(THREE.SRGBColorSpace);
-  const hb = new THREE.Color(b).getHex(THREE.SRGBColorSpace);
-  const ch = (h: number, shift: number) => (h >> shift) & 255;
-  const lerp = (shift: number) => Math.round(ch(ha, shift) + (ch(hb, shift) - ch(ha, shift)) * t);
-  const out = new THREE.Color();
-  out.setHex((lerp(16) << 16) | (lerp(8) << 8) | lerp(0), THREE.SRGBColorSpace);
-  return out;
-}
-
-function roundedRect(w: number, h: number, r: number) {
-  const s = new THREE.Shape();
-  const x = -w / 2;
-  const y = -h / 2;
-  s.moveTo(x + r, y);
-  s.lineTo(x + w - r, y);
-  s.quadraticCurveTo(x + w, y, x + w, y + r);
-  s.lineTo(x + w, y + h - r);
-  s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-  s.lineTo(x + r, y + h);
-  s.quadraticCurveTo(x, y + h, x, y + h - r);
-  s.lineTo(x, y + r);
-  s.quadraticCurveTo(x, y, x + r, y);
-  return s;
-}
-
-/** ShapeGeometry with UVs remapped to the shape's bounding box, so a texture fills it. */
-function shapeGeometry(w: number, h: number, r: number) {
-  const g = new THREE.ShapeGeometry(roundedRect(w, h, r), 20);
-  const pos = g.attributes.position;
-  const uv = new Float32Array(pos.count * 2);
-  for (let i = 0; i < pos.count; i++) {
-    uv[i * 2] = (pos.getX(i) + w / 2) / w;
-    uv[i * 2 + 1] = (pos.getY(i) + h / 2) / h;
-  }
-  g.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
-  return g;
-}
-
-/**
- * The whole 2D face of the screen on one canvas: status bar, the wordmark half
- * of the logo lockup, the standing line, the call button and the home
- * indicator. The globe is a real mesh drawn in front of this, in the gap the
- * lockup leaves for it, so the mark is half flat type and half geometry.
- */
-function uiTexture(p: DevicePalette, number: string, callLabel: string) {
-  const c = document.createElement("canvas");
-  c.width = 620;
-  c.height = 1380;
-  const g = c.getContext("2d");
-  if (!g) return null;
-  const W2 = c.width;
-
-  g.fillStyle = p.screen;
-  g.fillRect(0, 0, W2, c.height);
-
-  // ————— status bar —————
-  g.fillStyle = p.ink;
-  g.font = '600 30px ui-sans-serif, system-ui, sans-serif';
-  g.textAlign = "left";
-  g.fillText("9:41", 54, 66);
-
-  // signal bars, wifi arc, battery , drawn, so no icon font is needed
-  const bx = W2 - 168;
-  for (let i = 0; i < 4; i++) {
-    const h = 8 + i * 5;
-    g.fillRect(bx + i * 11, 58 - h, 7, h);
-  }
-  g.strokeStyle = p.ink;
-  g.lineWidth = 4.5;
-  g.lineCap = "round";
-  for (let i = 0; i < 3; i++) {
-    g.beginPath();
-    g.arc(bx + 66, 62, 6 + i * 7, Math.PI * 1.22, Math.PI * 1.78);
-    g.stroke();
-  }
-  g.lineWidth = 3;
-  g.strokeRect(W2 - 78, 44, 40, 20);
-  g.fillRect(W2 - 36, 50, 4, 8);
-  g.fillRect(W2 - 75, 47, 30, 14);
-
-  // ————— the wordmark, to the right of where the globe will sit —————
-  const lockY = 462;
-  g.textAlign = "left";
-  g.fillStyle = p.ink;
-  g.font = '500 58px Georgia, "Times New Roman", serif';
-  g.fillText("BRANDON", 280, lockY);
-  g.fillStyle = p.accent;
-  g.fillRect(282, lockY + 20, 252, 2.5);
-  g.fillStyle = p.ink;
-  g.globalAlpha = 0.78;
-  g.font = '600 19px ui-sans-serif, system-ui, sans-serif';
-  g.letterSpacing = "4px";
-  g.fillText("BROKERAGE GROUP", 283, lockY + 50);
-  g.letterSpacing = "0px";
-  g.globalAlpha = 1;
-
-  // ————— standing line —————
-  g.textAlign = "center";
-  g.globalAlpha = 0.5;
-  g.font = '500 22px ui-monospace, SFMono-Regular, Menlo, monospace';
-  g.letterSpacing = "4px";
-  g.fillText("CORAL GABLES · FLORIDA", W2 / 2, 762);
-  g.letterSpacing = "0px";
-  g.globalAlpha = 1;
-
-  // ————— the call button —————
-  const pw = 452;
-  const ph = 116;
-  const px = (W2 - pw) / 2;
-  const py = 906;
-  const r = ph / 2;
-  g.fillStyle = p.ink;
-  g.beginPath();
-  g.moveTo(px + r, py);
-  g.arcTo(px + pw, py, px + pw, py + ph, r);
-  g.arcTo(px + pw, py + ph, px, py + ph, r);
-  g.arcTo(px, py + ph, px, py, r);
-  g.arcTo(px, py, px + pw, py, r);
-  g.closePath();
-  g.fill();
-
-  // handset glyph
-  const hx = px + 74;
-  const hy = py + ph / 2;
-  g.strokeStyle = p.screen;
-  g.lineWidth = 5.5;
-  g.lineJoin = "round";
-  g.beginPath();
-  g.moveTo(hx - 15, hy - 13);
-  g.lineTo(hx - 4, hy - 2);
-  g.lineTo(hx - 9, hy + 3);
-  g.quadraticCurveTo(hx + 2, hy + 15, hx + 11, hy + 3);
-  g.lineTo(hx + 6, hy - 2);
-  g.lineTo(hx + 17, hy - 13);
-  g.stroke();
-
-  g.fillStyle = p.screen;
-  g.textAlign = "left";
-  g.font = '600 40px ui-sans-serif, system-ui, sans-serif';
-  g.fillText(number, hx + 44, hy + 14);
-
-  // label under the button
-  g.fillStyle = p.ink;
-  g.globalAlpha = 0.55;
-  g.textAlign = "center";
-  g.font = '500 21px ui-monospace, SFMono-Regular, Menlo, monospace';
-  g.letterSpacing = "4px";
-  g.fillText(callLabel.toUpperCase(), W2 / 2, py + ph + 52);
-  g.letterSpacing = "0px";
-  g.globalAlpha = 1;
-
-  // home indicator
-  g.fillStyle = p.ink;
-  g.globalAlpha = 0.32;
-  g.beginPath();
-  g.roundRect(W2 / 2 - 66, c.height - 40, 132, 8, 4);
-  g.fill();
-  g.globalAlpha = 1;
-
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = 4;
-  return tex;
-}
-
-/** Soft contact shadow, so the phone sits on something. */
-function shadowTexture() {
-  const c = document.createElement("canvas");
-  c.width = 256;
-  c.height = 256;
-  const g = c.getContext("2d");
-  if (!g) return null;
-  const grad = g.createRadialGradient(128, 128, 0, 128, 128, 128);
-  grad.addColorStop(0, "rgba(0,0,0,0.42)");
-  grad.addColorStop(0.55, "rgba(0,0,0,0.14)");
-  grad.addColorStop(1, "rgba(0,0,0,0)");
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 256, 256);
-  return new THREE.CanvasTexture(c);
-}
-
-export default function DeviceCall({ palette, number, callLabel, className, lean = true }: Props) {
-  const wrapRef = useRef<HTMLDivElement>(null);
+/* ————— the globe, the one piece that earns being 3D ————— */
+function GlobeChip({ palette, size }: { palette: DevicePalette; size: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
-  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    if (reduce || failed) return;
-    const wrap = wrapRef.current;
     const canvas = canvasRef.current;
-    if (!wrap || !canvas) return;
+    const wrap = wrapRef.current;
+    if (!canvas || !wrap) return;
 
     let renderer: THREE.WebGLRenderer;
     try {
       renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     } catch {
-      const id = setTimeout(() => setFailed(true), 0);
-      return () => clearTimeout(id);
+      return;
     }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    const disposables: { dispose(): void }[] = [];
+    const scene = new THREE.Scene();
+    const cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.01, 10);
+    cam.position.z = 4;
+
+    const globe = new THREE.Group();
+    // tipped the way the printed mark is drawn, not straight on
+    globe.rotation.z = 0.16;
+    globe.rotation.x = 0.22;
+    scene.add(globe);
+
+    const R = 0.85;
+    const bin: { dispose(): void }[] = [];
     const keep = <T extends { dispose(): void }>(x: T) => {
-      disposables.push(x);
+      bin.push(x);
       return x;
     };
 
-    // ————— the screen, as its own scene rendered to a texture —————
-    const target = new THREE.WebGLRenderTarget(600, 1300, {
-      colorSpace: THREE.SRGBColorSpace,
-      samples: 4,
-    });
-    disposables.push(target);
-
-    const uiScene = new THREE.Scene();
-    uiScene.background = new THREE.Color(palette.screen);
-    const halfH = (SH / SW) * 1;
-    const uiCam = new THREE.OrthographicCamera(-1, 1, halfH, -halfH, 0.01, 20);
-    uiCam.position.z = 6;
-
-    // The flat face of the screen. The globe sits in front of it, in the gap
-    // the lockup leaves on the left.
-    const uiTex = uiTexture(palette, number, callLabel);
-    if (uiTex) disposables.push(uiTex);
-    const face = new THREE.Mesh(
-      keep(new THREE.PlaneGeometry(2, halfH * 2)),
-      keep(new THREE.MeshBasicMaterial({ map: uiTex ?? undefined, toneMapped: false }))
-    );
-    uiScene.add(face);
-
-    // The globe: an ocean sphere under a dotted world map, so it reads as Earth
-    // from any angle rather than as a wireframe ball. The dots sit a hair off the
-    // surface, otherwise they z-fight and the whole thing flattens to a disc.
-    const R = 0.295;
-    const globe = new THREE.Group();
-    globe.position.set(-0.484, halfH - (455 / 1380) * halfH * 2, 0.6);
-    uiScene.add(globe);
-
-    const ball = new THREE.Mesh(
+    // ocean
+    globe.add(new THREE.Mesh(
       keep(new THREE.SphereGeometry(R, 48, 36)),
-      keep(new THREE.MeshBasicMaterial({ color: mix(palette.ink, palette.screen, 0.18) }))
-    );
-    globe.add(ball);
+      keep(new THREE.MeshBasicMaterial({ color: new THREE.Color(palette.accent) }))
+    ));
 
-    const landGeo = keep(new THREE.BufferGeometry());
-    landGeo.setAttribute("position", new THREE.Float32BufferAttribute(worldPoints(R * 1.012, 1.1), 3));
-    globe.add(new THREE.Points(landGeo, keep(new THREE.PointsMaterial({
-      color: mix(palette.screen, palette.accent, 0.35),
-      size: 0.0125,
+    // land, dotted just above the surface so the sphere never eats it
+    const land = keep(new THREE.BufferGeometry());
+    land.setAttribute("position", new THREE.Float32BufferAttribute(worldPoints(R * 1.015, 1.0), 3));
+    globe.add(new THREE.Points(land, keep(new THREE.PointsMaterial({
+      color: new THREE.Color(palette.screen),
+      size: 0.036,
       sizeAttenuation: true,
     }))));
 
-    // the equator, so the sphere reads as a globe and not a ball of dots
-    const eqPts: THREE.Vector3[] = [];
-    for (let i = 0; i <= 80; i++) {
-      const a = (i / 80) * Math.PI * 2;
-      eqPts.push(new THREE.Vector3(Math.cos(a) * R * 1.02, 0, Math.sin(a) * R * 1.02));
+    // the meridian ring the printed mark carries
+    const ring: THREE.Vector3[] = [];
+    for (let i = 0; i <= 90; i++) {
+      const a = (i / 90) * Math.PI * 2;
+      ring.push(new THREE.Vector3(Math.cos(a) * R * 1.035, Math.sin(a) * R * 1.035, 0));
     }
     globe.add(new THREE.Line(
-      keep(new THREE.BufferGeometry().setFromPoints(eqPts)),
-      keep(new THREE.LineBasicMaterial({ color: mix(palette.screen, palette.accent, 0.5), transparent: true, opacity: 0.45 }))
+      keep(new THREE.BufferGeometry().setFromPoints(ring)),
+      keep(new THREE.LineBasicMaterial({ color: new THREE.Color(palette.screen), transparent: true, opacity: 0.45 }))
     ));
 
-    // Miami
-    const hub = new THREE.Mesh(
-      keep(new THREE.SphereGeometry(0.017, 14, 14)),
-      keep(new THREE.MeshBasicMaterial({ color: new THREE.Color(palette.accent) }))
-    );
-    const mphi = ((90 - 25.76) * Math.PI) / 180;
-    const mth = ((-80.19 + 180) * Math.PI) / 180;
-    hub.position.set(
-      -R * 1.05 * Math.sin(mphi) * Math.cos(mth),
-      R * 1.05 * Math.cos(mphi),
-      R * 1.05 * Math.sin(mphi) * Math.sin(mth)
-    );
-    globe.add(hub);
-
-    // ————— the phone —————
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(26, 1, 0.1, 100);
-    camera.position.set(0, 0, 12.4);
-
-    const phone = new THREE.Group();
-    // a product-shot three-quarter hint, not a full turn
-    phone.rotation.y = -0.13;
-    phone.rotation.x = 0.05;
-    scene.add(phone);
-
-    // the polished rail sits a hair proud of the matte back
-    const rail = new THREE.Mesh(
-      keep(new RoundedBoxGeometry(W, H, D, 6, BODY_R)),
-      keep(new THREE.MeshStandardMaterial({ color: 0x8d9099, roughness: 0.24, metalness: 0.95 }))
-    );
-    phone.add(rail);
-
-    const body = new THREE.Mesh(
-      keep(new RoundedBoxGeometry(W - 0.035, H - 0.035, D + 0.006, 6, BODY_R - 0.02)),
-      keep(new THREE.MeshStandardMaterial({ color: 0x121316, roughness: 0.62, metalness: 0.35 }))
-    );
-    phone.add(body);
-
-    const screen = new THREE.Mesh(
-      keep(shapeGeometry(SW, SH, SCREEN_R)),
-      keep(new THREE.MeshBasicMaterial({ map: target.texture, toneMapped: false }))
-    );
-    screen.position.z = D / 2 + 0.006;
-    phone.add(screen);
-
-    // dynamic island
-    const island = new THREE.Mesh(
-      keep(shapeGeometry(0.5, 0.15, 0.075)),
-      keep(new THREE.MeshBasicMaterial({ color: 0x0a0a0c }))
-    );
-    island.position.set(0, SH / 2 - 0.17, D / 2 + 0.008);
-    phone.add(island);
-
-    // side buttons
-    const btnMat = keep(new THREE.MeshStandardMaterial({ color: 0x7e8189, roughness: 0.3, metalness: 0.9 }));
-    const mkBtn = (h: number, y: number, x: number) => {
-      const b = new THREE.Mesh(keep(new RoundedBoxGeometry(0.035, h, D * 0.62, 3, 0.016)), btnMat);
-      b.position.set(x, y, 0);
-      phone.add(b);
-    };
-    mkBtn(0.5, 0.62, W / 2 + 0.006);   // power
-    mkBtn(0.34, 1.05, -W / 2 - 0.006); // volume up
-    mkBtn(0.34, 0.65, -W / 2 - 0.006); // volume down
-    mkBtn(0.16, 1.42, -W / 2 - 0.006); // ring switch
-
-    // contact shadow
-    const shTex = shadowTexture();
-    if (shTex) disposables.push(shTex);
-    const shadow = new THREE.Mesh(
-      keep(new THREE.PlaneGeometry(W * 2.5, H * 0.7)),
-      keep(new THREE.MeshBasicMaterial({ map: shTex ?? undefined, transparent: true, depthWrite: false }))
-    );
-    shadow.position.set(0.1, -H / 2 - 0.15, -0.5);
-    scene.add(shadow);
-
-    scene.add(new THREE.AmbientLight(0xffffff, 1.5));
-    const key = new THREE.DirectionalLight(0xffffff, 2.6);
-    key.position.set(-3.5, 5, 6);
-    scene.add(key);
-    const rim = new THREE.DirectionalLight(0xffffff, 1.9);
-    rim.position.set(5, -1.5, 2);
-    scene.add(rim);
-
     const resize = () => {
-      const w = wrap.clientWidth;
-      const h = wrap.clientHeight;
-      if (!w || !h) return;
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
+      const s = wrap.clientWidth;
+      if (!s) return;
+      renderer.setSize(s, s, false);
     };
     resize();
     const ro = new ResizeObserver(resize);
     ro.observe(wrap);
-
-    const want = { x: 0, y: 0 };
-    const onMove = (e: PointerEvent) => {
-      if (e.pointerType !== "mouse") return;
-      const r = wrap.getBoundingClientRect();
-      want.x = ((e.clientX - (r.left + r.width / 2)) / (window.innerWidth / 2)) * 0.34;
-      want.y = ((e.clientY - (r.top + r.height / 2)) / (window.innerHeight / 2)) * 0.2;
-    };
-    if (lean) window.addEventListener("pointermove", onMove, { passive: true });
 
     let onScreen = true;
     const io = new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; }, { threshold: 0 });
@@ -435,57 +124,287 @@ export default function DeviceCall({ palette, number, callLabel, className, lean
 
     let raf = 0;
     let last = performance.now();
-    let t = 0;
-    // velocity spring, so the lean has weight and can be interrupted mid-move
-    const rot = { x: 0, y: 0, vx: 0, vy: 0 };
-    const STIFF = 40;
-    const DAMP = 9.5;
-
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame);
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
       if (!onScreen || document.hidden) return;
-      t += dt;
-
-      globe.rotation.y += dt * 0.32;
-
-      const ty = want.x + Math.sin(t * 0.3) * 0.055;
-      const tx = want.y + Math.sin(t * 0.23 + 1.1) * 0.03;
-      rot.vy += (ty - rot.y) * STIFF * dt;
-      rot.vx += (tx - rot.x) * STIFF * dt;
-      rot.vy -= rot.vy * DAMP * dt;
-      rot.vx -= rot.vx * DAMP * dt;
-      rot.y += rot.vy * dt;
-      rot.x += rot.vx * dt;
-
-      phone.rotation.y = -0.13 + rot.y;
-      phone.rotation.x = 0.05 + rot.x;
-      phone.position.y = Math.sin(t * 0.45) * 0.07;
-
-      renderer.setRenderTarget(target);
-      renderer.render(uiScene, uiCam);
-      renderer.setRenderTarget(null);
-      renderer.render(scene, camera);
+      if (!reduce) globe.rotation.y += dt * 0.34;
+      renderer.render(scene, cam);
     };
     raf = requestAnimationFrame(frame);
 
     return () => {
       cancelAnimationFrame(raf);
-      io.disconnect();
       ro.disconnect();
-      if (lean) window.removeEventListener("pointermove", onMove);
-      disposables.forEach((d) => d.dispose());
+      io.disconnect();
+      bin.forEach((d) => d.dispose());
       renderer.dispose();
     };
-  }, [palette, number, callLabel, reduce, failed, lean]);
-
-  // Decorative only: the number next to it is the real way to call.
-  if (reduce || failed) return null;
+  }, [palette, reduce]);
 
   return (
-    <div ref={wrapRef} className={className} aria-hidden="true">
-      <canvas ref={canvasRef} style={{ display: "block", width: "100%", height: "100%" }} />
+    <div ref={wrapRef} style={{ width: size, height: size, flexShrink: 0 }} aria-hidden="true">
+      <canvas ref={canvasRef} style={{ width: "100%", height: "100%", display: "block" }} />
+    </div>
+  );
+}
+
+/* Status bar glyphs, drawn so the phone needs no icon font. */
+function StatusIcons({ ink }: { ink: string }) {
+  return (
+    <span style={{ display: "inline-flex", alignItems: "flex-end", gap: "1.7cqw" }}>
+      <svg viewBox="0 0 18 13" fill={ink} style={{ width: "4.6cqw", height: "auto" }}>
+        <rect x="0" y="9" width="3" height="4" rx="1" />
+        <rect x="5" y="6" width="3" height="7" rx="1" />
+        <rect x="10" y="3" width="3" height="10" rx="1" />
+        <rect x="15" y="0" width="3" height="13" rx="1" />
+      </svg>
+      <svg viewBox="0 0 16 12" fill="none" stroke={ink} strokeWidth="1.6" strokeLinecap="round" style={{ width: "4.4cqw", height: "auto" }}>
+        <path d="M1.2 4.2a10 10 0 0 1 13.6 0" />
+        <path d="M3.9 7a6.2 6.2 0 0 1 8.2 0" />
+        <circle cx="8" cy="10" r="1" fill={ink} stroke="none" />
+      </svg>
+      <svg viewBox="0 0 26 13" fill="none" style={{ width: "6.6cqw", height: "auto" }}>
+        <rect x="0.7" y="0.7" width="21" height="11.6" rx="3" stroke={ink} strokeWidth="1.4" opacity="0.55" />
+        <rect x="2.4" y="2.4" width="16" height="8.2" rx="1.8" fill={ink} />
+        <path d="M23.6 4.4v4.2c1.1-.4 1.7-1.1 1.7-2.1s-.6-1.7-1.7-2.1Z" fill={ink} opacity="0.55" />
+      </svg>
+    </span>
+  );
+}
+
+export default function DeviceCall({
+  palette,
+  number,
+  href,
+  callLabel,
+  serif = 'Georgia, "Times New Roman", serif',
+  mono = "ui-monospace, SFMono-Regular, Menlo, monospace",
+  className,
+  lean = true,
+}: Props) {
+  const reduce = useReducedMotion();
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [pressed, setPressed] = useState(false);
+
+  // a spring, so the lean has weight and can be interrupted mid-move
+  const mx = useSpring(0, { stiffness: 90, damping: 18, mass: 0.6 });
+  const my = useSpring(0, { stiffness: 90, damping: 18, mass: 0.6 });
+  const rotY = useTransform(mx, (v) => -14 + v);
+  const rotX = useTransform(my, (v) => 6 + v);
+
+  useEffect(() => {
+    if (reduce || !lean) return;
+    const el = wrapRef.current;
+    if (!el) return;
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
+      const r = el.getBoundingClientRect();
+      mx.set(((e.clientX - (r.left + r.width / 2)) / (window.innerWidth / 2)) * 9);
+      my.set(((e.clientY - (r.top + r.height / 2)) / (window.innerHeight / 2)) * 5);
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onMove);
+  }, [reduce, lean, mx, my]);
+
+  const ink = palette.ink;
+  const screen = palette.screen;
+
+  return (
+    <div
+      ref={wrapRef}
+      className={className}
+      style={{ display: "flex", alignItems: "center", justifyContent: "center", perspective: 1500 }}
+    >
+      <motion.div
+        style={{
+          height: "min(100%, 580px)",
+          aspectRatio: "9 / 19.5",
+          position: "relative",
+          transformStyle: "preserve-3d",
+          rotateY: reduce ? -14 : rotY,
+          rotateX: reduce ? 6 : rotX,
+        }}
+        animate={reduce ? undefined : { y: [0, -12, 0] }}
+        transition={{ duration: 4.4, repeat: Infinity, ease: "easeInOut" }}
+      >
+        {/* the shadow that sets it on the band instead of over it */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: "-4% -12%",
+            background: "radial-gradient(46% 40% at 50% 92%, rgba(0,0,0,0.32), rgba(0,0,0,0) 72%)",
+            filter: "blur(16px)",
+            zIndex: -1,
+          }}
+        />
+
+        {/* frame: the rail gradient, with its padding acting as the bezel */}
+        <div
+          style={{
+            position: "relative",
+            height: "100%",
+            borderRadius: "13.5% / 6.2%",
+            padding: "2.7%",
+            background: "linear-gradient(146deg, #565b64 0%, #24272c 34%, #0f1114 70%, #2e3138 100%)",
+            border: "1px solid rgba(255,255,255,0.10)",
+            boxShadow:
+              "0 44px 80px -26px rgba(12,16,26,0.55), 0 10px 26px -8px rgba(12,16,26,0.35), inset 0 0 0 1px rgba(0,0,0,0.45)",
+          }}
+        >
+          {/* side buttons */}
+          <span aria-hidden="true" style={{ position: "absolute", left: -2, top: "17%", width: 3, height: "4.5%", borderRadius: "2px 0 0 2px", background: "#40444b" }} />
+          <span aria-hidden="true" style={{ position: "absolute", left: -2, top: "24.5%", width: 3, height: "8%", borderRadius: "2px 0 0 2px", background: "#40444b" }} />
+          <span aria-hidden="true" style={{ position: "absolute", left: -2, top: "34%", width: 3, height: "8%", borderRadius: "2px 0 0 2px", background: "#40444b" }} />
+          <span aria-hidden="true" style={{ position: "absolute", right: -2, top: "27%", width: 3, height: "11%", borderRadius: "0 2px 2px 0", background: "#40444b" }} />
+
+          {/* screen */}
+          <div
+            style={{
+              position: "relative",
+              height: "100%",
+              borderRadius: "11.4% / 5.4%",
+              overflow: "hidden",
+              background: screen,
+              containerType: "inline-size",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {/* glass */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                inset: 0,
+                background:
+                  "linear-gradient(133deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 26%, rgba(255,255,255,0) 45%)",
+                pointerEvents: "none",
+                zIndex: 30,
+              }}
+            />
+
+            {/* status bar */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "5.6cqw 7cqw 0",
+                fontFamily: mono,
+                fontSize: "3.9cqw",
+                fontWeight: 600,
+                color: ink,
+                position: "relative",
+                zIndex: 10,
+              }}
+            >
+              <span>9:41</span>
+              <StatusIcons ink={ink} />
+            </div>
+
+            {/* dynamic island */}
+            <span
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                top: "2.8cqw",
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: "29cqw",
+                height: "8.4cqw",
+                borderRadius: 999,
+                background: "#08090b",
+                zIndex: 20,
+              }}
+            />
+
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                padding: "0 7cqw",
+                position: "relative",
+                zIndex: 10,
+              }}
+            >
+              {/* the lockup: the globe, then the wordmark, as the mark is drawn */}
+              <div style={{ display: "flex", alignItems: "center", gap: "4.2cqw" }}>
+                <GlobeChip palette={palette} size="22cqw" />
+                <span style={{ minWidth: 0 }}>
+                  <span style={{ display: "block", fontFamily: serif, fontSize: "10.2cqw", lineHeight: 1, color: ink, whiteSpace: "nowrap" }}>
+                    BRANDON
+                  </span>
+                  <span aria-hidden="true" style={{ display: "block", height: 1, background: palette.accent, margin: "2.4cqw 0" }} />
+                  <span style={{ display: "block", fontFamily: mono, fontSize: "2.8cqw", letterSpacing: "0.17em", color: ink, opacity: 0.75, whiteSpace: "nowrap" }}>
+                    BROKERAGE GROUP
+                  </span>
+                </span>
+              </div>
+
+              <span style={{ display: "block", textAlign: "center", marginTop: "12cqw", fontFamily: mono, fontSize: "2.9cqw", letterSpacing: "0.22em", color: ink, opacity: 0.5 }}>
+                CORAL GABLES · FLORIDA
+              </span>
+
+              {/* This dials. It is the same tel: as the number beside the phone,
+                  which is the whole reason the phone is DOM and not a canvas. */}
+              <a
+                href={href}
+                onPointerDown={() => setPressed(true)}
+                onPointerUp={() => setPressed(false)}
+                onPointerLeave={() => setPressed(false)}
+                style={{
+                  marginTop: "8.5cqw",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "3.2cqw",
+                  padding: "4.6cqw 5cqw",
+                  borderRadius: 999,
+                  background: ink,
+                  color: screen,
+                  textDecoration: "none",
+                  fontFamily: mono,
+                  fontSize: "4.9cqw",
+                  fontWeight: 600,
+                  transform: pressed ? "scale(0.97)" : "scale(1)",
+                  transition: reduce ? "none" : "transform 160ms cubic-bezier(0.23,1,0.32,1)",
+                }}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke={screen} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: "5.2cqw", height: "auto", flexShrink: 0 }}>
+                  <path d="M6.6 2.9 9 2l2.1 4.6-2.2 1.6a12 12 0 0 0 6.9 6.9l1.6-2.2L22 15l-.9 2.4a2.6 2.6 0 0 1-2.9 1.6C11.8 17.8 6.2 12.2 5 5.8A2.6 2.6 0 0 1 6.6 2.9Z" />
+                </svg>
+                {number}
+              </a>
+
+              <span style={{ display: "block", textAlign: "center", marginTop: "4cqw", fontFamily: mono, fontSize: "2.7cqw", letterSpacing: "0.2em", color: ink, opacity: 0.55 }}>
+                {callLabel.toUpperCase()}
+              </span>
+            </div>
+
+            {/* home indicator */}
+            <span
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                bottom: "2.6cqw",
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: "36cqw",
+                height: "1.2cqw",
+                borderRadius: 999,
+                background: ink,
+                opacity: 0.28,
+                zIndex: 20,
+              }}
+            />
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 }

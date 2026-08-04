@@ -130,7 +130,7 @@ export default function ContactPage() {
                 {c.tapToCall}
               </p>
             </div>
-            <DeviceCall palette={PHONE_PALETTE} number={OFFICE.phone} callLabel={c.callLabel} className={styles.callDevice} />
+            <DeviceCall palette={PHONE_PALETTE} number={OFFICE.phone} href={OFFICE.phoneHref} callLabel={c.callLabel} serif="var(--font-bodoni), serif" mono="var(--font-plex-mono), monospace" className={styles.callDevice} />
           </div>
         </div>
       </div>
