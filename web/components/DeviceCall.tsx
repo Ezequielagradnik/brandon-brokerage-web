@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import * as THREE from "three";
-import { motion, useReducedMotion, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionTemplate, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import { worldPoints } from "@/lib/world";
 
 // The phone on the contact pages: a real element, not a picture of one.
@@ -98,6 +98,44 @@ function GlobeChip({ palette, size }: { palette: DevicePalette; size: string }) 
       sizeAttenuation: true,
     }))));
 
+    // The case, arriving. A gold arc lifting off São Paulo and landing on Miami,
+    // which is the firm's whole business drawn in one line, with a bead running
+    // it. It turns out of view with the globe, so it reads as a route on a
+    // planet rather than a decoration stuck to the front.
+    const onSphere = (lat: number, lon: number, r: number) => {
+      const phi = ((90 - lat) * Math.PI) / 180;
+      const th = ((lon + 180) * Math.PI) / 180;
+      return new THREE.Vector3(
+        -r * Math.sin(phi) * Math.cos(th),
+        r * Math.cos(phi),
+        r * Math.sin(phi) * Math.sin(th)
+      );
+    };
+    const from = onSphere(-23.5, -46.6, R * 1.02);
+    const to = onSphere(25.76, -80.19, R * 1.02);
+    const lift = from.clone().add(to).normalize().multiplyScalar(R * 1.4);
+    const route = new THREE.QuadraticBezierCurve3(from, lift, to);
+    const arcPts = route.getPoints(60);
+    globe.add(new THREE.Line(
+      keep(new THREE.BufferGeometry().setFromPoints(arcPts)),
+      keep(new THREE.LineBasicMaterial({ color: new THREE.Color(palette.screen), transparent: true, opacity: 0.9 }))
+    ));
+
+    const bead = new THREE.Mesh(
+      keep(new THREE.SphereGeometry(0.035, 12, 12)),
+      keep(new THREE.MeshBasicMaterial({ color: new THREE.Color(palette.screen) }))
+    );
+    globe.add(bead);
+
+    // the two ends, marked
+    const pin = keep(new THREE.SphereGeometry(0.028, 12, 12));
+    const pinMat = keep(new THREE.MeshBasicMaterial({ color: new THREE.Color(palette.screen) }));
+    for (const v of [from, to]) {
+      const m = new THREE.Mesh(pin, pinMat);
+      m.position.copy(v);
+      globe.add(m);
+    }
+
     // the meridian ring the printed mark carries
     const ring: THREE.Vector3[] = [];
     for (let i = 0; i <= 90; i++) {
@@ -124,12 +162,22 @@ function GlobeChip({ palette, size }: { palette: DevicePalette; size: string }) 
 
     let raf = 0;
     let last = performance.now();
+    let t = 0;
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame);
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
       if (!onScreen || document.hidden) return;
-      if (!reduce) globe.rotation.y += dt * 0.34;
+      if (!reduce) {
+        globe.rotation.y += dt * 0.34;
+        t += dt;
+        // the bead runs the route, waits a beat at Miami, and goes again
+        const cycle = (t % 4.6) / 3.2;
+        bead.position.copy(route.getPoint(Math.min(cycle, 1)));
+        bead.visible = cycle <= 1;
+      } else {
+        bead.position.copy(to);
+      }
       renderer.render(scene, cam);
     };
     raf = requestAnimationFrame(frame);
@@ -147,6 +195,28 @@ function GlobeChip({ palette, size }: { palette: DevicePalette; size: string }) 
     <div ref={wrapRef} style={{ width: size, height: size, flexShrink: 0 }} aria-hidden="true">
       <canvas ref={canvasRef} style={{ width: "100%", height: "100%", display: "block" }} />
     </div>
+  );
+}
+
+/**
+ * The visitor's own clock, not a screenshot of 9:41. Read through
+ * useSyncExternalStore so the server renders 9:41 and the client swaps to the
+ * real time on hydration, with no setState inside an effect.
+ */
+function useClock() {
+  return useSyncExternalStore(
+    (notify) => {
+      const id = setInterval(notify, 20_000);
+      return () => clearInterval(id);
+    },
+    () => {
+      // formatted by hand: toLocaleTimeString drags in "p. m." and iOS never
+      // shows a period designator in the status bar
+      const d = new Date();
+      const h = d.getHours() % 12 || 12;
+      return `${h}:${String(d.getMinutes()).padStart(2, "0")}`;
+    },
+    () => "9:41"
   );
 }
 
@@ -187,12 +257,18 @@ export default function DeviceCall({
   const reduce = useReducedMotion();
   const wrapRef = useRef<HTMLDivElement>(null);
   const [pressed, setPressed] = useState(false);
+  const clock = useClock();
 
   // a spring, so the lean has weight and can be interrupted mid-move
   const mx = useSpring(0, { stiffness: 90, damping: 18, mass: 0.6 });
   const my = useSpring(0, { stiffness: 90, damping: 18, mass: 0.6 });
   const rotY = useTransform(mx, (v) => -14 + v);
   const rotX = useTransform(my, (v) => 6 + v);
+  // the specular rides the same springs, so the sheen tracks the cursor across
+  // the glass instead of sitting in one corner like a printed gradient
+  const gx = useTransform(mx, (v) => `${34 + v * 3.4}%`);
+  const gy = useTransform(my, (v) => `${18 + v * 4.5}%`);
+  const sheen = useMotionTemplate`radial-gradient(58% 44% at ${gx} ${gy}, rgba(255,255,255,0.30), rgba(255,255,255,0.05) 46%, rgba(255,255,255,0) 72%)`;
 
   useEffect(() => {
     if (reduce || !lean) return;
@@ -215,32 +291,41 @@ export default function DeviceCall({
     <div
       ref={wrapRef}
       className={className}
-      style={{ display: "flex", alignItems: "center", justifyContent: "center", perspective: 1500 }}
+      style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", perspective: 1500 }}
     >
+      {/* the shadow sits outside the 3D box: inside it, a sibling wider than the
+          phone swallowed taps on the call button */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          left: "50%",
+          bottom: "6%",
+          width: "34%",
+          height: "10%",
+          transform: "translateX(-50%)",
+          background: "radial-gradient(50% 50% at 50% 50%, rgba(0,0,0,0.34), rgba(0,0,0,0) 72%)",
+          filter: "blur(14px)",
+          pointerEvents: "none",
+        }}
+      />
+
       <motion.div
         style={{
           height: "min(100%, 580px)",
           aspectRatio: "9 / 19.5",
           position: "relative",
-          transformStyle: "preserve-3d",
+          /* deliberately NOT preserve-3d: it propagates the 3D context to every
+             descendant, and then a child's bounding box stops agreeing with
+             where the browser actually hit-tests it , which silently killed
+             taps on the call button. The perspective on the wrapper is what
+             renders the tilt; nothing here needs its own 3D plane. */
           rotateY: reduce ? -14 : rotY,
           rotateX: reduce ? 6 : rotX,
         }}
         animate={reduce ? undefined : { y: [0, -12, 0] }}
         transition={{ duration: 4.4, repeat: Infinity, ease: "easeInOut" }}
       >
-        {/* the shadow that sets it on the band instead of over it */}
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            inset: "-4% -12%",
-            background: "radial-gradient(46% 40% at 50% 92%, rgba(0,0,0,0.32), rgba(0,0,0,0) 72%)",
-            filter: "blur(16px)",
-            zIndex: -1,
-          }}
-        />
-
         {/* frame: the rail gradient, with its padding acting as the bezel */}
         <div
           style={{
@@ -274,13 +359,14 @@ export default function DeviceCall({
             }}
           >
             {/* glass */}
-            <div
+            <motion.div
               aria-hidden="true"
               style={{
                 position: "absolute",
                 inset: 0,
-                background:
-                  "linear-gradient(133deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 26%, rgba(255,255,255,0) 45%)",
+                background: reduce
+                  ? "linear-gradient(133deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 26%, rgba(255,255,255,0) 45%)"
+                  : sheen,
                 pointerEvents: "none",
                 zIndex: 30,
               }}
@@ -301,7 +387,7 @@ export default function DeviceCall({
                 zIndex: 10,
               }}
             >
-              <span>9:41</span>
+              <span>{clock}</span>
               <StatusIcons ink={ink} />
             </div>
 
@@ -318,6 +404,7 @@ export default function DeviceCall({
                 borderRadius: 999,
                 background: "#08090b",
                 zIndex: 20,
+                pointerEvents: "none",
               }}
             />
 
@@ -358,6 +445,8 @@ export default function DeviceCall({
                 onPointerUp={() => setPressed(false)}
                 onPointerLeave={() => setPressed(false)}
                 style={{
+                  position: "relative",
+                  zIndex: 40,
                   marginTop: "8.5cqw",
                   display: "flex",
                   alignItems: "center",
@@ -400,6 +489,7 @@ export default function DeviceCall({
                 background: ink,
                 opacity: 0.28,
                 zIndex: 20,
+                pointerEvents: "none",
               }}
             />
           </div>
