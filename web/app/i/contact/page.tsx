@@ -19,17 +19,14 @@ import styles from "../page.module.css";
 /* Google's map arrives in Google's colours. This pulls it onto the concept's
    paper: all colour out, a warm tint back in, contrast lifted a hair so the
    street grid still reads as ink. */
-const MAP_FILTER = "grayscale(1) sepia(0.22) saturate(0.9) contrast(1.06) brightness(1.03)";
 
 /* The phone as a photographed object: graphite body, paper screen, near-black
    ink on it, and a warm grey where a colder concept would put an accent. Module
    scope so the identity is stable across renders. */
 const DEVICE: DevicePalette = {
-  shell: "#26221c",
   screen: PAPER,
   ink: INK,
   accent: MUTED,
-  ground: PAPER,
 };
 
 const DIRECTIONS_HREF = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(OFFICE.mapQuery)}`;
@@ -116,7 +113,7 @@ export default function ContactPage() {
           <figure data-reveal className={styles.ctcFig}>
             <OfficeMap
               title={lang === "es" ? "Mapa de la oficina de Coral Gables" : "Map of the Coral Gables office"}
-              filter={MAP_FILTER}
+             
               className={styles.ctcMap}
             />
             <figcaption className={styles.figCap} style={{ paddingTop: 12 }}>
@@ -144,8 +141,6 @@ export default function ContactPage() {
               alone reads as breath. */}
           <DeviceCall
             palette={DEVICE}
-            number={OFFICE.phone}
-            caption={c.callLabel}
             className={styles.ctcDevice}
             lean={false}
           />

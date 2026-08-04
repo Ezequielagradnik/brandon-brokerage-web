@@ -17,16 +17,13 @@ import styles from "../page.module.css";
 
 // Google's embed arrives with its own colours. /g grades every photo the same
 // way, so the map takes the same grade and stops fighting the canvas.
-const MAP_FILTER = "grayscale(1) contrast(1.12) brightness(0.94)";
 
 // The device in the page's own palette: warm off-white shell on the navy band,
 // navy screen, gold call pill and side button.
 const DEVICE: DevicePalette = {
-  shell: "#f4f1e9",
-  screen: "#14224a",
-  ink: "#f4f1e9",
+  screen: "#f4f1e9",
+  ink: "#14224a",
   accent: "#c2a15b",
-  ground: "#14224a",
 };
 
 // The directory is `as const` in lib/deep, so each person carries only the
@@ -134,7 +131,7 @@ export default function ContactPage() {
             </div>
 
             <div data-reveal>
-              <OfficeMap title={`${OFFICE.street}, ${OFFICE.city}`} filter={MAP_FILTER} className={styles.ctcMap} />
+              <OfficeMap title={`${OFFICE.street}, ${OFFICE.city}`} className={styles.ctcMap} />
             </div>
           </div>
         </div>
@@ -158,7 +155,7 @@ export default function ContactPage() {
             </div>
 
             {/* decorative , the number above is the affordance */}
-            <DeviceCall palette={DEVICE} number={OFFICE.phone} caption={c.callLabel} className={styles.deviceWrap} />
+            <DeviceCall palette={DEVICE} className={styles.deviceWrap} />
           </div>
         </div>
       </div>

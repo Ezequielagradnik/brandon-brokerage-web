@@ -19,18 +19,14 @@ import styles from "../page.module.css";
 /* Google's embed arrives in Google's colours. Grey it out, then warm it back
    with sepia and a nudge towards gold, so the map sits on the beige canvas as
    part of the page rather than as a window into another site. */
-const MAP_FILTER =
-  "grayscale(1) sepia(0.44) saturate(1.45) hue-rotate(-12deg) brightness(1.03) contrast(1.05)";
 
 /* The phone lies on the navy band, so the shell is the warm silver of the
    beige canvas and the screen is the band it lies on: navy, beige ink, gold
    call pill. Module-level, so its identity is stable across renders. */
 const DEVICE: DevicePalette = {
-  shell: "#e7e0d0",
-  screen: "#14224a",
-  ink: "#f5f1e8",
+  screen: "#f5f1e8",
+  ink: "#14224a",
   accent: "#c2a15b",
-  ground: "#14224a",
 };
 
 const DIRECTIONS_HREF = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(OFFICE.mapQuery)}`;
@@ -58,7 +54,7 @@ export default function ContactPage() {
 
   useScrollReveal(pageRef);
 
-  // "Talk to the desk." / "Hable con la mesa." , the last word goes gold italic.
+  // "Talk to Brandon." / "Hable con Brandon." , the last word goes gold italic.
   const words = c.title.split(" ");
   const titleHead = words.slice(0, -1).join(" ");
   const titleTail = words.slice(-1).join(" ");
@@ -118,7 +114,7 @@ export default function ContactPage() {
             <div data-reveal className={styles.mapFrame}>
               <OfficeMap
                 title={`${c.office} — ${OFFICE.street}, ${OFFICE.city}`}
-                filter={MAP_FILTER}
+               
                 className={styles.mapInner}
               />
               <span className={styles.photoEdge} aria-hidden="true" />
@@ -148,7 +144,7 @@ export default function ContactPage() {
               <div data-reveal className={styles.callCap}>{c.tapToCall}</div>
             </div>
 
-            <DeviceCall palette={DEVICE} number={OFFICE.phone} caption={c.tapToCall} className={styles.callCanvas} />
+            <DeviceCall palette={DEVICE} className={styles.callCanvas} />
           </div>
         </div>
       </section>

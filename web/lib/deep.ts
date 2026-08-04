@@ -1,5 +1,5 @@
-// The firm's own content, shared by every concept: who we serve, what the desk
-// does, the networks behind it, the foreign-national case flow, the forms desk
+// The firm's own content, shared by every concept: who we serve, what Brandon
+// does, the networks behind it, the foreign-national case flow, the forms
 // and the team by name. Each concept renders this in its own visual language,
 // so the org chart and the case flow exist once.
 //
@@ -16,8 +16,8 @@ export const DEEP = {
     nav: { firm: "Our Firm", products: "Products", foreign: "Foreign Nationals", forms: "Forms", contact: "Contact" },
     heroLine1: "Sixty years placing the cases",
     heroLine2: "others turn away.",
-    heroSub: "Advanced sales support, full case management and 30+ top-rated carriers, from one Coral Gables desk.",
-    statement: "Every case is built, presented and placed by the same desk that answers your call.",
+    heroSub: "Advanced sales support, full case management and 30+ top-rated carriers, from one Coral Gables office.",
+    statement: "Every case is built, presented and placed by the same team that answers your call.",
     states: "States licensed",
 
     aiNav: "AI Assistant",
@@ -29,7 +29,7 @@ export const DEEP = {
     // landing signposts into the deep pages
     moreKicker: "Go deeper",
     deeper: [
-      { key: "firm", title: "Our Firm", body: "Who we serve, what the desk does, the Tellus and ICS networks, and the people who answer." },
+      { key: "firm", title: "Our Firm", body: "Who we serve, what Brandon does, the Tellus and ICS networks, and the people who answer." },
       { key: "products", title: "Products", body: "Term, permanent, annuities, long-term care and disability, line by line." },
       { key: "forms", title: "Forms", body: "Carrier forms, underwriting questionnaires and contracting paperwork." },
     ],
@@ -68,7 +68,7 @@ export const DEEP = {
 
     // services
     svcKicker: "Capabilities",
-    svcTitle: "What the desk does.",
+    svcTitle: "What Brandon does.",
     svc: [
       "Access to top-rated carriers for life, annuities, long-term care and disability",
       "Illustrations, sales concepts and strategies",
@@ -111,15 +111,15 @@ export const DEEP = {
     ],
 
     // resources
-    resKicker: "Agent desk",
+    resKicker: "Agent resources",
     resTitle: "Everything you need to submit.",
-    resBody: "Forms, questionnaires and contracting paperwork, in one place. Call the desk and a new business team member will confirm the current version for the carrier and product.",
+    resBody: "Forms, questionnaires and contracting paperwork, in one place. Call Brandon and a new business team member will confirm the current version for the carrier and product.",
     resGroups: [
       { label: "New business", items: ["Carrier forms", "Term quotes", "HIPAA authorization"] },
       { label: "Underwriting", items: ["Guidelines & requirements", "Smoker / non-smoker guidelines", "Medical pre-screening questionnaires", "Cancer, diabetes, cardiac & gastric bypass"] },
       { label: "Licensing & contracting", items: ["New agent registration form", "LIMRA AML guide for producers", "Form W-9"] },
     ],
-    resCta: "Call the desk",
+    resCta: "Call Brandon",
 
     back: "Back to home",
   },
@@ -129,7 +129,7 @@ export const DEEP = {
     heroLine1: "Sesenta años colocando los casos",
     heroLine2: "que otros rechazan.",
     heroSub: "Soporte avanzado de ventas, gestión integral de casos y más de 30 aseguradoras top, desde una sola oficina en Coral Gables.",
-    statement: "Cada caso se arma, se presenta y se coloca en la misma mesa que atiende su llamado.",
+    statement: "Cada caso se arma, se presenta y se coloca con el mismo equipo que atiende su llamado.",
     states: "Estados con licencia",
 
     aiNav: "Asistente IA",
@@ -140,7 +140,7 @@ export const DEEP = {
 
     moreKicker: "Más en detalle",
     deeper: [
-      { key: "firm", title: "La Firma", body: "A quién servimos, qué hace la mesa, las redes Tellus e ICS, y las personas que atienden." },
+      { key: "firm", title: "La Firma", body: "A quién servimos, qué hace Brandon, las redes Tellus e ICS, y las personas que atienden." },
       { key: "products", title: "Productos", body: "Term, permanente, anualidades, long-term care y disability, línea por línea." },
       { key: "forms", title: "Formularios", body: "Formularios de aseguradoras, cuestionarios de underwriting y papelería de contratación." },
     ],
@@ -176,7 +176,7 @@ export const DEEP = {
     fnNote: "Los más altos estándares de integridad, cumplimiento y confidencialidad en cada proceso.",
 
     svcKicker: "Capacidades",
-    svcTitle: "Qué hace la mesa.",
+    svcTitle: "Qué hace Brandon.",
     svc: [
       "Acceso a aseguradoras top para vida, anualidades, long-term care y disability",
       "Ilustraciones, conceptos y estrategias de venta",
@@ -219,13 +219,13 @@ export const DEEP = {
 
     resKicker: "Mesa del agente",
     resTitle: "Todo lo que necesita para presentar.",
-    resBody: "Formularios, cuestionarios y papelería de contratación, en un solo lugar. Llame a la mesa y alguien de new business le confirma la versión vigente para esa aseguradora y ese producto.",
+    resBody: "Formularios, cuestionarios y papelería de contratación, en un solo lugar. Llame a Brandon y alguien de new business le confirma la versión vigente para esa aseguradora y ese producto.",
     resGroups: [
       { label: "New business", items: ["Formularios de aseguradoras", "Cotizaciones de term", "Autorización HIPAA"] },
       { label: "Underwriting", items: ["Guías y requisitos", "Guías fumador / no fumador", "Cuestionarios médicos previos", "Cáncer, diabetes, cardíacas y bypass gástrico"] },
       { label: "Licencias y contratos", items: ["Formulario de registro de agente", "Guía LIMRA AML para productores", "Formulario W-9"] },
     ],
-    resCta: "Llamar a la mesa",
+    resCta: "Llamar a Brandon",
 
     back: "Volver al inicio",
   },
@@ -266,7 +266,7 @@ export function deepLinks(prefix: string, lang: Lang) {
   return DEEP[lang].deeper.map((d) => ({ href: `${prefix}/${d.key}`, title: d.title, body: d.body }));
 }
 
-// ————— The desk, by name —————
+// ————— The team, by name —————
 // Lifted from brandonbrokerage.com/contact. Extensions reach the Coral Gables
 // switchboard; the two direct lines are the ones the firm publishes.
 export const OFFICE = {
@@ -327,34 +327,34 @@ export const DIRECTORY = {
 export const CONTACT = {
   en: {
     kicker: "Contact",
-    title: "Talk to the desk.",
+    title: "Talk to Brandon.",
     lede: "One office, one team, and a direct line to the person who will handle your case. A brokerage director responds within one business day.",
     office: "Office",
     phone: "Phone",
     tollFree: "Toll-free",
     fax: "Fax",
     directions: "Get directions",
-    directory: "The desk, by name",
+    directory: "The team, by name",
     ext: "Ext.",
     direct: "Direct",
     email: "Email",
-    callLabel: "Call the desk",
+    callLabel: "Call Brandon",
     tapToCall: "Tap to call",
   },
   es: {
     kicker: "Contacto",
-    title: "Hable con la mesa.",
+    title: "Hable con Brandon.",
     lede: "Una oficina, un equipo y una línea directa con la persona que va a manejar su caso. Un director de brokerage responde dentro de un día hábil.",
     office: "Oficina",
     phone: "Teléfono",
     tollFree: "Línea gratuita",
     fax: "Fax",
     directions: "Cómo llegar",
-    directory: "La mesa, por nombre",
+    directory: "El equipo, por nombre",
     ext: "Int.",
     direct: "Directo",
     email: "Email",
-    callLabel: "Llamar a la mesa",
+    callLabel: "Llamar a Brandon",
     tapToCall: "Toque para llamar",
   },
 } as const;

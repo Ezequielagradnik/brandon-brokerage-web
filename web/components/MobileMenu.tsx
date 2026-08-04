@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import styles from "./MobileMenu.module.css";
@@ -21,6 +21,10 @@ function NavItem({ href, className, style, onClick, tabIndex, children }: { href
   );
 }
 
+// "are we on the client yet" without setting state inside an effect: the server
+// snapshot is false, the client snapshot is true, and nothing ever changes.
+const subscribeNoop = () => () => {};
+
 type MobileMenuProps = {
   links: NavLink[];
   ctaLabel: string;
@@ -39,8 +43,7 @@ export default function MobileMenu({ links, ctaLabel, ctaHref, panelBg, textColo
   // containing block for position: fixed , so rendering the panel in place
   // anchored it to the pill instead of the viewport and left a slice of it
   // hanging off the right edge of the page.
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useSyncExternalStore(subscribeNoop, () => true, () => false);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";

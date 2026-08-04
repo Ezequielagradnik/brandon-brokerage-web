@@ -19,16 +19,13 @@ import styles from "../page.module.css";
 // Google's embed lands with its own colours. Grey it out, then push it back
 // through sepia into the concept's cream-and-gold: parchment ground, warm roads,
 // nothing that fights the page.
-const MAP_FILTER = "grayscale(1) sepia(0.46) hue-rotate(-8deg) saturate(1.45) brightness(1.05) contrast(0.9)";
 
 // Sapphire shell, cream screen, navy digits, gold call pill , the palette the
 // rest of the concept is cut from. `ground` is the band it lies on.
 const PHONE_PALETTE: DevicePalette = {
-  shell: "#12294a",
   screen: "#f7f3ea",
   ink: "#12294a",
   accent: "#a9812f",
-  ground: "#ece7db",
 };
 
 const DIRECTIONS_HREF = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(OFFICE.mapQuery)}`;
@@ -112,7 +109,7 @@ export default function ContactPage() {
             </div>
 
             <div data-reveal>
-              <OfficeMap title={`${OFFICE.street}, ${OFFICE.city}`} filter={MAP_FILTER} className={styles.contactMap} />
+              <OfficeMap title={`${OFFICE.street}, ${OFFICE.city}`} className={styles.contactMap} />
             </div>
           </div>
         </div>
@@ -133,7 +130,7 @@ export default function ContactPage() {
                 {c.tapToCall}
               </p>
             </div>
-            <DeviceCall palette={PHONE_PALETTE} number={OFFICE.phone} caption={c.tapToCall} className={styles.callDevice} />
+            <DeviceCall palette={PHONE_PALETTE} className={styles.callDevice} />
           </div>
         </div>
       </div>
