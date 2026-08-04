@@ -1098,3 +1098,234 @@
     transition: none;
   }
 }
+
+/* ==========================================================================
+   Contact — the office ledger, the phone moment and the desk by name.
+   Appended last on purpose: these are plain class selectors, so anything that
+   overrides a rule above has to sit below it. Nothing here renames an existing
+   class; every selector is new.
+   ========================================================================== */
+
+/* ————— 01 · the office: ledger left, Coral Gables right ————— */
+.ctcGrid {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: clamp(28px, 4vw, 64px);
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .ctcGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ctcList {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid rgba(20, 34, 74, 0.14);
+}
+.ctcRow {
+  display: grid;
+  grid-template-columns: minmax(84px, 128px) 1fr;
+  gap: 6px clamp(16px, 2.4vw, 32px);
+  align-items: baseline;
+  padding: clamp(15px, 1.9vw, 22px) 0;
+  border-bottom: 1px solid rgba(20, 34, 74, 0.14);
+}
+.ctcRow dt {
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #7d6425;
+}
+.ctcRow dd {
+  margin: 0;
+  min-width: 0;
+  font-family: var(--font-lora), serif;
+  font-size: clamp(16px, 1.5vw, 20px);
+  line-height: 1.5;
+  color: #14224a;
+}
+/* at the narrow end the label sits above its value rather than squeezing it */
+@media (max-width: 440px) {
+  .ctcRow {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+/* a gold rule that draws under the value, and survives a line wrap */
+.ctcLink {
+  background-image: linear-gradient(#c2a15b, #c2a15b);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ctcLink:hover {
+  background-size: 100% 1px;
+}
+/* .ctcRow dd already sets a colour and outranks a lone class — match it */
+.ctcRow .ctcFax {
+  color: #475467;
+}
+
+/* block-level flex, so the link drops below the address instead of trailing it */
+.ctcDir {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 8px;
+  margin-top: clamp(16px, 2vw, 22px);
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #14224a;
+}
+.ctcDirArrow {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ctcDir:hover .ctcDirArrow {
+  transform: translate(3px, -3px);
+}
+
+.ctcMap {
+  width: 100%;
+  height: clamp(300px, 40vw, 460px);
+  border: 1px solid rgba(20, 34, 74, 0.14);
+  background: #f9fafb;
+  overflow: hidden;
+}
+@media (max-width: 900px) {
+  .ctcMap {
+    height: clamp(260px, 58vw, 380px);
+  }
+}
+
+/* ————— 02 · the phone moment ————— */
+/* auto-fit, so the row still reads right when the device declines to render
+   (reduced motion, no WebGL) and the number is the only child left */
+.callGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: clamp(28px, 4vw, 64px);
+  align-items: center;
+}
+.callPhone {
+  font-family: var(--font-lora), serif;
+  font-weight: 500;
+  font-size: clamp(38px, 5.4vw, 84px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.deviceWrap {
+  width: 100%;
+  height: clamp(300px, 34vw, 430px);
+}
+@media (max-width: 860px) {
+  .deviceWrap {
+    height: clamp(250px, 60vw, 330px);
+  }
+}
+
+/* ————— 03 · the desk, by name ————— */
+/* three columns at full width (5 groups → 3 + 2), two at tablet, one at 390 */
+.dirGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: clamp(30px, 3.6vw, 56px) clamp(24px, 3vw, 48px);
+  align-items: start;
+}
+.dirGroup {
+  min-width: 0;
+}
+.dirGroupLabel {
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(194, 161, 91, 0.45);
+}
+.dirPerson {
+  min-width: 0;
+  padding: clamp(16px, 1.9vw, 22px) 0;
+  border-bottom: 1px solid rgba(20, 34, 74, 0.1);
+}
+.dirName {
+  font-family: var(--font-lora), serif;
+  font-weight: 500;
+  font-size: clamp(18px, 1.6vw, 21px);
+  line-height: 1.2;
+  color: #14224a;
+  text-wrap: balance;
+}
+.dirRole {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #475467;
+  margin-top: 5px;
+}
+.dirLines {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: 13px;
+  min-width: 0;
+}
+.dirLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 3px 9px;
+  max-width: 100%;
+  min-width: 0;
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #14224a;
+}
+.dirTag {
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #7d6425;
+}
+.dirExt {
+  color: #475467;
+}
+.dirLink {
+  max-width: 100%;
+  background-image: linear-gradient(#c2a15b, #c2a15b);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s ease;
+}
+.dirLink:hover {
+  color: #7d6425;
+  background-size: 100% 1px;
+}
+/* long addresses break rather than pushing the page sideways */
+.dirMail {
+  display: inline-block;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.ctcLink:focus-visible,
+.ctcDir:focus-visible,
+.dirLink:focus-visible {
+  outline: 2px solid #c2a15b;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ctcLink,
+  .ctcDirArrow,
+  .dirLink {
+    transition: none;
+  }
+}

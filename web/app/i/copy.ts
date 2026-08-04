@@ -21,4 +21,4 @@ export const LABEL: CSSProperties = { fontSize: 11, letterSpacing: "0.28em", tex
 /* The numeral prefix on every chapter head. */
 export const numeral = (lang: Lang) => (lang === "es" ? "N.º" : "No.");
 
-export { CARRIERS, DEEP as EXTRA, PRODUCT_DETAIL, deepLinks, deepNav } from "@/lib/deep";
+export { CARRIERS, CONTACT, DEEP as EXTRA, DIRECTORY, OFFICE, PRODUCT_DETAIL, deepLinks, deepNav } from "@/lib/deep";

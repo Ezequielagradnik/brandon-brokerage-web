@@ -258,10 +258,103 @@ export function deepNav(prefix: string, lang: Lang) {
     { href: `${prefix}/products`, label: nav.products },
     { href: `${prefix}/foreign-nationals`, label: nav.foreign },
     { href: `${prefix}/forms`, label: nav.forms },
-    { href: `${prefix}#contact`, label: nav.contact },
+    { href: `${prefix}/contact`, label: nav.contact },
   ];
 }
 
 export function deepLinks(prefix: string, lang: Lang) {
   return DEEP[lang].deeper.map((d) => ({ href: `${prefix}/${d.key}`, title: d.title, body: d.body }));
 }
+
+// ————— The desk, by name —————
+// Lifted from brandonbrokerage.com/contact. Extensions reach the Coral Gables
+// switchboard; the two direct lines are the ones the firm publishes.
+export const OFFICE = {
+  street: "75 Valencia Avenue, Suite 200",
+  city: "Coral Gables, FL 33134",
+  phone: "305-444-7401",
+  phoneHref: "tel:+13054447401",
+  tollFree: "1-888-776-4678",
+  tollFreeHref: "tel:+18887764678",
+  fax: "305-441-2237",
+  mapQuery: "75 Valencia Ave, Suite 200, Coral Gables, FL 33134",
+} as const;
+
+export const DIRECTORY = {
+  en: [
+    { label: "Management", people: [
+      { name: "Garry M. Brandon", role: "Managing Partner", ext: "102", email: "gbrandon@brandonbrokerage.com" },
+      { name: "Onel Garcia", role: "Managing Partner", ext: "101", email: "ogarcia@brandonbrokerage.com" },
+    ] },
+    { label: "Sales support", people: [
+      { name: "Saul Zitner", role: "Regional Vice President, Domestic Sales", ext: "109", direct: "305-710-7945", directHref: "tel:+13057107945", email: "szitner@brandonbrokerage.com" },
+      { name: "Claritza Encarnacion", role: "Regional Vice President, International & Institutional Sales", direct: "305-510-4059", directHref: "tel:+13055104059", email: "cencarnacion@brandonbrokerage.com" },
+    ] },
+    { label: "Marketing", people: [
+      { name: "Peder Knoth", role: "Case Design Specialist", ext: "108", email: "pknoth@brandonbrokerage.com" },
+    ] },
+    { label: "New business", people: [
+      { name: "Grace Vera", role: "Underwriting Manager", ext: "106", email: "gvera@brandonbrokerage.com" },
+      { name: "Elvira Ash", role: "Case Manager & Licensing Coordinator", ext: "104", email: "eash@brandonbrokerage.com" },
+    ] },
+    { label: "Commissions & customer service", people: [
+      { name: "Cary Diaz", role: "Customer Service", ext: "105", email: "cdiaz@brandonbrokerage.com" },
+    ] },
+  ],
+  es: [
+    { label: "Dirección", people: [
+      { name: "Garry M. Brandon", role: "Socio director", ext: "102", email: "gbrandon@brandonbrokerage.com" },
+      { name: "Onel Garcia", role: "Socio director", ext: "101", email: "ogarcia@brandonbrokerage.com" },
+    ] },
+    { label: "Soporte de ventas", people: [
+      { name: "Saul Zitner", role: "Vicepresidente regional, ventas domésticas", ext: "109", direct: "305-710-7945", directHref: "tel:+13057107945", email: "szitner@brandonbrokerage.com" },
+      { name: "Claritza Encarnacion", role: "Vicepresidenta regional, ventas internacionales e institucionales", direct: "305-510-4059", directHref: "tel:+13055104059", email: "cencarnacion@brandonbrokerage.com" },
+    ] },
+    { label: "Marketing", people: [
+      { name: "Peder Knoth", role: "Especialista en diseño de casos", ext: "108", email: "pknoth@brandonbrokerage.com" },
+    ] },
+    { label: "New business", people: [
+      { name: "Grace Vera", role: "Gerenta de underwriting", ext: "106", email: "gvera@brandonbrokerage.com" },
+      { name: "Elvira Ash", role: "Case manager y coordinadora de licencias", ext: "104", email: "eash@brandonbrokerage.com" },
+    ] },
+    { label: "Comisiones y atención al cliente", people: [
+      { name: "Cary Diaz", role: "Atención al cliente", ext: "105", email: "cdiaz@brandonbrokerage.com" },
+    ] },
+  ],
+} as const;
+
+// Page furniture for the contact route, in both languages.
+export const CONTACT = {
+  en: {
+    kicker: "Contact",
+    title: "Talk to the desk.",
+    lede: "One office, one team, and a direct line to the person who will handle your case. A brokerage director responds within one business day.",
+    office: "Office",
+    phone: "Phone",
+    tollFree: "Toll-free",
+    fax: "Fax",
+    directions: "Get directions",
+    directory: "The desk, by name",
+    ext: "Ext.",
+    direct: "Direct",
+    email: "Email",
+    callLabel: "Call the desk",
+    tapToCall: "Tap to call",
+  },
+  es: {
+    kicker: "Contacto",
+    title: "Hable con la mesa.",
+    lede: "Una oficina, un equipo y una línea directa con la persona que va a manejar su caso. Un director de brokerage responde dentro de un día hábil.",
+    office: "Oficina",
+    phone: "Teléfono",
+    tollFree: "Línea gratuita",
+    fax: "Fax",
+    directions: "Cómo llegar",
+    directory: "La mesa, por nombre",
+    ext: "Int.",
+    direct: "Directo",
+    email: "Email",
+    callLabel: "Llamar a la mesa",
+    tapToCall: "Toque para llamar",
+  },
+} as const;

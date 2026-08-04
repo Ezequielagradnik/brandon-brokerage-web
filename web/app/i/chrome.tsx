@@ -53,7 +53,7 @@ export function IHeader({
 
         <LangToggle lang={lang} setLang={setLang} color="rgba(26,24,20,0.5)" activeColor={INK} />
 
-        <Link href="/i#contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.headerCta}`}>
+        <Link href="/i/contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.headerCta}`}>
           {t.cta.partner}
         </Link>
       </div>
@@ -61,7 +61,7 @@ export function IHeader({
       <MobileMenu
         links={[{ href: NETWORK_URL, label: t.nav.assistant }, ...links]}
         ctaLabel={t.cta.partner}
-        ctaHref="/i#contact"
+        ctaHref="/i/contact"
         panelBg={PAPER}
         textColor={INK}
         accentColor={INK}

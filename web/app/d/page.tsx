@@ -8,10 +8,9 @@ import GlobeArcs, { GOLD_ARCS } from "@/components/GlobeArcs";
 import { COPY, OFFERINGS_I18N, type Lang } from "@/lib/copy";
 import { ScrollProgress, WordsReveal, FadeIn, CountUp, GrowLine, Magnetic, MaskReveal, ctaFillFromCursor } from "@/components/motion";
 import { motion, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
-import WhatsAppIcon from "@/components/WhatsAppIcon";
-import { CTA_HREF, NETWORK_URL, WHATSAPP_ENABLED } from "@/lib/contact";
+import { NETWORK_URL } from "@/lib/contact";
 import { DHeader, SectionHead, useLang } from "./chrome";
-import { BODY, CARRIERS, EASE, GOLD, GOLD_DIM, GOLD_SOFT, HAIR, MONO_K, MUTED, NAVY, SERIF, EXTRA, deepLinks } from "./copy";
+import { BODY, CARRIERS, EASE, GOLD, GOLD_DIM, GOLD_SOFT, HAIR, MONO_K, MUTED, NAVY, SERIF, EXTRA, OFFICE, deepLinks } from "./copy";
 import styles from "./page.module.css";
 
 // Ivory & Sapphire. The landing carries the argument: the silk hero, the
@@ -209,7 +208,7 @@ export default function ConceptD() {
             </FadeIn>
             <FadeIn delay={1.3} style={{ display: "flex", gap: 26, alignItems: "center", flexWrap: "wrap" }}>
               <Magnetic>
-                <a href="#contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaLine}`} style={{ padding: "16px 34px", fontSize: 14, letterSpacing: "0.06em" }}>{t.cta.partner}</a>
+                <Link href="/d/contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaLine}`} style={{ padding: "16px 34px", fontSize: 14, letterSpacing: "0.06em" }}>{t.cta.partner}</Link>
               </Magnetic>
               <Link href="/d/products" className={styles.lnk} style={{ fontSize: 14, letterSpacing: "0.04em", color: NAVY }}>{t.cta.explore}</Link>
             </FadeIn>
@@ -370,22 +369,22 @@ export default function ConceptD() {
         </div>
       </div>
 
-      {/* CONTACT */}
-      <div id="contact" style={{ position: "relative", padding: "clamp(90px,13vw,180px) clamp(20px,5vw,60px)", background: "#ece7db" }}>
-        <div style={{ maxWidth: 1300, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(40px,6vw,90px)", alignItems: "center" }}>
-          <div data-reveal>
+      {/* CONTACT , a closing band, not the contact page. The office, the desk by
+          name, every extension and every mailbox live at /d/contact now; this
+          says the sentence and hands over, keeping one number a tap away. */}
+      <div id="contact" style={{ position: "relative", padding: "clamp(80px,11vw,150px) clamp(20px,5vw,60px)", background: "#ece7db" }}>
+        <div className={styles.wrapD}>
+          <div data-reveal style={{ maxWidth: 760 }}>
             <div style={{ ...MONO_K, marginBottom: 14 }}>04 / {t.contactKicker}</div>
             <GrowLine color={HAIR} style={{ marginBottom: 26 }} />
             <h2 style={{ fontFamily: SERIF, fontWeight: 500, fontSize: "clamp(38px,5.5vw,72px)", lineHeight: 1.02, margin: "0 0 28px", color: NAVY }}>{t.contactTitle}</h2>
-            <p style={{ fontSize: 17, lineHeight: 1.66, color: BODY, fontWeight: 400, margin: 0, maxWidth: 440 }}>{t.contactBody}</p>
+            <p style={{ fontSize: 17, lineHeight: 1.66, color: BODY, fontWeight: 400, margin: 0, maxWidth: 480 }}>{t.contactBody}</p>
           </div>
-          <div data-reveal style={{ borderTop: "1px solid rgba(169,129,47,0.5)" }}>
-            <a href="tel:+13054447401" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "26px 0", borderBottom: "1px solid rgba(18,41,74,0.14)" }}><span style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: MUTED }}>{t.phone}</span><span style={{ fontFamily: SERIF, fontSize: "clamp(20px,2.4vw,28px)", color: NAVY }}>305-444-7401</span></a>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "26px 0", borderBottom: "1px solid rgba(18,41,74,0.14)" }}><span style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: MUTED }}>{t.tollFree}</span><span style={{ fontFamily: SERIF, fontSize: "clamp(20px,2.4vw,28px)", color: NAVY }}>1-888-776-4678</span></div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "26px 0", borderBottom: "1px solid rgba(18,41,74,0.14)" }}><span style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: MUTED }}>{t.office}</span><span style={{ fontFamily: SERIF, fontSize: "clamp(17px,1.8vw,22px)", color: NAVY, textAlign: "right" }}>75 Valencia Ave, Suite 200<br />Coral Gables, FL 33134</span></div>
+          <div data-reveal style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "clamp(20px,3vw,40px)", marginTop: "clamp(34px,4.5vw,56px)" }}>
             <Magnetic>
-              <a href={CTA_HREF} {...(WHATSAPP_ENABLED ? { target: "_blank", rel: "noopener noreferrer" } : {})} onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaLine}`} style={{ marginTop: 34, padding: "16px 38px", fontSize: 14 }}>{WHATSAPP_ENABLED && <WhatsAppIcon />}{t.cta.partner}</a>
+              <Link href="/d/contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaLine}`} style={{ padding: "16px 38px", fontSize: 14 }}>{t.cta.partner}</Link>
             </Magnetic>
+            <a href={OFFICE.phoneHref} className={styles.lnk} style={{ fontFamily: SERIF, fontSize: "clamp(22px,2.6vw,32px)", color: NAVY }}>{OFFICE.phone}</a>
           </div>
         </div>
       </div>

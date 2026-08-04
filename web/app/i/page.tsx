@@ -6,8 +6,7 @@ import { motion } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useReveals";
 import { COPY, OFFERINGS_I18N } from "@/lib/copy";
 import { ScrollProgress, MaskReveal, LettersReveal, FadeIn, CountUp, ParallaxImg, ClipReveal, GrowLine, Magnetic, ctaFillFromCursor } from "@/components/motion";
-import WhatsAppIcon from "@/components/WhatsAppIcon";
-import { CTA_HREF, NETWORK_URL, WHATSAPP_ENABLED } from "@/lib/contact";
+import { NETWORK_URL } from "@/lib/contact";
 import { ChapterHead, FootBar, IHeader, useLang } from "./chrome";
 import { CARRIERS, EXTRA, FAINT, INK, LABEL, MUTED, SERIF, deepLinks, numeral } from "./copy";
 import styles from "./page.module.css";
@@ -95,7 +94,7 @@ export default function ConceptI() {
             </FadeIn>
             <FadeIn delay={1.35} style={{ display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap" }}>
               <Magnetic>
-                <a href="#contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaLarge}`}>{t.cta.partner}</a>
+                <Link href="/i/contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaLarge}`}>{t.cta.partner}</Link>
               </Magnetic>
               <Link href="/i/firm" className={styles.lnk} style={{ fontSize: 13, letterSpacing: "0.06em", color: INK }}>{lang === "es" ? "La firma, en detalle" : "The firm, in full"}</Link>
             </FadeIn>
@@ -312,26 +311,23 @@ export default function ConceptI() {
         </div>
       </div>
 
-      {/* CONTACT , oversized sign-off */}
+      {/* CONTACT , the sign-off. The office, the switchboard and the desk by
+          name now live on /i/contact, so this band only points at them. */}
       <div id="contact" className={styles.wrap} style={{ paddingBottom: "clamp(80px,11vw,150px)" }}>
         <div style={{ borderTop: `1px solid ${INK}`, paddingTop: "clamp(44px,6vw,80px)" }}>
           <h2 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: "clamp(44px,8vw,120px)", lineHeight: 1.04, margin: "0 0 clamp(36px,5vw,60px)", color: INK, letterSpacing: "-0.015em" }}>
             <MaskReveal inView duration={1.2}>{lang === "es" ? "Escribamos más " : "Let’s write more "}<span style={{ fontStyle: "italic" }}>{lang === "es" ? "negocio." : "business."}</span></MaskReveal>
           </h2>
-          <div data-reveal className={styles.footGrid}>
-            <div>
-              <div style={{ ...LABEL, marginBottom: 14 }}>{t.phone}</div>
-              <a href="tel:+13054447401" className={styles.lnk} style={{ fontFamily: SERIF, fontSize: "clamp(22px,2.4vw,30px)", color: INK }}>305-444-7401</a>
-              <div style={{ fontSize: 13.5, color: MUTED, marginTop: 8 }}>{t.tollFree} 1-888-776-4678</div>
-            </div>
-            <div>
-              <div style={{ ...LABEL, marginBottom: 14 }}>{t.office}</div>
-              <div style={{ fontFamily: SERIF, fontSize: "clamp(19px,1.9vw,24px)", color: INK, lineHeight: 1.4 }}>75 Valencia Avenue, Suite 200<br />Coral Gables, FL 33134</div>
-            </div>
+          <div data-reveal className={styles.ctcSignOff}>
             <div>
               <div style={{ ...LABEL, marginBottom: 14 }}>{t.response}</div>
-              <p style={{ fontSize: 14.5, lineHeight: 1.7, color: MUTED, margin: "0 0 22px" }}>{t.responseText}</p>
-              <a href={CTA_HREF} {...(WHATSAPP_ENABLED ? { target: "_blank", rel: "noopener noreferrer" } : {})} onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaLarge}`} style={{ display: "inline-flex", alignItems: "center" }}>{WHATSAPP_ENABLED && <WhatsAppIcon />}{t.cta.partner}</a>
+              <p style={{ fontSize: 14.5, lineHeight: 1.7, color: MUTED, margin: 0, maxWidth: 420 }}>{t.responseText}</p>
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "16px clamp(20px,3vw,36px)" }}>
+              <Magnetic>
+                <Link href="/i/contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaLarge}`}>{t.cta.partner}</Link>
+              </Magnetic>
+              <a href="tel:+13054447401" className={styles.lnk} style={{ fontFamily: SERIF, fontSize: "clamp(22px,2.4vw,30px)", color: INK }}>305-444-7401</a>
             </div>
           </div>
         </div>

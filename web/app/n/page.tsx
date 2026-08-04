@@ -6,10 +6,9 @@ import { motion, useAnimationFrame, useMotionValue, useReducedMotion, useScroll,
 import { useScrollReveal } from "@/hooks/useReveals";
 import { COPY, OFFERINGS_I18N } from "@/lib/copy";
 import { CountUp, GrowLine, MaskReveal, FadeIn, Magnetic, ScrollProgress, ctaFillFromCursor } from "@/components/motion";
-import WhatsAppIcon from "@/components/WhatsAppIcon";
-import { CTA_HREF, WHATSAPP_ENABLED, NETWORK_URL } from "@/lib/contact";
+import { NETWORK_URL } from "@/lib/contact";
 import { NHeader, SectionMark, useLang } from "./chrome";
-import { CARRIERS, EASE, GOLD, GOLD_SOFT, GOLD_DEEP, HAIR, INK_MUTED, NAVY, EXTRA, deepLinks } from "./copy";
+import { CARRIERS, CONTACT, EASE, GOLD, GOLD_SOFT, GOLD_DEEP, HAIR, INK_MUTED, NAVY, EXTRA, deepLinks } from "./copy";
 import styles from "./page.module.css";
 
 // Network , beige canvas, navy depth, Brandon gold. The landing carries the
@@ -113,7 +112,7 @@ export default function ConceptN() {
 
           <FadeIn delay={0.85} style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
             <Magnetic>
-              <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta}>{t.cta.partner}</a>
+              <Link href="/n/contact" onPointerEnter={ctaFillFromCursor} className={styles.cta}>{t.cta.partner}</Link>
             </Magnetic>
             <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaGhost}`}>
               {x.aiNav} ↗
@@ -264,29 +263,20 @@ export default function ConceptN() {
             <a href="tel:+13054447401" className={styles.phoneGiant} style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(40px,6.4vw,104px)", lineHeight: 1, letterSpacing: "-0.02em" }}>305-444-7401</a>
           </div>
 
-          <div data-reveal style={{ display: "flex", flexWrap: "wrap", gap: "clamp(24px,4vw,56px)", alignItems: "center", marginTop: "clamp(34px,4vw,52px)", paddingTop: 26, borderTop: "1px solid rgba(194,161,91,0.35)" }}>
-            <div>
-              <div className={styles.kicker} style={{ color: GOLD_SOFT, fontSize: 9.5, marginBottom: 8 }}>{t.tollFree}</div>
-              <a href="tel:+18887764678" style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(18px,1.9vw,24px)", color: "#fbfaf7" }}>1-888-776-4678</a>
-            </div>
-            <div>
-              <div className={styles.kicker} style={{ color: GOLD_SOFT, fontSize: 9.5, marginBottom: 8 }}>{t.office}</div>
-              <div style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(15px,1.5vw,19px)", color: "rgba(245,241,232,0.9)" }}>75 Valencia Ave, Suite 200 · Coral Gables, FL 33134</div>
-            </div>
-            <div style={{ marginLeft: "auto" }}>
-              <Magnetic>
-                <a
-                  href={CTA_HREF}
-                  {...(WHATSAPP_ENABLED ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  onPointerEnter={ctaFillFromCursor}
-                  className={styles.cta}
-                  style={{ background: GOLD, borderColor: GOLD, color: NAVY }}
-                >
-                  {WHATSAPP_ENABLED && <WhatsAppIcon />}
-                  {t.cta.partner}
-                </a>
-              </Magnetic>
-            </div>
+          {/* The office, the toll-free line, the fax and the desk by name now
+              live on /n/contact. This band keeps the number and hands over. */}
+          <div data-reveal style={{ display: "flex", flexWrap: "wrap", gap: "clamp(20px,3.4vw,44px)", alignItems: "center", marginTop: "clamp(34px,4vw,52px)", paddingTop: 26, borderTop: "1px solid rgba(194,161,91,0.35)" }}>
+            <Magnetic>
+              <Link
+                href="/n/contact"
+                onPointerEnter={ctaFillFromCursor}
+                className={styles.cta}
+                style={{ background: GOLD, borderColor: GOLD, color: NAVY }}
+              >
+                {t.cta.partner}
+              </Link>
+            </Magnetic>
+            <span className={styles.kicker} style={{ color: GOLD_SOFT, fontSize: 9.5 }}>{CONTACT[lang].directory}</span>
           </div>
 
           <div style={{ marginTop: "clamp(44px,6vw,72px)", paddingTop: 22, borderTop: "1px solid rgba(245,241,232,0.12)", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>

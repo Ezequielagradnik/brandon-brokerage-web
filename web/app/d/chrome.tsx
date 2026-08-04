@@ -68,7 +68,7 @@ export function DHeader({
 
         <LangToggle lang={lang} setLang={setLang} color="rgba(18,41,74,0.55)" activeColor={NAVY} />
 
-        <Link href="/d#contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaGold} ${styles.ctaLineSm}`}>
+        <Link href="/d/contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaGold} ${styles.ctaLineSm}`}>
           {t.cta.partnerCaps}
         </Link>
       </nav>
@@ -76,7 +76,7 @@ export function DHeader({
       <MobileMenu
         links={[{ href: NETWORK_URL, label: t.nav.assistant }, ...links]}
         ctaLabel={t.cta.partnerCaps}
-        ctaHref="/d#contact"
+        ctaHref="/d/contact"
         panelBg={CREAM}
         textColor={NAVY}
         accentColor={NAVY}
@@ -134,12 +134,14 @@ export function PageHero({
 }
 
 /* Closing band for an inner page: the phone, the desk, the way back. Sapphire
-   ground so the inner pages end where the landing ends. */
+   ground so the inner pages end where the landing ends. It used to carry
+   id="contact" and stand in for a contact page; /d/contact is that page now, so
+   the anchor is gone and nothing points here. */
 export function DFooter({ lang, flush = false }: { lang: Lang; flush?: boolean }) {
   const t = COPY[lang];
   const x = EXTRA[lang];
   return (
-    <footer id="contact" className={`${styles.innerFoot} ${flush ? styles.innerFootFlush : ""}`}>
+    <footer className={`${styles.innerFoot} ${flush ? styles.innerFootFlush : ""}`}>
       <div className={styles.wrapD}>
         <div style={{ ...MONO_K, color: GOLD_SOFT, marginBottom: 14 }}>{t.contactKicker}</div>
         <GrowLine color="rgba(169,129,47,0.6)" style={{ marginBottom: 26 }} />

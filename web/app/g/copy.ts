@@ -142,4 +142,4 @@ export const G = {
   },
 } as const;
 
-export { DEEP as EXTRA, PRODUCT_DETAIL, deepLinks, deepNav } from "@/lib/deep";
+export { CONTACT, DEEP as EXTRA, DIRECTORY, OFFICE, PRODUCT_DETAIL, deepLinks, deepNav } from "@/lib/deep";

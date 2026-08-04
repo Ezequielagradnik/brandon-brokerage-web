@@ -33,4 +33,18 @@ export const MONO_K: CSSProperties = {
 // keeps its cadence at 40s.
 export const CARRIERS = ["Lincoln", "John Hancock", "AIG", "Nationwide", "Principal", "MassMutual", "Mutual of Omaha", "Protective", "Prudential", "Pacific Life", "Transamerica", "Symetra", "Global Atlantic", "Allianz"];
 
-export { DEEP as EXTRA, PRODUCT_DETAIL, deepLinks, deepNav } from "@/lib/deep";
+export { CONTACT, DEEP as EXTRA, DIRECTORY, OFFICE, PRODUCT_DETAIL, deepLinks, deepNav } from "@/lib/deep";
+
+// The directory arrives from lib/deep frozen with `as const`, so DIRECTORY[lang]
+// is a union of two readonly tuples whose people differ , some carry an
+// extension, some a direct line, one carries both. Reading it back through this
+// shape is what lets the contact page map over it.
+export type DirPerson = {
+  name: string;
+  role: string;
+  ext?: string;
+  direct?: string;
+  directHref?: string;
+  email: string;
+};
+export type DirGroup = { label: string; people: readonly DirPerson[] };

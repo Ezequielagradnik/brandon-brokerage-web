@@ -5,11 +5,10 @@ import Link from "next/link";
 import { motion, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useReveals";
 import { ScrollProgress, MaskReveal, FadeIn, CountUp, GrowLine, Magnetic, ctaFillFromCursor } from "@/components/motion";
-import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { COPY } from "@/lib/copy";
-import { CTA_HREF, NETWORK_URL, WHATSAPP_ENABLED } from "@/lib/contact";
+import { NETWORK_URL } from "@/lib/contact";
 import { GHeader, SectionHead, useLang } from "./chrome";
-import { CARRIERS, EASE, EXTRA, G, GOLD, GRAY, HAIR, MASTHEAD, NAVY, OFFWHITE, deepLinks, deepNav, mono, monoEyebrow, sans, serif } from "./copy";
+import { CARRIERS, CONTACT, EASE, EXTRA, G, GOLD, GRAY, HAIR, MASTHEAD, NAVY, OFFWHITE, deepLinks, deepNav, mono, monoEyebrow, sans, serif } from "./copy";
 import styles from "./page.module.css";
 
 // Boutique Latam , white canvas, navy and gold, Lora on Plex Mono. The landing
@@ -182,7 +181,7 @@ export default function ConceptG() {
           </FadeIn>
           <FadeIn delay={0.78} style={{ display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap" }}>
             <Magnetic>
-              <a href="#contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "16px 36px", fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase" }}>{g.heroCta}</a>
+              <Link href="/g/contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-block", padding: "16px 36px", fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase" }}>{g.heroCta}</Link>
             </Magnetic>
             <a href="#solutions" className={styles.lnk} style={{ fontSize: 13.5, letterSpacing: "0.04em", color: "rgba(255,255,255,0.9)" }}>{g.heroLink}</a>
           </FadeIn>
@@ -240,7 +239,7 @@ export default function ConceptG() {
                 <span key={l} style={{ display: "block" }}>{l}</span>
               ))}
             </h2>
-            <a data-reveal href="#contact" className={styles.lnk} style={{ display: "inline-block", marginTop: 34, fontSize: 13, letterSpacing: "0.1em", textTransform: "uppercase", color: NAVY, fontWeight: 700 }}>{g.deck.seeAll} →</a>
+            <Link data-reveal href="/g/contact" className={styles.lnk} style={{ display: "inline-block", marginTop: 34, fontSize: 13, letterSpacing: "0.1em", textTransform: "uppercase", color: NAVY, fontWeight: 700 }}>{g.deck.seeAll} →</Link>
           </motion.div>
 
           {/* the deck (desktop) */}
@@ -339,7 +338,10 @@ export default function ConceptG() {
         </div>
       </div>
 
-      {/* 04 , CONTACT: masthead close, giant clickable phone */}
+      {/* 04 , CONTACT: masthead close, giant clickable phone. The office, the
+          toll-free line, the fax, the map and the desk by name all live on
+          /g/contact now, so this band keeps the number and points at the page
+          instead of repeating it. */}
       <div id="contact" style={{ position: "relative", padding: "clamp(80px,11vw,150px) clamp(20px,5vw,60px)", background: NAVY, overflow: "hidden" }}>
         <div className={styles.grain} aria-hidden="true" />
         <div style={{ position: "relative", zIndex: 2, maxWidth: 1240, margin: "0 auto" }}>
@@ -354,19 +356,9 @@ export default function ConceptG() {
           </div>
 
           <div data-reveal style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "clamp(24px,4vw,56px)", marginTop: "clamp(36px,4vw,56px)", paddingTop: 28, borderTop: "1px solid rgba(194,161,91,0.4)" }}>
-            <div>
-              <div style={{ ...monoEyebrow(true), marginBottom: 8 }}>{t.tollFree}</div>
-              <a href="tel:+18887764678" style={{ fontFamily: serif, fontSize: "clamp(18px,1.8vw,24px)", color: "#fff" }}>1-888-776-4678</a>
-            </div>
-            <div>
-              <div style={{ ...monoEyebrow(true), marginBottom: 8 }}>{t.office}</div>
-              <div style={{ fontFamily: serif, fontSize: "clamp(15px,1.4vw,18px)", color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>75 Valencia Ave, Suite 200 · Coral Gables, FL 33134</div>
-            </div>
-            <div style={{ marginLeft: "auto" }}>
-              <Magnetic>
-                <a href={CTA_HREF} {...(WHATSAPP_ENABLED ? { target: "_blank", rel: "noopener noreferrer" } : {})} onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-flex", alignItems: "center", padding: "16px 36px", fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase" }}>{WHATSAPP_ENABLED && <WhatsAppIcon />}{g.ctaBtn}</a>
-              </Magnetic>
-            </div>
+            <Magnetic>
+              <Link href="/g/contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ display: "inline-flex", alignItems: "center", padding: "16px 36px", fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase" }}>{CONTACT[lang].directory} →</Link>
+            </Magnetic>
           </div>
         </div>
       </div>

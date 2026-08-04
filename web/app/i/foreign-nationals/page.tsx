@@ -42,7 +42,7 @@ export default function ForeignNationalsPage() {
         variant="editorial"
         serif={SERIF}
         cta={
-          <Link href="/i#contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaInverse} ${styles.ctaLarge}`}>
+          <Link href="/i/contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaInverse} ${styles.ctaLarge}`}>
             {x.fnTeaserCta}
           </Link>
         }

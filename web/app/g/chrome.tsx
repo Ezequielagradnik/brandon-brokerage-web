@@ -68,7 +68,7 @@ export function GHeader({
       </span>
 
       <Link
-        href="/g#contact"
+        href="/g/contact"
         onPointerEnter={ctaFillFromCursor}
         className={`${styles.cta} ${styles.ctaDark} ${styles.headerCta}`}
       >
@@ -78,7 +78,7 @@ export function GHeader({
       <MobileMenu
         links={[...links, { href: NETWORK_URL, label: g.nav.assistant }]}
         ctaLabel={t.cta.partner}
-        ctaHref="/g#contact"
+        ctaHref="/g/contact"
         panelBg={NAVY}
         textColor="#ffffff"
         accentColor={GOLD}
@@ -143,7 +143,7 @@ export function GFooter({ lang }: { lang: Lang }) {
 
         <div style={{ marginTop: "clamp(34px,4vw,56px)", paddingTop: 22, borderTop: "1px solid rgba(255,255,255,0.12)", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
           <span style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.45)" }}>{g.rights}</span>
-          <span style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.45)" }}>{t.licensed}</span>
+          <span style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.45)" }}>brandonbrokerage.com</span>
         </div>
       </div>
     </footer>

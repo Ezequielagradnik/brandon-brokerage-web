@@ -64,13 +64,13 @@ export function NHeader({ lang, setLang, solid = false }: { lang: Lang; setLang:
 
       <LangToggle lang={lang} setLang={setLang} color="rgba(20,34,74,0.5)" activeColor={NAVY} />
 
-      <Link href="/n#contact" onPointerEnter={ctaFillFromCursor} className={styles.headerCta}>{t.cta.partner}</Link>
+      <Link href="/n/contact" onPointerEnter={ctaFillFromCursor} className={styles.headerCta}>{t.cta.partner}</Link>
 
       <span style={{ display: "flex" }}>
         <MobileMenu
           links={[...links, { href: NETWORK_URL, label: x.aiNav }]}
           ctaLabel={t.cta.partner}
-          ctaHref="/n#contact"
+          ctaHref="/n/contact"
           panelBg={NAVY}
           textColor={BEIGE}
           accentColor={GOLD}
@@ -100,12 +100,15 @@ export function PageHero({ kicker, title, italic, body }: { kicker: string; titl
   );
 }
 
-/* Closing band for an inner page: the phone, the desk, the way back. */
+/* Closing band for an inner page: the phone, the desk, the way back.
+   Contact used to be an anchor on this band (/n#contact); it is a real page
+   now, so the band keeps the number in reach and points at the full desk
+   directory instead of standing in for it. */
 export function NFooter({ lang }: { lang: Lang }) {
   const t = COPY[lang];
   const x = EXTRA[lang];
   return (
-    <footer id="contact" className={styles.innerFoot}>
+    <footer className={styles.innerFoot}>
       <div className={styles.grain} aria-hidden="true" />
       <div className={styles.wrap} style={{ position: "relative", zIndex: 2 }}>
         <h2 className={styles.display} style={{ color: "#fbfaf7", fontSize: "clamp(26px,3.4vw,48px)", margin: "0 0 22px", maxWidth: 720 }}>
@@ -117,7 +120,8 @@ export function NFooter({ lang }: { lang: Lang }) {
             <div className={styles.kicker} style={{ color: GOLD, fontSize: 9.5, marginBottom: 8 }}>{t.office}</div>
             <div style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(15px,1.5vw,19px)", color: "rgba(245,241,232,0.9)" }}>75 Valencia Ave, Suite 200 · Coral Gables, FL 33134</div>
           </div>
-          <div style={{ marginLeft: "auto" }}>
+          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", flexWrap: "wrap", gap: "clamp(16px,2.4vw,28px)" }}>
+            <Link href="/n/contact" className={styles.backLink}>{x.nav.contact} →</Link>
             <Link href="/n" className={styles.backLink}>← {x.back}</Link>
           </div>
         </div>
