@@ -12,8 +12,11 @@ export const GRAY = "#475467";
 export const GOLD = "#c2a15b";
 export const GOLD_LIGHT = "#d9c291";
 export const GOLD_DEEP = "#7d6425";
-export const OFFWHITE = "#f9fafb";
-export const WARM = "#f4f1e9";
+// Two near-whites carry the whole concept and no more: #ffffff is the page tone,
+// OFFWHITE is the one recessed tone. A shift between them always means something
+// (a new chapter, or a card sitting back inside one); a third would read as an
+// accident. The old cool #f9fafb and the warm #f4f1e9 are now the same value.
+export const OFFWHITE = "#f4f1e9";
 export const HAIR = "1px solid rgba(20,34,74,0.14)";
 export const HAIR_LINE = "rgba(20,34,74,0.14)";
 export const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -142,4 +145,4 @@ export const G = {
   },
 } as const;
 
-export { CONTACT, DEEP as EXTRA, DIRECTORY, OFFICE, PRODUCT_DETAIL, deepLinks, deepNav } from "@/lib/deep";
+export { CONTACT, DEEP as EXTRA, DIRECTORY, OFFICE, PRODUCT_DETAIL, deepNav } from "@/lib/deep";

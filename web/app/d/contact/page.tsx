@@ -23,7 +23,7 @@ import styles from "../page.module.css";
 // Sapphire shell, cream screen, navy digits, gold call pill , the palette the
 // rest of the concept is cut from. `ground` is the band it lies on.
 const PHONE_PALETTE: DevicePalette = {
-  screen: "#f7f3ea",
+  screen: "#f3efe6",
   ink: "#12294a",
   accent: "#a9812f",
 };

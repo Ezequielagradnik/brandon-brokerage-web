@@ -26,13 +26,6 @@ export const DEEP = {
     aiBody: "Answers on US finance, tax and legal matters. IRS, W-8BEN, trusts and structures, with sources cited, in English, Spanish or Portuguese. Built by the group, open to our advisors.",
     aiCta: "Open the platform",
 
-    // landing signposts into the deep pages
-    moreKicker: "Go deeper",
-    deeper: [
-      { key: "firm", title: "Our Firm", body: "Who we serve, what Brandon does, the Tellus and ICS networks, and the people who answer." },
-      { key: "products", title: "Products", body: "Term, permanent, annuities, long-term care and disability, line by line." },
-      { key: "forms", title: "Forms", body: "Carrier forms, underwriting questionnaires and contracting paperwork." },
-    ],
 
     // who we serve
     serveKicker: "Who we serve",
@@ -138,12 +131,6 @@ export const DEEP = {
     aiBody: "Respuestas sobre finanzas, impuestos y temas legales de EE.UU. IRS, W-8BEN, trusts y estructuras, con fuentes citadas, en español, inglés o portugués. Desarrollado por el grupo, abierto a nuestros asesores.",
     aiCta: "Abrir la plataforma",
 
-    moreKicker: "Más en detalle",
-    deeper: [
-      { key: "firm", title: "La Firma", body: "A quién servimos, qué hace Brandon, las redes Tellus e ICS, y las personas que atienden." },
-      { key: "products", title: "Productos", body: "Term, permanente, anualidades, long-term care y disability, línea por línea." },
-      { key: "forms", title: "Formularios", body: "Formularios de aseguradoras, cuestionarios de underwriting y papelería de contratación." },
-    ],
 
     serveKicker: "A quién servimos",
     serveTitle: "Una brokerage business-to-business.",
@@ -249,8 +236,7 @@ export const PRODUCT_DETAIL = {
   ],
 } as const;
 
-// Nav and signposts for a concept: the four routes plus the contact anchor on
-// that concept's own landing.
+// The nav for a concept: the four routes plus its contact page.
 export function deepNav(prefix: string, lang: Lang) {
   const nav = DEEP[lang].nav;
   return [
@@ -262,9 +248,6 @@ export function deepNav(prefix: string, lang: Lang) {
   ];
 }
 
-export function deepLinks(prefix: string, lang: Lang) {
-  return DEEP[lang].deeper.map((d) => ({ href: `${prefix}/${d.key}`, title: d.title, body: d.body }));
-}
 
 // ————— The team, by name —————
 // Lifted from brandonbrokerage.com/contact. Extensions reach the Coral Gables

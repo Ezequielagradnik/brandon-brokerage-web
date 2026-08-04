@@ -359,7 +359,7 @@
   font-size: clamp(28px, 4vw, 56px);
   line-height: 1.05;
   letter-spacing: -0.01em;
-  color: #f7f3ea;
+  color: #f3efe6;
   margin: 0;
   max-width: 780px;
 }
@@ -412,35 +412,6 @@
   gap: 16px;
 }
 
-/* ————— landing: the go-deeper signposts ————— */
-.moreGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: clamp(16px, 2vw, 28px);
-}
-.moreCard {
-  display: block;
-  padding: clamp(24px, 2.6vw, 36px);
-  border: 1px solid rgba(18, 41, 74, 0.14);
-  background: rgba(255, 255, 255, 0.42);
-  transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-@media (hover: hover) and (pointer: fine) {
-  .moreCard:hover {
-    border-color: rgba(169, 129, 47, 0.6);
-    background: #fbf9f4;
-    transform: translateY(-3px);
-  }
-  .moreCard:hover .moreArrow {
-    transform: translateX(6px);
-  }
-}
-.moreArrow {
-  display: inline-block;
-  color: #9a7526;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
 /* ————— firm: who we serve ————— */
 .serveGrid {
   display: grid;
@@ -476,7 +447,7 @@
     color: #d3ab5c !important;
   }
   .serveItem:hover > span:last-child {
-    color: #f7f3ea !important;
+    color: #f3efe6 !important;
   }
 }
 .serveItem > span {
@@ -550,7 +521,8 @@
   position: relative;
   padding: clamp(24px, 2.8vw, 38px);
   border: 1px solid rgba(18, 41, 74, 0.14);
-  background: #fbf9f4;
+  /* the page tone, raised out of the recessed band this card sits on */
+  background: #f3efe6;
   transition: border-color 0.25s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .netCard::before {
@@ -609,7 +581,7 @@
   font-family: var(--font-bodoni), serif;
   font-size: clamp(18px, 1.7vw, 23px);
   line-height: 1.15;
-  color: #f7f3ea;
+  color: #f3efe6;
   margin-bottom: 5px;
   text-wrap: balance;
   transition: color 0.35s ease;
@@ -829,8 +801,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .headerFixed,
-  .moreCard,
-  .moreArrow,
   .backLinkD,
   .phoneGiantD,
   .phoneGiantD::after,
@@ -846,158 +816,6 @@
   .marquee {
     transition: none;
     animation: none;
-  }
-}
-
-/* ————— landing: the hand-off to the group's platform —————
-   One sapphire block, gold hairline furniture, Bodoni display: the same
-   language as the inner closing band, carrying a CTA instead of a phone.
-   Appended last on purpose , these classes override the link colour the page
-   sets on every anchor, and plain selectors here are resolved by source order. */
-.platBand {
-  position: relative;
-  display: block;
-  overflow: hidden;
-  padding: clamp(52px, 7vw, 96px) clamp(20px, 5vw, 60px);
-  background: #12294a;
-  color: #f3efe6;
-  border-top: 1px solid rgba(169, 129, 47, 0.3);
-  border-bottom: 1px solid rgba(169, 129, 47, 0.3);
-}
-.platBand:hover {
-  color: #f3efe6;
-}
-/* the ring draws inside: the band is full-bleed, so an offset ring would clip */
-.platBand:focus-visible {
-  outline: 2px solid #d3ab5c;
-  outline-offset: -7px;
-}
-.platGlow {
-  position: absolute;
-  z-index: 1;
-  top: -16vw;
-  right: -8vw;
-  width: 46vw;
-  height: 46vw;
-  max-width: 560px;
-  max-height: 560px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(211, 171, 92, 0.26), rgba(211, 171, 92, 0) 66%);
-  opacity: 0.85;
-  pointer-events: none;
-  animation: dPlatDrift 26s ease-in-out infinite alternate;
-  transition: opacity 0.6s ease;
-}
-@keyframes dPlatDrift {
-  from { transform: translate3d(0, 0, 0) scale(1); }
-  to { transform: translate3d(-3vw, 2vw, 0) scale(1.08); }
-}
-.platInner {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  gap: clamp(28px, 4vw, 64px);
-  max-width: 1300px;
-  margin: 0 auto;
-}
-.platCopy {
-  display: block;
-  flex: 1 1 420px;
-  min-width: 0;
-}
-.platTitle {
-  display: block;
-  font-family: var(--font-bodoni), serif;
-  font-weight: 500;
-  font-size: clamp(30px, 4.3vw, 58px);
-  line-height: 1.04;
-  letter-spacing: -0.01em;
-  color: #f7f3ea;
-  margin-bottom: clamp(16px, 2vw, 24px);
-  text-wrap: balance;
-}
-.platBody {
-  display: block;
-  max-width: 620px;
-  font-size: clamp(14.5px, 1.3vw, 17px);
-  line-height: 1.7;
-  color: rgba(243, 239, 230, 0.72);
-}
-.platAside {
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 14px;
-}
-.platCta {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 15px 34px;
-  border: 1px solid rgba(243, 239, 230, 0.5);
-  color: #f7f3ea;
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transition: background 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.45s ease, color 0.45s ease;
-}
-.platArrow {
-  display: inline-block;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.platHost {
-  font-family: var(--font-plex-mono), monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: rgba(243, 239, 230, 0.45);
-}
-@media (hover: hover) and (pointer: fine) {
-  .platBand:hover .platCta {
-    background: #a9812f;
-    border-color: #a9812f;
-    color: #12294a;
-  }
-  .platBand:hover .platArrow {
-    transform: translate(4px, -4px);
-  }
-  .platBand:hover .platGlow {
-    opacity: 1;
-  }
-}
-.platBand:focus-visible .platCta {
-  background: #a9812f;
-  border-color: #a9812f;
-  color: #12294a;
-}
-@media (max-width: 720px) {
-  .platInner {
-    align-items: flex-start;
-  }
-  .platAside {
-    flex: 1 1 100%;
-    align-items: stretch;
-  }
-  .platCta {
-    justify-content: center;
-    padding: 15px 20px;
-  }
-  .platHost {
-    text-align: center;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .platGlow {
-    animation: none;
-  }
-  .platGlow,
-  .platCta,
-  .platArrow {
-    transition: none;
   }
 }
 
@@ -1270,5 +1088,173 @@
   .dirTel,
   .dirMail {
     transition: none;
+  }
+}
+
+/* ————— landing: the hand-off to the group's platform —————
+   This link leaves the site, so it is not dressed as one of the concept's
+   sapphire chapters. It is a card on the concept's own cream: the recessed tone
+   inside the ink hairline, the gold rule under a mono kicker, Bodoni at card
+   scale rather than display, and the header's pulsing dot so the assistant reads
+   as the same thing in both places. The ↗ says the tab changes.
+   Appended last on purpose , these are plain class selectors of equal
+   specificity, so the ones that override rules set earlier in this file , the
+   blanket gold anchor colour, most of all , have to sit after them. */
+.platCard {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: clamp(22px, 3vw, 48px);
+  padding: clamp(24px, 3vw, 40px);
+  background: #ece7db;
+  border: 1px solid rgba(18, 41, 74, 0.14);
+  color: #1a2536;
+  transition: border-color 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.platCard:hover {
+  color: #1a2536;
+}
+/* the card accent the firm's network cards use: a gold rule drawn along the top */
+.platCard::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 0;
+  height: 2px;
+  background: #a9812f;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.platCopy {
+  display: block;
+  flex: 1 1 380px;
+  min-width: 0;
+}
+.platKicker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 14px;
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #9a7526;
+}
+.platDot {
+  flex-shrink: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #a9812f;
+  animation: atNavPulse 2.6s ease-out infinite;
+}
+.platTitle {
+  display: block;
+  font-family: var(--font-bodoni), serif;
+  font-weight: 500;
+  font-size: clamp(22px, 2.3vw, 31px);
+  line-height: 1.16;
+  letter-spacing: -0.005em;
+  color: #12294a;
+  margin-bottom: 12px;
+  text-wrap: balance;
+}
+.platBody {
+  display: block;
+  max-width: 620px;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: #4a5568;
+}
+.platAside {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.platCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 30px;
+  border: 1px solid #12294a;
+  color: #12294a;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.45s ease, color 0.45s ease;
+}
+.platArrow {
+  display: inline-block;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.platHost {
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #6b7482;
+}
+@media (hover: hover) and (pointer: fine) {
+  .platCard:hover {
+    border-color: rgba(169, 129, 47, 0.6);
+    transform: translateY(-3px);
+  }
+  .platCard:hover::before {
+    width: calc(100% + 2px);
+  }
+  .platCard:hover .platCta {
+    background: #a9812f;
+    border-color: #a9812f;
+    color: #12294a;
+  }
+  .platCard:hover .platArrow {
+    transform: translate(4px, -4px);
+  }
+}
+/* the press settles back down, so leaving the site still feels like a click.
+   After the hover block on purpose: it has to win while the pointer is held. */
+.platCard:active {
+  transform: translateY(-1px);
+}
+/* keyboard parity: the ring is the page's own, the fill matches hover */
+.platCard:focus-visible .platCta {
+  background: #a9812f;
+  border-color: #a9812f;
+  color: #12294a;
+}
+@media (max-width: 720px) {
+  .platCard {
+    align-items: flex-start;
+  }
+  .platAside {
+    flex: 1 1 100%;
+    align-items: stretch;
+  }
+  .platCta {
+    justify-content: center;
+    padding: 14px 20px;
+  }
+  .platHost {
+    text-align: center;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .platDot {
+    animation: none;
+  }
+  .platCard,
+  .platCard::before,
+  .platCta,
+  .platArrow {
+    transition: none;
+  }
+  .platCard:hover,
+  .platCard:active {
+    transform: none;
   }
 }

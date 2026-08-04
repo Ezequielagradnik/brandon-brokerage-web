@@ -8,14 +8,15 @@ import { ScrollProgress, MaskReveal, FadeIn, CountUp, GrowLine, Magnetic, ctaFil
 import { COPY } from "@/lib/copy";
 import { NETWORK_URL } from "@/lib/contact";
 import { GHeader, SectionHead, useLang } from "./chrome";
-import { CARRIERS, CONTACT, EASE, EXTRA, G, GOLD, GRAY, HAIR, MASTHEAD, NAVY, OFFWHITE, deepLinks, deepNav, mono, monoEyebrow, sans, serif } from "./copy";
+import { CARRIERS, CONTACT, EASE, EXTRA, G, GOLD, GRAY, HAIR, MASTHEAD, NAVY, OFFWHITE, deepNav, mono, monoEyebrow, sans, serif } from "./copy";
 import styles from "./page.module.css";
 
-// Boutique Latam , white canvas, navy and gold, Lora on Plex Mono. The landing
-// carries the argument and nothing else: the hero, the hand-off to the group's
-// platform, the four pillars fanning out of a pinned deck, the numbers, a short
-// word on the specialty and the phone number. Our Firm, Products, Foreign
-// Nationals and Forms each live on their own page, the way the real site splits it.
+// Boutique Latam , white canvas, navy and gold, Lora on Plex Mono. Two tones
+// carry the whole concept: white for the page, #f4f1e9 for anything recessed.
+// The landing carries the argument and nothing else: the hero, the four pillars
+// fanning out of a pinned deck, the numbers, a short word on the specialty and
+// the phone number. Our Firm, Products, Foreign Nationals and Forms each live on
+// their own page, reached from the header nav on every page.
 
 // ----- Card deck (pinned, scroll-driven) -----
 const DECK_IMGS = ["/images/miami-palms-sunset.jpg", "/images/miami-aerial-day.jpg", "/images/miami-night.jpg", "/images/miami-sunset.jpg"];
@@ -203,29 +204,29 @@ export default function ConceptG() {
         </div>
       </div>
 
-      {/* THE PLATFORM , the assistant itself lives on Brandon Latam Network */}
-      <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" className={styles.platform}>
-        <div className={styles.grain} aria-hidden="true" />
-        <div className={styles.platformInner}>
-          <div className={styles.platformMain}>
-            <div data-reveal className={styles.platformKicker}>
-              <span className={styles.platformDot} aria-hidden="true" />
+      {/* THE ASSISTANT , it lives on Brandon Latam Network, not here, so it gets
+          a contained card on the concept's own recessed tone rather than one of
+          the page's dark chapters. Card-size type, so it stops competing with
+          the section headlines it used to shout over. */}
+      <div className={styles.assistBand}>
+        <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" className={styles.assist}>
+          <div data-reveal className={styles.assistMain}>
+            <div className={styles.assistKicker}>
+              <span className={styles.assistDot} aria-hidden="true" />
               {x.aiKicker}
             </div>
-            <h2 data-reveal className={styles.platformTitle}>
+            <h2 className={styles.assistTitle}>
               {x.aiTitle.split(" ").slice(0, -1).join(" ")}{" "}
-              <span className={styles.platformTitleItalic}>{x.aiTitle.split(" ").slice(-1)}</span>
+              <span className={styles.assistTitleItalic}>{x.aiTitle.split(" ").slice(-1)}</span>
             </h2>
-            <p data-reveal className={styles.platformBody}>{x.aiBody}</p>
+            <p className={styles.assistBody}>{x.aiBody}</p>
           </div>
-          <div data-reveal className={styles.platformAside}>
-            <span className={`${styles.cta} ${styles.platformCta}`}>
-              {x.aiCta}
-              <span className={styles.platformArrow} aria-hidden="true">↗</span>
-            </span>
-          </div>
-        </div>
-      </a>
+          <span data-reveal className={styles.assistCta}>
+            {x.aiCta}
+            <span className={styles.assistArrow} aria-hidden="true">↗</span>
+          </span>
+        </a>
+      </div>
 
       {/* 01 , SOLUTIONS: pinned card deck, scroll-driven */}
       <div id="solutions" ref={deckRef} className={styles.deckSection}>
@@ -314,38 +315,14 @@ export default function ConceptG() {
         </div>
       </div>
 
-      {/* 03 , GO DEEPER: the signposts into the four pages */}
-      <div id="deeper" style={{ padding: "clamp(64px,9vw,120px) clamp(20px,5vw,60px)", background: "#fff" }}>
-        <div className={styles.wrap}>
-          <SectionHead num="03" label={x.moreKicker} />
-          <div className={styles.moreGrid}>
-            {deepLinks("/g", lang).map((m, i) => (
-              <motion.div
-                key={m.href}
-                initial={reduce ? false : { opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.9, delay: i * 0.08, ease: EASE }}
-              >
-                <Link href={m.href} className={styles.moreCard}>
-                  <h3>{m.title}</h3>
-                  <p style={{ fontSize: 13.5, lineHeight: 1.65, color: GRAY, margin: "0 0 18px" }}>{m.body}</p>
-                  <span className={styles.moreArrow}>→</span>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* 04 , CONTACT: masthead close, giant clickable phone. The office, the
+      {/* 03 , CONTACT: masthead close, giant clickable phone. The office, the
           toll-free line, the fax, the map and the desk by name all live on
           /g/contact now, so this band keeps the number and points at the page
           instead of repeating it. */}
       <div id="contact" style={{ position: "relative", padding: "clamp(80px,11vw,150px) clamp(20px,5vw,60px)", background: NAVY, overflow: "hidden" }}>
         <div className={styles.grain} aria-hidden="true" />
         <div style={{ position: "relative", zIndex: 2, maxWidth: 1240, margin: "0 auto" }}>
-          <SectionHead num="04" label={g.heads.contact} dark />
+          <SectionHead num="03" label={g.heads.contact} dark />
           <h2 style={{ ...MASTHEAD, margin: "0 0 30px", color: "#fff", maxWidth: 1050 }}>
             <MaskReveal inView delay={0.1}>{t.contactTitle}</MaskReveal>
           </h2>

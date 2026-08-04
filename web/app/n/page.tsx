@@ -8,7 +8,7 @@ import { COPY, OFFERINGS_I18N } from "@/lib/copy";
 import { CountUp, GrowLine, MaskReveal, FadeIn, Magnetic, ScrollProgress, ctaFillFromCursor } from "@/components/motion";
 import { NETWORK_URL } from "@/lib/contact";
 import { NHeader, SectionMark, useLang } from "./chrome";
-import { CARRIERS, CONTACT, EASE, GOLD, GOLD_SOFT, GOLD_DEEP, HAIR, INK_MUTED, NAVY, EXTRA, deepLinks } from "./copy";
+import { CARRIERS, CONTACT, EASE, GOLD, GOLD_SOFT, GOLD_DEEP, HAIR, INK_MUTED, NAVY, EXTRA } from "./copy";
 import styles from "./page.module.css";
 
 // Network , beige canvas, navy depth, Brandon gold. The landing carries the
@@ -130,26 +130,31 @@ export default function ConceptN() {
         </div>
       </div>
 
-      {/* ----- the platform: hands off to the real assistant ----- */}
-      <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" className={styles.aiBand}>
-        <div className={styles.grain} aria-hidden="true" />
-        <div className={styles.aiGlow} aria-hidden="true" />
+      {/* ----- the platform: hands off to the real assistant -----
+          It leaves the site, so it is a card on the beige and not a navy
+          chapter: the chapters here argue for Brandon, this one points away. */}
+      <section style={{ padding: "clamp(38px,5vw,66px) 0" }}>
         <div className={styles.wrap}>
-          <div className={styles.aiRow}>
-            <div style={{ flex: 1, minWidth: 260 }}>
-              <div className={styles.kicker} style={{ color: GOLD_SOFT, marginBottom: 16 }}>{x.aiKicker}</div>
-              <div style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(28px,3.6vw,52px)", lineHeight: 1.08, letterSpacing: "-0.02em", color: "#fbfaf7", marginBottom: 16 }}>
-                {x.aiTitle.split(" ").slice(0, -1).join(" ")}{" "}
-                <span className={styles.displayItalic}>{x.aiTitle.split(" ").slice(-1)}</span>
+          <a data-reveal href={NETWORK_URL} target="_blank" rel="noopener noreferrer" className={styles.aiCard}>
+            <div className={styles.aiCardRow}>
+              <div className={styles.aiCardText}>
+                <div className={styles.aiCardHead}>
+                  <span className={styles.aiPulse} aria-hidden="true" />
+                  <span className={styles.kicker} style={{ color: GOLD_DEEP, fontSize: 10 }}>{x.aiKicker}</span>
+                </div>
+                <div className={styles.aiCardTitle}>
+                  {x.aiTitle.split(" ").slice(0, -1).join(" ")}{" "}
+                  <span className={styles.displayItalic}>{x.aiTitle.split(" ").slice(-1)}</span>
+                </div>
+                <p className={styles.aiCardBody}>{x.aiBody}</p>
               </div>
-              <p style={{ fontSize: 15, lineHeight: 1.7, color: "rgba(245,241,232,0.72)", margin: 0, maxWidth: 640 }}>{x.aiBody}</p>
+              <span className={styles.aiCta}>
+                {x.aiCta} <span className={styles.aiArrow} aria-hidden="true">↗</span>
+              </span>
             </div>
-            <span className={styles.aiCta}>
-              {x.aiCta} <span className={styles.aiArrow}>↗</span>
-            </span>
-          </div>
+          </a>
         </div>
-      </a>
+      </section>
 
       {/* ----- the statement and the numbers behind it ----- */}
       <section style={{ padding: "clamp(56px,7vw,104px) 0" }}>
@@ -208,29 +213,9 @@ export default function ConceptN() {
         </div>
       </section>
 
-      {/* ----- signposts into the deep pages ----- */}
-      <section style={{ padding: "clamp(56px,7vw,96px) 0", borderTop: `1px solid ${HAIR}` }}>
-        <div className={styles.wrap}>
-          <div data-reveal className={styles.kicker} style={{ color: INK_MUTED, marginBottom: 26, fontSize: 10.5 }}>{x.moreKicker}</div>
-          <div className={styles.moreGrid}>
-            {deepLinks("/n", lang).map((m, i) => (
-              <motion.div
-                key={m.href}
-                initial={reduce ? false : { opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.6, delay: i * 0.07, ease: EASE }}
-              >
-                <Link href={m.href} className={styles.moreCard}>
-                  <h3 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(20px,2vw,27px)", lineHeight: 1.2, margin: "0 0 12px", color: NAVY }}>{m.title}</h3>
-                  <p style={{ fontSize: 14, lineHeight: 1.7, color: INK_MUTED, margin: "0 0 18px" }}>{m.body}</p>
-                  <span className={styles.moreArrow}>→</span>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* The four deep pages were repeated here as a signpost row. They sit in
+          the header on every page, and the teaser above already links to the
+          foreign-national page, so the row was the nav in bigger type. */}
 
       {/* ----- carriers ----- */}
       <div data-reveal style={{ padding: "clamp(46px,6vw,76px) 0", borderTop: `1px solid ${HAIR}`, background: "#f0ece1" }}>
@@ -254,7 +239,7 @@ export default function ConceptN() {
         <SectionMark n="03" dark />
         <div className={styles.wrap} style={{ position: "relative", zIndex: 2 }}>
           <GrowLine color="rgba(194,161,91,0.4)" />
-          <h2 className={styles.display} style={{ color: "#fbfaf7", fontSize: "clamp(34px,5vw,74px)", margin: "clamp(30px,4vw,48px) 0 26px", maxWidth: 900 }}>
+          <h2 className={styles.display} style={{ color: "#f5f1e8", fontSize: "clamp(34px,5vw,74px)", margin: "clamp(30px,4vw,48px) 0 26px", maxWidth: 900 }}>
             <MaskReveal inView delay={0.1}>{t.contactTitle}</MaskReveal>
           </h2>
           <p data-reveal style={{ fontSize: 16, lineHeight: 1.7, color: "rgba(245,241,232,0.75)", margin: "0 0 clamp(36px,5vw,56px)", maxWidth: 460 }}>{t.contactBody}</p>

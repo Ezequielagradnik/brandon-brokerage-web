@@ -136,7 +136,7 @@ export default function FirmPage() {
             <div style={{ ...MONO_K, color: GOLD_SOFT, marginBottom: 14 }}>03 / {x.teamKicker}</div>
             <GrowLine color="rgba(169,129,47,0.6)" />
           </div>
-          <h2 data-reveal style={{ fontFamily: SERIF, fontWeight: 500, fontSize: "clamp(30px,4.2vw,60px)", lineHeight: 1.04, letterSpacing: "-0.01em", margin: "0 0 22px", color: "#f7f3ea", maxWidth: 760 }}>{x.teamTitle}</h2>
+          <h2 data-reveal style={{ fontFamily: SERIF, fontWeight: 500, fontSize: "clamp(30px,4.2vw,60px)", lineHeight: 1.04, letterSpacing: "-0.01em", margin: "0 0 22px", color: "#f3efe6", maxWidth: 760 }}>{x.teamTitle}</h2>
           <p data-reveal style={{ fontSize: 16, lineHeight: 1.72, color: "rgba(243,239,230,0.72)", margin: "0 0 clamp(40px,5vw,64px)", maxWidth: 640 }}>{x.teamBody}</p>
 
           <div className={styles.masthead}>

@@ -33,7 +33,7 @@ export const MONO_K: CSSProperties = {
 // keeps its cadence at 40s.
 export const CARRIERS = ["Lincoln", "John Hancock", "AIG", "Nationwide", "Principal", "MassMutual", "Mutual of Omaha", "Protective", "Prudential", "Pacific Life", "Transamerica", "Symetra", "Global Atlantic", "Allianz"];
 
-export { CONTACT, DEEP as EXTRA, DIRECTORY, OFFICE, PRODUCT_DETAIL, deepLinks, deepNav } from "@/lib/deep";
+export { CONTACT, DEEP as EXTRA, DIRECTORY, OFFICE, PRODUCT_DETAIL, deepNav } from "@/lib/deep";
 
 // The directory arrives from lib/deep frozen with `as const`, so DIRECTORY[lang]
 // is a union of two readonly tuples whose people differ , some carry an

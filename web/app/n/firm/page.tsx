@@ -130,7 +130,7 @@ export default function FirmPage() {
         <div className={styles.wrap} style={{ position: "relative", zIndex: 2 }}>
           <GrowLine color="rgba(194,161,91,0.4)" />
           <div data-reveal className={styles.kicker} style={{ color: GOLD_SOFT, margin: "clamp(26px,3vw,40px) 0 16px", fontSize: 10.5 }}>{x.teamKicker}</div>
-          <h2 data-reveal className={styles.display} style={{ color: "#fbfaf7", fontSize: "clamp(30px,4vw,60px)", margin: "0 0 22px", maxWidth: 760 }}>{x.teamTitle}</h2>
+          <h2 data-reveal className={styles.display} style={{ color: "#f5f1e8", fontSize: "clamp(30px,4vw,60px)", margin: "0 0 22px", maxWidth: 760 }}>{x.teamTitle}</h2>
           <p data-reveal style={{ fontSize: 15.5, lineHeight: 1.7, color: "rgba(245,241,232,0.72)", margin: "0 0 clamp(38px,5vw,60px)", maxWidth: 620 }}>{x.teamBody}</p>
 
           <div className={styles.masthead}>

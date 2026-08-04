@@ -111,7 +111,7 @@ export function NFooter({ lang }: { lang: Lang }) {
     <footer className={styles.innerFoot}>
       <div className={styles.grain} aria-hidden="true" />
       <div className={styles.wrap} style={{ position: "relative", zIndex: 2 }}>
-        <h2 className={styles.display} style={{ color: "#fbfaf7", fontSize: "clamp(26px,3.4vw,48px)", margin: "0 0 22px", maxWidth: 720 }}>
+        <h2 className={styles.display} style={{ color: "#f5f1e8", fontSize: "clamp(26px,3.4vw,48px)", margin: "0 0 22px", maxWidth: 720 }}>
           <MaskReveal inView delay={0.05}>{t.contactTitle}</MaskReveal>
         </h2>
         <div data-reveal style={{ display: "flex", flexWrap: "wrap", gap: "clamp(24px,4vw,56px)", alignItems: "center" }}>

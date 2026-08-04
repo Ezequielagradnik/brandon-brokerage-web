@@ -10,7 +10,7 @@ import { ScrollProgress, WordsReveal, FadeIn, CountUp, GrowLine, Magnetic, MaskR
 import { motion, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { NETWORK_URL } from "@/lib/contact";
 import { DHeader, SectionHead, useLang } from "./chrome";
-import { BODY, CARRIERS, EASE, GOLD, GOLD_DIM, GOLD_SOFT, HAIR, MONO_K, MUTED, NAVY, SERIF, EXTRA, OFFICE, deepLinks } from "./copy";
+import { BODY, CARRIERS, EASE, GOLD, GOLD_DIM, HAIR, MONO_K, MUTED, NAVY, SERIF, EXTRA, OFFICE } from "./copy";
 import styles from "./page.module.css";
 
 // Ivory & Sapphire. The landing carries the argument: the silk hero, the
@@ -220,27 +220,34 @@ export default function ConceptD() {
         </div>
       </div>
 
-      {/* THE PLATFORM , the assistant is not demoed here, it is handed over */}
-      <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" className={styles.platBand}>
-        <span className={styles.platGlow} aria-hidden="true" />
-        <span className={styles.platInner}>
-          <span className={styles.platCopy}>
-            <span style={{ ...MONO_K, color: GOLD_SOFT, display: "block", marginBottom: 14 }}>{x.aiKicker}</span>
-            <GrowLine color="rgba(169,129,47,0.6)" style={{ marginBottom: "clamp(20px,2.6vw,32px)" }} />
-            <span className={styles.platTitle}>
-              <MaskReveal inView delay={0.05}>{x.aiTitle}</MaskReveal>
+      {/* THE PLATFORM , the assistant is not demoed here, it is handed over. It
+          leaves the site, so it is an aside on the concept's own cream , one
+          card, the gold rule and the header's pulsing dot , and not one of the
+          numbered sapphire chapters, which are Brandon's own argument. */}
+      <div style={{ padding: "clamp(36px,4.5vw,64px) clamp(20px,5vw,60px) 0", background: "#f3efe6" }}>
+        <div className={styles.wrapD}>
+          <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" className={styles.platCard}>
+            <span className={styles.platCopy}>
+              <span className={styles.platKicker}>
+                <span className={styles.platDot} aria-hidden="true" />
+                {x.aiKicker}
+              </span>
+              <GrowLine color={HAIR} style={{ marginBottom: "clamp(16px,2vw,22px)" }} />
+              <span className={styles.platTitle}>
+                <MaskReveal inView delay={0.05}>{x.aiTitle}</MaskReveal>
+              </span>
+              <span data-reveal className={styles.platBody}>{x.aiBody}</span>
             </span>
-            <span data-reveal className={styles.platBody}>{x.aiBody}</span>
-          </span>
-          <span className={styles.platAside}>
-            <span className={styles.platCta}>
-              {x.aiCta}
-              <span className={styles.platArrow} aria-hidden="true">↗</span>
+            <span className={styles.platAside}>
+              <span className={styles.platCta}>
+                {x.aiCta}
+                <span className={styles.platArrow} aria-hidden="true">↗</span>
+              </span>
+              <span className={styles.platHost}>brandonlatamnetwork.com</span>
             </span>
-            <span className={styles.platHost}>brandonlatamnetwork.com</span>
-          </span>
-        </span>
-      </a>
+          </a>
+        </div>
+      </div>
 
       {/* STATS , drawn hairlines + count-up */}
       <div data-reveal style={{ padding: "clamp(48px,6vw,72px) clamp(20px,5vw,60px)", background: "#f3efe6" }}>
@@ -325,32 +332,9 @@ export default function ConceptD() {
         </div>
       </div>
 
-      {/* GO DEEPER , signposts into the four inner pages */}
-      <div style={{ padding: "clamp(60px,8vw,110px) clamp(20px,5vw,60px)", background: "#f3efe6", borderTop: "1px solid rgba(18,41,74,0.12)" }}>
-        <div className={styles.wrapD}>
-          <SectionHead index="03" kicker={x.moreKicker} style={{ marginBottom: 34 }} />
-          <div className={styles.moreGrid}>
-            {deepLinks("/d", lang).map((m, i) => (
-              <motion.div
-                key={m.href}
-                initial={reduce ? false : { opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.6, delay: i * 0.07, ease: EASE }}
-              >
-                <Link href={m.href} className={styles.moreCard}>
-                  <h3 style={{ fontFamily: SERIF, fontWeight: 500, fontSize: "clamp(21px,2.1vw,29px)", lineHeight: 1.16, margin: "0 0 14px", color: NAVY }}>{m.title}</h3>
-                  <p style={{ fontSize: 14.5, lineHeight: 1.7, color: BODY, margin: "0 0 20px" }}>{m.body}</p>
-                  <span className={styles.moreArrow}>→</span>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* CARRIERS MARQUEE */}
-      <div data-reveal style={{ padding: "clamp(56px,7vw,90px) clamp(20px,5vw,60px)", background: "#f3efe6", borderTop: "1px solid rgba(18,41,74,0.1)" }}>
+      {/* CARRIERS MARQUEE , the four inner pages are in the header on every page,
+          so the landing no longer repeats them in bigger type down here */}
+      <div data-reveal style={{ padding: "clamp(56px,7vw,90px) clamp(20px,5vw,60px)", background: "#f3efe6", borderTop: "1px solid rgba(18,41,74,0.12)" }}>
         <div className={styles.wrapD}>
           <div style={{ fontSize: 12, letterSpacing: "0.24em", textTransform: "uppercase", color: MUTED, marginBottom: 34 }}>{t.carriersLabel}</div>
           <div style={{ position: "relative", overflow: "hidden", WebkitMaskImage: "linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)", maskImage: "linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)" }}>
@@ -375,7 +359,8 @@ export default function ConceptD() {
       <div id="contact" style={{ position: "relative", padding: "clamp(80px,11vw,150px) clamp(20px,5vw,60px)", background: "#ece7db" }}>
         <div className={styles.wrapD}>
           <div data-reveal style={{ maxWidth: 760 }}>
-            <div style={{ ...MONO_K, marginBottom: 14 }}>04 / {t.contactKicker}</div>
+            {/* 03 now: the go-deeper signposts used to sit between 02 and this */}
+            <div style={{ ...MONO_K, marginBottom: 14 }}>03 / {t.contactKicker}</div>
             <GrowLine color={HAIR} style={{ marginBottom: 26 }} />
             <h2 style={{ fontFamily: SERIF, fontWeight: 500, fontSize: "clamp(38px,5.5vw,72px)", lineHeight: 1.02, margin: "0 0 28px", color: NAVY }}>{t.contactTitle}</h2>
             <p style={{ fontSize: 17, lineHeight: 1.66, color: BODY, fontWeight: 400, margin: 0, maxWidth: 480 }}>{t.contactBody}</p>

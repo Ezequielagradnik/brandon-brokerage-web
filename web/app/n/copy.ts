@@ -10,4 +10,4 @@ export const INK_MUTED = "#4a5568";
 export const HAIR = "rgba(20,34,74,0.16)";
 export const EASE = [0.16, 1, 0.3, 1] as const;
 
-export { CARRIERS, CONTACT, DEEP as EXTRA, DIRECTORY, OFFICE, PRODUCT_DETAIL, deepLinks, deepNav } from "@/lib/deep";
+export { CARRIERS, CONTACT, DEEP as EXTRA, DIRECTORY, OFFICE, PRODUCT_DETAIL, deepNav } from "@/lib/deep";

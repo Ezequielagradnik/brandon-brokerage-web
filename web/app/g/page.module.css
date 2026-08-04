@@ -1,4 +1,8 @@
-/* Boutique Latam — modeled on bblatam.com. Navy #14224a, gold #c2a15b, Lora serif. */
+/* Boutique Latam — modeled on bblatam.com. Navy #14224a, gold #c2a15b, Lora serif.
+   Two near-whites and no more: #ffffff is the page tone, #f4f1e9 is the one
+   recessed tone (chapter grounds, cards that sit back, hover washes). A third
+   near-white would read as an accident, so anything off-white here is one of
+   those two. */
 
 .page {
   width: 100%;
@@ -18,7 +22,7 @@
 }
 
 /* anchor targets land below the floating nav pill */
-.page :where(#top, #solutions, #foreign, #deeper, #firm, #insights, #team, #contact) {
+.page :where(#top, #solutions, #foreign, #firm, #insights, #team, #contact) {
   scroll-margin-top: 96px;
 }
 
@@ -187,6 +191,7 @@
 .deckSection {
   position: relative;
   height: 300vh;
+  /* the recessed tone */
   background: #f4f1e9;
 }
 .deckPin {
@@ -500,44 +505,6 @@
   color: #d9c291 !important;
 }
 
-/* ————— landing: the signposts into the deep pages ————— */
-.moreGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(20px, 2.6vw, 36px);
-}
-.moreCard {
-  display: block;
-  border-top: 1px solid rgba(20, 34, 74, 0.25);
-  padding-top: 22px;
-  color: inherit;
-}
-.moreCard h3 {
-  font-family: var(--font-lora), serif;
-  font-weight: 500;
-  font-size: clamp(20px, 2vw, 27px);
-  line-height: 1.22;
-  color: #14224a;
-  margin: 0 0 12px;
-  transition: color 0.3s ease;
-}
-.moreCard:hover h3 {
-  color: #7d6425;
-}
-.moreArrow {
-  display: inline-block;
-  color: #7d6425;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.moreCard:hover .moreArrow {
-  transform: translateX(6px);
-}
-@media (max-width: 900px) {
-  .moreGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* ————— who we serve ————— */
 .serveGrid {
   display: grid;
@@ -744,7 +711,8 @@
 @media (hover: hover) and (pointer: fine) {
   .prodRow:hover {
     padding-left: 18px;
-    background: rgba(20, 34, 74, 0.03);
+    /* the recessed tone, rather than a cool grey nobody else on the page uses */
+    background: #f4f1e9;
   }
 }
 .prodName {
@@ -932,7 +900,6 @@
 }
 
 /* the rest of the page already has focus rings; give the new controls theirs */
-.moreCard:focus-visible,
 .serveItem:focus-visible,
 .netCard:focus-visible,
 .prodRow:focus-visible,
@@ -944,8 +911,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .moreArrow,
-  .moreCard h3,
   .serveItem::before,
   .serveItem > span,
   .netCard,
@@ -956,145 +921,6 @@
   .resItem,
   .resArrow,
   .backLink {
-    transition: none;
-  }
-}
-
-/* ————— the platform band: the whole navy block links out to Brandon Latam
-   Network, where the assistant actually lives. Appended last on purpose, so the
-   .cta overrides below beat the base .cta rules earlier in this file. ————— */
-.platform {
-  position: relative;
-  display: block;
-  overflow: hidden;
-  background: #14224a;
-  padding: clamp(52px, 6.5vw, 96px) clamp(20px, 5vw, 60px);
-}
-/* a gold hairline draws across the top edge as the block is hovered */
-.platform::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: #c2a15b;
-  z-index: 3;
-  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-@media (hover: hover) and (pointer: fine) {
-  .platform:hover::before {
-    width: 100%;
-  }
-}
-.platform:focus-visible {
-  outline: 2px solid #c2a15b;
-  outline-offset: -6px;
-}
-.platformInner {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  max-width: 1240px;
-  margin: 0 auto;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: clamp(28px, 4vw, 64px);
-}
-.platformMain {
-  flex: 1 1 420px;
-  min-width: 0;
-}
-.platformKicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  font-family: var(--font-plex-mono), monospace;
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: #d9c291;
-  margin-bottom: clamp(16px, 2vw, 22px);
-}
-.platformDot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #d9c291;
-  animation: gPulse 2.6s ease-out infinite;
-}
-.platformTitle {
-  font-family: var(--font-lora), serif;
-  font-weight: 500;
-  font-size: clamp(30px, 4.2vw, 62px);
-  line-height: 1.04;
-  letter-spacing: -0.02em;
-  color: #ffffff;
-  margin: 0 0 clamp(16px, 2vw, 24px);
-}
-.platformTitleItalic {
-  font-style: italic;
-  color: #d9c291;
-}
-.platformBody {
-  font-size: clamp(14.5px, 1.25vw, 16px);
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.74);
-  margin: 0;
-  max-width: 640px;
-}
-.platformAside {
-  flex-shrink: 0;
-  padding-bottom: 6px;
-}
-.platformCta {
-  display: inline-flex;
-  align-items: center;
-  gap: 11px;
-  padding: 16px 34px;
-  font-size: 12.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-/* the gold sweep and the arrow answer to the whole block, not just the pill */
-.platform:hover .platformCta::after {
-  clip-path: circle(160% at 50% 50%);
-}
-.platform:hover .platformCta {
-  color: #14224a !important;
-}
-.platformArrow {
-  display: inline-block;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.platform:hover .platformArrow {
-  transform: translate(4px, -4px);
-}
-@media (max-width: 620px) {
-  .platformInner {
-    align-items: stretch;
-  }
-  .platformAside {
-    width: 100%;
-    padding-bottom: 0;
-  }
-  .platformCta {
-    width: 100%;
-    justify-content: center;
-    padding: 15px 22px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .platformDot {
-    animation: none;
-  }
-  .platform::before,
-  .platformArrow,
-  .platformCta,
-  .platformCta::after {
     transition: none;
   }
 }
@@ -1196,7 +1022,7 @@
   width: 100%;
   height: clamp(300px, 40vw, 460px);
   border: 1px solid rgba(20, 34, 74, 0.14);
-  background: #f9fafb;
+  background: #f4f1e9;
   overflow: hidden;
 }
 @media (max-width: 900px) {
@@ -1327,5 +1153,159 @@
   .ctcDirArrow,
   .dirLink {
     transition: none;
+  }
+}
+
+/* ==========================================================================
+   The AI assistant — it lives on Brandon Latam Network, so on Brandon's own
+   landing it is a card that points off the site, not one of the page's
+   chapters. Page-tone band, recessed-tone card, hairline and the gold rule
+   drawn on hover, the same containment idiom as .netCard. Card-size Lora, so
+   it sits below the section headlines instead of shouting over them.
+   Appended last on purpose: these are plain class selectors, so anything that
+   overrides a rule above has to sit below it. Every selector here is new.
+   ========================================================================== */
+
+.assistBand {
+  background: #ffffff;
+  padding: clamp(30px, 4vw, 56px) clamp(20px, 5vw, 60px);
+}
+/* no overflow clip: the gold rule sits on the border edge at top/left -1px, the
+   way .netCard's does, and a clip would shave it to a hairline */
+.assist {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: clamp(18px, 3vw, 44px);
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: clamp(22px, 2.6vw, 34px) clamp(22px, 3vw, 40px);
+  background: #f4f1e9;
+  border: 1px solid rgba(20, 34, 74, 0.14);
+  transition: border-color 0.25s ease, transform 0.28s cubic-bezier(0.23, 1, 0.32, 1);
+}
+/* the gold rule draws across the top edge as the card is hovered */
+.assist::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 0;
+  height: 2px;
+  background: #c2a15b;
+  transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .assist:hover {
+    border-color: rgba(194, 161, 91, 0.55);
+    transform: translateY(-2px);
+  }
+  .assist:hover::before {
+    width: calc(100% + 2px);
+  }
+}
+/* honest press for a link that leaves the site: the lift settles back down */
+.assist:active {
+  transform: translateY(0);
+}
+.assist:focus-visible {
+  outline: 2px solid #c2a15b;
+  outline-offset: 3px;
+}
+.assistMain {
+  flex: 1 1 400px;
+  min-width: 0;
+}
+.assistKicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #7d6425;
+  margin-bottom: 13px;
+}
+/* the same pulse the header's assistant entry uses, tuned for a light ground */
+.assistDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #9a7b32;
+  box-shadow: 0 0 0 0 rgba(194, 161, 91, 0.7);
+  animation: gPulse 2.6s ease-out infinite;
+}
+.assistTitle {
+  font-family: var(--font-lora), serif;
+  font-weight: 500;
+  font-size: clamp(20px, 2vw, 27px);
+  line-height: 1.22;
+  letter-spacing: -0.01em;
+  color: #14224a;
+  margin: 0 0 11px;
+  text-wrap: balance;
+}
+.assistTitleItalic {
+  font-style: italic;
+  color: #7d6425;
+}
+.assistBody {
+  font-size: 13.5px;
+  line-height: 1.68;
+  color: #475467;
+  margin: 0;
+  max-width: 620px;
+}
+/* footer-weight call to action: mono caps and a gold rule that draws under it */
+.assistCta {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #14224a;
+  background-image: linear-gradient(#c2a15b, #c2a15b);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.assist:hover .assistCta {
+  background-size: 100% 1px;
+}
+.assistArrow {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.assist:hover .assistArrow {
+  transform: translate(3px, -3px);
+}
+@media (max-width: 700px) {
+  .assist {
+    align-items: flex-start;
+    gap: 18px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .assistDot {
+    animation: none;
+  }
+  .assist,
+  .assist::before,
+  .assistCta,
+  .assistArrow {
+    transition: none;
+  }
+  /* border, gold rule and underline still answer to hover; nothing moves */
+  .assist:hover,
+  .assist:hover .assistArrow {
+    transform: none;
   }
 }

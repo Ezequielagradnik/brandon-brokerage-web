@@ -40,9 +40,10 @@
   box-shadow: 0 6px 24px rgba(20, 34, 74, 0.05);
   transition: background 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease, padding 0.4s ease;
 }
-/* on scroll it firms up to white glass, never navy */
+/* on scroll it firms up to beige glass, never navy or white: the pill is the
+   page tone at full strength, held by the gold hairline and its shadow */
 .headerSolid {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(245, 241, 232, 0.92);
   border-color: rgba(194, 161, 91, 0.42);
   box-shadow: 0 14px 44px rgba(20, 34, 74, 0.12);
 }
@@ -338,37 +339,66 @@
 }
 
 
-/* ————— the platform band (links out to the real assistant) ————— */
-.aiBand {
+/* ————— the assistant card (links out to the real assistant) —————
+   This one block leaves the site. Dressed as a navy chapter it read as one of
+   Brandon's own, so it sits on the concept's beige at card weight: the recessed
+   tone, a hairline, and the gold rule the other cards use. No grain, no glow,
+   and a title that stays under every section headline on the page. */
+.aiCard {
   position: relative;
   display: block;
   overflow: hidden;
-  background: #14224a;
-  color: #f5f1e8;
+  background: #f0ece1;
+  border: 1px solid rgba(20, 34, 74, 0.16);
+  padding: clamp(24px, 2.8vw, 40px);
+  transition: background 0.3s var(--ease-out), border-color 0.3s var(--ease-out);
 }
-.aiRow {
-  position: relative;
-  z-index: 2;
+/* the gold rule sits short at rest and completes under the cursor, the way the
+   pillar cards do */
+.aiCard::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #c2a15b;
+  transform: scaleX(0.18);
+  transform-origin: 0 50%;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.aiCardRow {
   display: flex;
   align-items: center;
-  gap: clamp(20px, 3vw, 46px);
-  width: 100%;
-  padding: clamp(34px, 4.4vw, 62px) 0;
-  text-align: left;
+  gap: clamp(18px, 3vw, 44px);
   flex-wrap: wrap;
 }
-.aiGlow {
-  position: absolute;
-  width: 40vw;
-  height: 40vw;
-  max-width: 520px;
-  max-height: 520px;
-  right: -6vw;
-  top: -14vw;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(194, 161, 91, 0.3), rgba(194, 161, 91, 0) 64%);
-  pointer-events: none;
-  animation: nDrift 24s ease-in-out infinite alternate;
+.aiCardText {
+  flex: 1 1 300px;
+  min-width: 0;
+}
+.aiCardHead {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 13px;
+}
+.aiCardTitle {
+  font-family: var(--font-bodoni), serif;
+  font-weight: 500;
+  font-size: clamp(21px, 2.1vw, 28px);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: #14224a;
+  margin: 0 0 11px;
+  text-wrap: balance;
+}
+.aiCardBody {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #4a5568;
+  margin: 0;
+  max-width: 560px;
 }
 .aiCta {
   flex-shrink: 0;
@@ -376,25 +406,38 @@
   align-items: center;
   gap: 10px;
   border: 1px solid rgba(194, 161, 91, 0.6);
-  color: #d9c291;
+  color: #14224a;
   padding: 14px 26px;
   font-family: var(--font-plex-mono), monospace;
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  transition: background 0.3s, color 0.3s, border-color 0.3s;
+  transition: background 0.3s, color 0.3s, border-color 0.3s, transform 0.14s var(--ease-out);
 }
-.aiBand:hover .aiCta {
-  background: #c2a15b;
-  border-color: #c2a15b;
-  color: #14224a;
+@media (hover: hover) and (pointer: fine) {
+  .aiCard:hover {
+    background: #f5f1e8;
+    border-color: rgba(194, 161, 91, 0.55);
+  }
+  .aiCard:hover::after {
+    transform: scaleX(1);
+  }
+  .aiCard:hover .aiCta {
+    background: #c2a15b;
+    border-color: #c2a15b;
+  }
+  .aiCard:hover .aiArrow {
+    transform: translate(4px, -4px);
+  }
+}
+/* the press lands on the pill: [data-reveal] leaves an inline transform on the
+   card itself, so a transform there would never take */
+.aiCard:active .aiCta {
+  transform: scale(0.97);
 }
 .aiArrow {
   display: inline-block;
   transition: transform 0.26s var(--ease-out);
-}
-.aiBand:hover .aiArrow {
-  transform: translate(4px, -4px);
 }
 
 /* ————— signature: horizontal pillar gallery ————— */
@@ -426,7 +469,7 @@
   flex: 0 0 auto;
   width: clamp(280px, 30vw, 400px);
   min-height: clamp(360px, 46vh, 470px);
-  background: #f5f1e8;
+  background: #f0ece1;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -434,8 +477,10 @@
   padding: clamp(26px, 2.6vw, 38px);
   transition: background 0.5s ease;
 }
+/* the card rests on the recessed tone and comes up to the page tone on hover:
+   two beiges, and the brighter one still means "under the cursor" */
 .galCard:hover {
-  background: #fbf9f4;
+  background: #f5f1e8;
 }
 .galCard::after {
   content: "";
@@ -591,7 +636,7 @@
   color: #c8a76a !important;
 }
 .serveItem:hover > span:last-child {
-  color: #fff !important;
+  color: #f5f1e8 !important;
 }
 
 /* Tellus / Crump + ICS */
@@ -605,7 +650,7 @@
   position: relative;
   padding: clamp(24px, 2.8vw, 38px);
   border: 1px solid rgba(20, 34, 74, 0.14);
-  background: #fbf9f4;
+  background: #f0ece1;
   transition: border-color 0.25s var(--ease-out), transform 0.28s var(--ease-out);
 }
 .netCard::before {
@@ -891,7 +936,7 @@
   font-family: var(--font-bodoni), serif;
   font-size: clamp(18px, 1.7vw, 23px);
   line-height: 1.15;
-  color: #fff;
+  color: #f5f1e8;
   margin-bottom: 5px;
   transition: color 0.35s ease;
   text-wrap: balance;
@@ -971,7 +1016,7 @@
   transform: scaleX(1);
 }
 
-/* ————— inner pages: masthead, closing band, and the landing's signposts ————— */
+/* ————— inner pages: masthead and closing band ————— */
 .headerLogo {
   display: inline-flex;
   flex-shrink: 0;
@@ -979,35 +1024,6 @@
 
 .pageHero {
   padding: clamp(120px, 15vh, 190px) 0 clamp(40px, 5vw, 70px);
-}
-
-.moreGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: clamp(16px, 2vw, 26px);
-}
-.moreCard {
-  display: block;
-  padding: clamp(22px, 2.4vw, 32px);
-  border: 1px solid rgba(20, 34, 74, 0.16);
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.5);
-  transition: border-color 0.3s var(--ease-out), background 0.3s var(--ease-out), transform 0.3s var(--ease-out);
-}
-@media (hover: hover) and (pointer: fine) {
-  .moreCard:hover {
-    border-color: rgba(194, 161, 91, 0.6);
-    background: #ffffff;
-    transform: translateY(-3px);
-  }
-  .moreCard:hover .moreArrow {
-    transform: translateX(5px);
-  }
-}
-.moreArrow {
-  display: inline-block;
-  color: #9a7b32;
-  transition: transform 0.35s var(--ease-out);
 }
 
 .innerFoot {
@@ -1032,13 +1048,13 @@
 @media (prefers-reduced-motion: reduce) {
   .heroGlow,
   .heroGlow2,
-  .aiGlow,
   .aiPulse {
     animation: none;
   }
-  .moreCard,
-  .moreArrow,
-  .backLink {
+  .backLink,
+  .aiCard,
+  .aiCard::after,
+  .aiCta {
     transition: none;
   }
   .galImg img,
@@ -1173,7 +1189,7 @@
      square outline showing at the corners */
   border-radius: 14px;
   height: clamp(300px, 40vw, 470px);
-  background: #e9e3d6;
+  background: #f0ece1;
 }
 .mapInner {
   width: 100%;

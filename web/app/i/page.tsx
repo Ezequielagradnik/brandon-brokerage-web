@@ -8,14 +8,16 @@ import { COPY, OFFERINGS_I18N } from "@/lib/copy";
 import { ScrollProgress, MaskReveal, LettersReveal, FadeIn, CountUp, ParallaxImg, ClipReveal, GrowLine, Magnetic, ctaFillFromCursor } from "@/components/motion";
 import { NETWORK_URL } from "@/lib/contact";
 import { ChapterHead, FootBar, IHeader, useLang } from "./chrome";
-import { CARRIERS, EXTRA, FAINT, INK, LABEL, MUTED, SERIF, deepLinks, numeral } from "./copy";
+import { CARRIERS, EXTRA, FAINT, INK, LABEL, MUTED, SERIF, numeral } from "./copy";
 import styles from "./page.module.css";
 
 // Maison Editorial. The landing carries the argument and nothing else: the
-// masthead, the platform, the ledger of numbers, the mission, the four
-// numbered chapters, the specialty in brief and the catalogue index. Our Firm,
+// masthead, the ledger of numbers, and four numbered chapters (the mission,
+// the firm's own chapters, the specialty in brief, the catalogue). Our Firm,
 // Products, Foreign Nationals and Forms each open onto their own page, the way
-// brandonbrokerage.com splits it.
+// brandonbrokerage.com splits it, and the header carries them on every page.
+// The group's AI platform sits between chapters as a card rather than as one of
+// them, because it leaves the site. The numbered chapters are Brandon's own.
 
 /* Each chapter cross-references the page where it is treated in full. */
 const CHAPTER_HREF = ["/i/foreign-nationals", "/i/firm", "/i/firm", "/i/products"];
@@ -128,26 +130,31 @@ export default function ConceptI() {
         </div>
       </div>
 
-      {/* THE PLATFORM , the group's own network; the whole block leaves the site */}
-      <div id="network" className={styles.wrap} style={{ paddingTop: "clamp(70px,9vw,120px)" }}>
-        <ChapterHead num={`${no} 01`} title={x.aiKicker} note="brandonlatamnetwork.com" />
+      {/* THE PLATFORM , the group's own network. It is on another site, so it
+          is a card on the recessed tone and carries no chapter number: the
+          whole block is still one link out. */}
+      <div id="network" className={styles.wrap} style={{ paddingTop: "clamp(56px,7vw,92px)" }}>
         <a
           data-reveal
           href={NETWORK_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className={styles.netRow}
+          className={styles.netCard}
         >
-          <span className={styles.netTitle} style={{ fontFamily: SERIF }}>
-            {ai.head}
-            <span style={{ fontStyle: "italic" }}>{ai.tail}</span>
-          </span>
-          <span className={styles.netAside}>
-            <span className={styles.netBody}>{x.aiBody}</span>
-            <span className={styles.netCta}>
-              {x.aiCta}
-              <span className={styles.netArrow} aria-hidden="true">↗</span>
+          <span className={styles.netCardText}>
+            <span className={styles.netCardHeads}>
+              <span style={LABEL}>{x.aiKicker}</span>
+              <span style={{ ...LABEL, color: FAINT }}>brandonlatamnetwork.com</span>
             </span>
+            <span className={styles.netCardTitle} style={{ fontFamily: SERIF }}>
+              {ai.head}
+              <span style={{ fontStyle: "italic" }}>{ai.tail}</span>
+            </span>
+            <span className={styles.netCardBody}>{x.aiBody}</span>
+          </span>
+          <span className={styles.netCardCta}>
+            {x.aiCta}
+            <span className={styles.netArrow} aria-hidden="true">↗</span>
           </span>
         </a>
       </div>
@@ -177,14 +184,14 @@ export default function ConceptI() {
       {/* MISSION , indented editorial pull quote */}
       <div className={styles.wrap} style={{ paddingTop: "clamp(90px,13vw,170px)", paddingBottom: "clamp(90px,13vw,170px)" }}>
         <div className={styles.quoteGrid}>
-          <div data-reveal className={styles.quoteMark} style={LABEL}>{no} 02<br />{t.missionKicker.replace(/^(Our|Nuestra) /, "")}</div>
+          <div data-reveal className={styles.quoteMark} style={LABEL}>{no} 01<br />{t.missionKicker.replace(/^(Our|Nuestra) /, "")}</div>
           <p data-reveal className={styles.quoteText} style={{ fontFamily: SERIF }}>{t.missionText}<span style={{ fontStyle: "italic" }}>{t.missionHighlight}</span>.</p>
         </div>
       </div>
 
       {/* THE FIRM , signature scroll moment: the chapter index marks itself */}
       <div id="firm" className={styles.wrap} style={{ paddingBottom: "clamp(60px,8vw,110px)" }}>
-        <ChapterHead num={`${no} 03`} title={lang === "es" ? "Capítulos" : "Chapters"} note={t.offerNote} />
+        <ChapterHead num={`${no} 02`} title={lang === "es" ? "Capítulos" : "Chapters"} note={t.offerNote} />
 
         <div className={styles.tocGrid}>
           {/* sticky table of contents , marks itself as you read */}
@@ -237,7 +244,7 @@ export default function ConceptI() {
 
       {/* FOREIGN NATIONALS , the specialty in brief; the case flow has its own page */}
       <div id="foreign" className={styles.wrap} style={{ paddingBottom: "clamp(70px,9vw,130px)" }}>
-        <ChapterHead num={`${no} 04`} title={x.fnKicker} note={x.fnFlowTitle} />
+        <ChapterHead num={`${no} 03`} title={x.fnKicker} note={x.fnFlowTitle} />
         <div className={styles.fnSpread}>
           <div className={styles.fnText}>
             <h2 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: "clamp(34px,5.4vw,76px)", lineHeight: 1.02, letterSpacing: "-0.015em", margin: "0 0 clamp(24px,3vw,36px)", color: INK }}>
@@ -270,7 +277,7 @@ export default function ConceptI() {
 
       {/* PRODUCTS , the catalogue index; every line opens on its own page */}
       <div id="products" className={styles.wrap} style={{ paddingBottom: "clamp(70px,9vw,130px)" }}>
-        <ChapterHead num={`${no} 05`} title={t.productsKicker} note={t.productsBacked} />
+        <ChapterHead num={`${no} 04`} title={t.productsKicker} note={t.productsBacked} />
         <div data-reveal>
           {t.products.map((p, i) => (
             <motion.div
@@ -290,23 +297,6 @@ export default function ConceptI() {
           <span style={LABEL}>{lang === "es" ? "Aseguradoras" : "Carriers"}</span>
           {CARRIERS.map((c) => (
             <span key={c} style={{ fontSize: 13, color: FAINT, letterSpacing: "0.02em" }}>{c}</span>
-          ))}
-        </div>
-      </div>
-
-      {/* CONTENTS , the four pages this landing hands off to */}
-      <div className={styles.wrap} style={{ paddingBottom: "clamp(70px,9vw,120px)" }}>
-        <ChapterHead num={`${no} 06`} title={x.moreKicker} note={lang === "es" ? "Tres páginas" : "Three pages"} />
-        <div>
-          {deepLinks("/i", lang).map((m, i) => (
-            <Link key={m.href} data-reveal href={m.href} className={styles.idxRow}>
-              <span style={{ ...LABEL, fontSize: 10 }}>0{i + 1}</span>
-              <span>
-                <span style={{ display: "block", fontFamily: SERIF, fontSize: "clamp(24px,2.8vw,36px)", fontWeight: 400, color: INK, lineHeight: 1.15, marginBottom: 8 }}>{m.title}</span>
-                <span style={{ display: "block", fontSize: 14, lineHeight: 1.7, color: MUTED, maxWidth: 560 }}>{m.body}</span>
-              </span>
-              <span className={styles.idxArrow} aria-hidden="true">→</span>
-            </Link>
           ))}
         </div>
       </div>
