@@ -109,20 +109,32 @@
 }
 
 /* Signature scroll moment: the silk curtain reveals each pillar */
-/* The offer ledger: category / title / blurb on one hairline per row. */
-.offerRow {
-  display: grid;
-  grid-template-columns: clamp(130px, 15vw, 190px) minmax(0, 1fr) minmax(240px, 380px);
-  gap: clamp(18px, 3vw, 52px);
-  align-items: baseline;
-  padding: clamp(28px, 3.6vw, 46px) 0;
-  border-bottom: 1px solid rgba(18, 41, 74, 0.12);
+.silkSection {
+  position: relative;
+  height: 260vh;
+  background: #f3efe6;
 }
-@media (max-width: 860px) {
-  .offerRow {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    padding: 26px 0;
+.silkPin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+.silkMobile {
+  display: none;
+}
+@media (max-width: 900px) {
+  .silkSection {
+    height: auto;
+  }
+  .silkPin {
+    display: none;
+  }
+  .silkMobile {
+    display: block;
+    padding: clamp(56px, 10vw, 90px) clamp(20px, 5vw, 60px);
+    max-width: 760px;
+    margin: 0 auto;
   }
 }
 

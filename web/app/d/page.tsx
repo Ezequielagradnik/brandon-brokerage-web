@@ -1,28 +1,57 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { useScrollReveal } from "@/hooks/useReveals";
 import GlobeArcs, { BLUE_ARCS } from "@/components/GlobeArcs";
-import { COPY, OFFERINGS_I18N } from "@/lib/copy";
+import { COPY, OFFERINGS_I18N, type Lang } from "@/lib/copy";
 import { ScrollProgress, WordsReveal, FadeIn, CountUp, GrowLine, Magnetic, MaskReveal, ctaFillFromCursor } from "@/components/motion";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { NETWORK_URL } from "@/lib/contact";
 import { DHeader, SectionHead, useLang } from "./chrome";
 import { BODY, CARRIERS, EASE, HAIR, HAIR_SAPPHIRE, MONO_K, MUTED, NAVY, SAPPHIRE, SAPPHIRE_DEEP, SERIF, EXTRA, OFFICE } from "./copy";
 import styles from "./page.module.css";
 
 // Ivory & Sapphire. The landing carries the argument: the marble hero, the
-// platform hand-off, the four pillars dissolving over the same stone, the specialty in one
+// platform hand-off, the four pillars dissolving on the cream, the specialty in one
 // paragraph and the phone number. Everything that needs room , the firm, the
 // products, the foreign-national case flow, the forms desk , lives on its own
 // page, the way brandonbrokerage.com splits it.
 
-// Row categories for the offer ledger.
+// ----- Signature scroll moment: the pillars dissolve on the cream -----
 const D_CATS = {
   en: ["Specialty", "Support", "Operations", "Network"],
   es: ["Especialidad", "Soporte", "Operaciones", "Red"],
 };
+
+const dSeg = (p: number, a: number, b: number) => Math.min(1, Math.max(0, (p - a) / (b - a)));
+
+function SilkPanel({ i, progress, reduce, lang }: { i: number; progress: MotionValue<number>; reduce: boolean; lang: Lang }) {
+  const o = OFFERINGS_I18N[lang][i];
+  // without the curtain the swap must be clean: each pillar finishes leaving
+  // before the next arrives, with a beat of bare stone in between
+  const op = useTransform(progress, (p) => {
+    if (reduce) return i === 3 ? 1 : 0;
+    const fadeIn = i === 0 ? 1 : dSeg(p, i / 4 + 0.006, i / 4 + 0.034);
+    const fadeOut = i === 3 ? 0 : dSeg(p, (i + 1) / 4 - 0.034, (i + 1) / 4 - 0.006);
+    return fadeIn * (1 - fadeOut);
+  });
+  const y = useTransform(progress, (p) => (reduce ? 0 : 16 * (1 - dSeg(p, i / 4 + 0.006, i / 4 + 0.05))));
+  return (
+    <motion.div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", opacity: op, y, pointerEvents: "none" }}>
+      <div style={{ maxWidth: 860, padding: "0 clamp(20px,5vw,60px)", textAlign: "center" }}>
+        <div style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 11.5, letterSpacing: "0.26em", textTransform: "uppercase", color: SAPPHIRE_DEEP, marginBottom: 24 }}>0{i + 1} / {D_CATS[lang][i]}</div>
+        <h3 style={{ fontFamily: SERIF, fontWeight: 500, fontSize: "clamp(36px,5.5vw,84px)", lineHeight: 1.04, letterSpacing: "-0.01em", margin: "0 0 22px", color: NAVY }}>{o.title}</h3>
+        <p style={{ fontSize: "clamp(15px,1.4vw,18px)", lineHeight: 1.65, color: BODY, margin: "0 auto", maxWidth: 520 }}>{o.blurb}</p>
+      </div>
+    </motion.div>
+  );
+}
+
+function SilkTick({ i, progress }: { i: number; progress: MotionValue<number> }) {
+  const op = useTransform(progress, (p) => (p >= (i === 0 ? -1 : i / 4) && p < (i + 1) / 4 + (i === 3 ? 1 : 0) ? 1 : 0.3));
+  return <motion.span style={{ width: 26, height: 2, background: SAPPHIRE, opacity: op, display: "block" }} />;
+}
 
 export default function ConceptD() {
   const [lang, setLang] = useLang();
@@ -30,9 +59,14 @@ export default function ConceptD() {
   const x = EXTRA[lang];
   const OFFERINGS = OFFERINGS_I18N[lang];
   const pageRef = useRef<HTMLDivElement>(null);
+  const silkRevealRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
 
   useScrollReveal(pageRef);
+
+  // scrub for the silk-curtain reveal
+  const { scrollYProgress: silkRaw } = useScroll({ target: silkRevealRef, offset: ["start start", "end end"] });
+  const silkProgress = useSpring(silkRaw, { stiffness: 90, damping: 28, mass: 0.4 });
 
   return (
     <div ref={pageRef} className={styles.page}>
@@ -152,20 +186,40 @@ export default function ConceptD() {
         </div>
       </div>
 
-      {/* WHAT WE OFFER , the four pillars as an editorial ledger: mono
-          category, Bodoni title, blurb, one hairline per row. Four rows of
-          document instead of four screens of theater. */}
-      <div id="why" style={{ padding: "clamp(72px,9vw,130px) clamp(20px,5vw,60px)", background: "#f3efe6" }}>
-        <div className={styles.wrapD}>
-          <div data-reveal style={{ marginBottom: "clamp(20px,3vw,36px)" }}>
+      {/* WHAT WE OFFER , the pillars dissolve one after another on the bare
+          cream: the stone stays the hero's, this moment is type alone */}
+      <div id="why" ref={silkRevealRef} className={styles.silkSection}>
+        <div className={styles.silkPin}>
+          {/* clears the fixed header, which is ~74px tall over this pin */}
+          <div style={{ position: "absolute", top: "clamp(92px,13vh,124px)", left: "clamp(20px,5vw,60px)", right: "clamp(20px,5vw,60px)" }}>
             <div style={{ ...MONO_K, color: SAPPHIRE_DEEP, marginBottom: 14 }}>01 / {t.offerKicker}</div>
             <GrowLine color={HAIR_SAPPHIRE} />
           </div>
+
+          {OFFERINGS.map((_, i) => (
+            <SilkPanel key={i} i={i} progress={silkProgress} reduce={!!reduce} lang={lang} />
+          ))}
+
+          <div style={{ position: "absolute", right: "clamp(20px,5vw,60px)", bottom: 24, fontFamily: "var(--font-plex-mono), monospace", fontSize: 10.5, letterSpacing: "0.3em", color: "#8b8574" }}>{lang === "es" ? "SCROLLEÁ PARA REVELAR" : "SCROLL TO REVEAL"}</div>
+          {/* progress ticks */}
+          <div style={{ position: "absolute", left: "clamp(20px,5vw,60px)", bottom: 24, display: "flex", gap: 10 }}>
+            {OFFERINGS.map((_, i) => (
+              <SilkTick key={i} i={i} progress={silkProgress} />
+            ))}
+          </div>
+        </div>
+
+        {/* mobile: plain stacked pillars, no pin */}
+        <div className={styles.silkMobile}>
+          <div data-reveal style={{ marginBottom: 32 }}>
+            <div style={{ ...MONO_K, marginBottom: 14 }}>01 / {t.offerKicker}</div>
+            <GrowLine color={HAIR} />
+          </div>
           {OFFERINGS.map((o, i) => (
-            <div key={o.n} data-reveal className={styles.offerRow}>
-              <div style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: SAPPHIRE_DEEP }}>0{i + 1} / {D_CATS[lang][i]}</div>
-              <h3 style={{ fontFamily: SERIF, fontWeight: 500, fontSize: "clamp(26px,2.9vw,42px)", lineHeight: 1.1, letterSpacing: "-0.01em", margin: 0, color: NAVY, textWrap: "balance" }}>{o.title}</h3>
-              <p style={{ fontSize: "clamp(14.5px,1.15vw,16px)", lineHeight: 1.65, color: BODY, margin: 0 }}>{o.blurb}</p>
+            <div key={o.n} data-reveal style={{ padding: "26px 0", borderBottom: "1px solid rgba(18,41,74,0.14)" }}>
+              <div style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: SAPPHIRE_DEEP, marginBottom: 12 }}>0{i + 1} / {D_CATS[lang][i]}</div>
+              <h3 style={{ fontFamily: SERIF, fontWeight: 500, fontSize: "clamp(26px,6vw,36px)", margin: "0 0 10px", color: NAVY, lineHeight: 1.1 }}>{o.title}</h3>
+              <p style={{ fontSize: 14.5, lineHeight: 1.6, color: BODY, margin: 0 }}>{o.blurb}</p>
             </div>
           ))}
         </div>

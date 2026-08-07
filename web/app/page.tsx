@@ -16,7 +16,7 @@ const T = {
     open: "Open homepage →",
     cards: {
       g: { title: "Aligned with Brandon Latam.", desc: "Modeled on bblatam.com, the sister firm. Pinned card deck, the case-journey map, agent tools, insights, EN/ES toggle, Lora serif." },
-      d: { title: "Ivory and sapphire.", desc: "The masthead sets over real Carrara marble under an ivory veil, the four pillars read as an editorial ledger, and the 3D globe carries the LatAm→Miami arcs in blue. The quietest of the five." },
+      d: { title: "Ivory and sapphire.", desc: "The masthead sets over real Carrara marble under an ivory veil, the four pillars reveal one by one as you scroll, and the 3D globe carries the LatAm→Miami arcs in blue. The quietest of the five." },
       i: { title: "Paper, ink, oversized type.", desc: "Warm paper and near-black ink, giant Cormorant masthead, black & white photography and numbered chapters. A maison lookbook." },
       n: { title: "The site as the platform.", desc: "Beige canvas, navy depth and Brandon gold, the Latam Network palette. Centered masthead, floating glass header, four pillars travelling sideways, the foreign-national case flow, the full product shelf and the team by name. Deepest of the five." },
       s: { title: "The gold silk field.", desc: "The Network language opening on navy: a full-screen three.js silk of gold threads that swells on its own, lifts under the cursor and ripples on click. Behind it, the same pillars, case flow and desk." },
@@ -30,7 +30,7 @@ const T = {
     open: "Abrir home →",
     cards: {
       g: { title: "Alineada con Brandon Latam.", desc: "Modelada sobre bblatam.com, la firma hermana. Mazo de cartas pinneado, el mapa del viaje del caso, herramientas para agentes, insights, toggle EN/ES y serif Lora." },
-      d: { title: "Marfil y zafiro.", desc: "El masthead se asienta sobre mármol de Carrara real bajo un velo marfil, los cuatro pilares se leen como un ledger editorial, y el globo 3D lleva los arcos LatAm→Miami en azul. La más silenciosa de las cinco." },
+      d: { title: "Marfil y zafiro.", desc: "El masthead se asienta sobre mármol de Carrara real bajo un velo marfil, los cuatro pilares se revelan uno a uno con el scroll, y el globo 3D lleva los arcos LatAm→Miami en azul. La más silenciosa de las cinco." },
       i: { title: "Papel, tinta y tipografía gigante.", desc: "Papel cálido y tinta casi negra, masthead Cormorant gigante, fotografía en blanco y negro y capítulos numerados: un lookbook de maison." },
       n: { title: "El sitio como la plataforma.", desc: "Canvas beige, profundidad navy y dorado Brandon: la paleta de Latam Network. Masthead centrado, header flotante de vidrio, cuatro pilares que viajan de costado, el flujo del caso extranjero, todo el catálogo de productos y el equipo con nombre y apellido. La más completa de las cinco." },
       s: { title: "El campo de seda dorada.", desc: "El lenguaje Network abriendo en navy: una seda three.js de hilos dorados a pantalla completa que ondula sola, se levanta bajo el cursor y hace ondas al click. Detrás, los mismos pilares, flujo de casos y equipo." },
