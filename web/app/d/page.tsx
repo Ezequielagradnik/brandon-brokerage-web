@@ -63,10 +63,14 @@ void main(){
   col=mix(col,depth, deepVein*0.62);
   col+=(noise(p*7.0+t*0.1)-0.5)*0.025;
 
-  float mask = mk>0.5
-    ? (res.x>res.y ? smoothstep(0.26,0.78,uv.x) : smoothstep(0.52,0.13,uv.y))
-    : 1.0;
-  if (mk>0.5) { mask*=smoothstep(1.0,0.84,uv.y); } // the ink stays clear of the nav
+  // the type floats in a calm ivory eye at the center; the ink blooms around it
+  float mask=1.0;
+  if (mk>0.5) {
+    vec2 dd = uv - vec2(0.5, 0.54);
+    if (res.x>res.y) { dd.x*=res.x/res.y; } else { dd.y*=1.6; }
+    mask = smoothstep(0.44, 0.8, length(dd));
+    mask *= smoothstep(1.0, 0.84, uv.y); // and stays clear of the nav
+  }
   col=mix(ivory,col, 0.08+0.92*mask);
   gl_FragColor=vec4(col,1.0);
 }
@@ -232,9 +236,9 @@ export default function ConceptD() {
           the cursor and a click pulses through the veins. */}
       <div id="top" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", padding: "120px clamp(20px,5vw,60px) 80px", background: "#f3efe6", overflow: "hidden" }}>
         <canvas ref={silkCanvas} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block", zIndex: 0 }} />
-        <div style={{ position: "relative", zIndex: 2, maxWidth: 1300, margin: "0 auto", width: "100%" }}>
-          <div style={{ maxWidth: 820 }}>
-            <FadeIn delay={0.1} style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 34 }}>
+        <div style={{ position: "relative", zIndex: 2, maxWidth: 1300, margin: "0 auto", width: "100%", textAlign: "center" }}>
+          <div style={{ maxWidth: 880, margin: "0 auto" }}>
+            <FadeIn delay={0.1} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 34 }}>
               <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.3, ease: EASE }} style={{ width: 44, height: 1, background: SAPPHIRE, transformOrigin: "0 50%" }} />
               <span style={{ fontSize: 12, letterSpacing: "0.32em", textTransform: "uppercase", color: SAPPHIRE_DEEP }}>{t.heroKicker}</span>
             </FadeIn>
@@ -249,9 +253,9 @@ export default function ConceptD() {
               />
             </h1>
             <FadeIn delay={1.1}>
-              <p style={{ fontSize: "clamp(17px,1.5vw,20px)", lineHeight: 1.6, color: BODY, fontWeight: 400, maxWidth: 520, margin: "0 0 42px" }}>{t.heroSub}</p>
+              <p style={{ fontSize: "clamp(17px,1.5vw,20px)", lineHeight: 1.6, color: BODY, fontWeight: 400, maxWidth: 560, margin: "0 auto 42px" }}>{t.heroSub}</p>
             </FadeIn>
-            <FadeIn delay={1.3} style={{ display: "flex", gap: 26, alignItems: "center", flexWrap: "wrap" }}>
+            <FadeIn delay={1.3} style={{ display: "flex", gap: 26, alignItems: "center", justifyContent: "center", flexWrap: "wrap" }}>
               <Magnetic>
                 <Link href="/d/contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaLine}`} style={{ padding: "16px 34px", fontSize: 14, letterSpacing: "0.06em" }}>{t.cta.partner}</Link>
               </Magnetic>
