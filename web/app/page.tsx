@@ -9,29 +9,31 @@ import styles from "./page.module.css";
 // Picker copy , the landings themselves carry their own bilingual dictionaries.
 const T = {
   en: {
-    kicker: "Website redesign · Four directions",
+    kicker: "Website redesign · Five directions",
     titleA: "Pick a ",
     titleB: "direction",
-    intro: "Four design languages sharing the same real homepage copy. Direction 01 is modeled on bblatam.com, the sister firm, so brandonbrokerage.com feels part of the same visual family. Every landing ships in English with an ES toggle. Open any one to see the full homepage.",
+    intro: "Five design languages sharing the same real homepage copy. Direction 02 is modeled on bblatam.com, the sister firm, so brandonbrokerage.com feels part of the same visual family. Every landing ships in English with an ES toggle. Open any one to see the full homepage.",
     open: "Open homepage →",
     cards: {
       g: { title: "Aligned with Brandon Latam.", desc: "Modeled on bblatam.com, the sister firm. Pinned card deck, the case-journey map, agent tools, insights, EN/ES toggle, Lora serif." },
       d: { title: "Light, animated, premium.", desc: "Bodoni serif over a slow silk shader that follows the cursor, plus the 3D globe with LatAm→Miami arcs." },
       i: { title: "Paper, ink, oversized type.", desc: "Warm paper and near-black ink, giant Cormorant masthead, black & white photography and numbered chapters. A maison lookbook." },
-      n: { title: "The site as the platform.", desc: "Beige canvas, navy depth and Brandon gold, the Latam Network palette. Floating glass header, four pillars travelling sideways, the foreign-national case flow, the full product shelf and the team by name. Deepest of the four." },
+      n: { title: "The site as the platform.", desc: "Beige canvas, navy depth and Brandon gold, the Latam Network palette. Centered masthead, floating glass header, four pillars travelling sideways, the foreign-national case flow, the full product shelf and the team by name. Deepest of the five." },
+      s: { title: "The gold silk field.", desc: "The Network language opening on navy: a full-screen three.js silk of gold threads that swells on its own, lifts under the cursor and ripples on click. Behind it, the same pillars, case flow and desk." },
     },
   },
   es: {
-    kicker: "Rediseño del sitio · Cuatro direcciones",
+    kicker: "Rediseño del sitio · Cinco direcciones",
     titleA: "Elegí una ",
     titleB: "dirección",
-    intro: "Cuatro lenguajes de diseño con el mismo copy real de la home. La dirección 01 está modelada sobre bblatam.com, la firma hermana, para que brandonbrokerage.com se sienta parte de la misma familia visual. Todas abren en inglés y tienen toggle ES. Abrí cualquiera para ver la home completa.",
+    intro: "Cinco lenguajes de diseño con el mismo copy real de la home. La dirección 02 está modelada sobre bblatam.com, la firma hermana, para que brandonbrokerage.com se sienta parte de la misma familia visual. Todas abren en inglés y tienen toggle ES. Abrí cualquiera para ver la home completa.",
     open: "Abrir home →",
     cards: {
       g: { title: "Alineada con Brandon Latam.", desc: "Modelada sobre bblatam.com, la firma hermana. Mazo de cartas pinneado, el mapa del viaje del caso, herramientas para agentes, insights, toggle EN/ES y serif Lora." },
       d: { title: "Liviana, animada, premium.", desc: "Serif Bodoni sobre un shader de seda lento que sigue al cursor, más el globo 3D con arcos LatAm→Miami." },
       i: { title: "Papel, tinta y tipografía gigante.", desc: "Papel cálido y tinta casi negra, masthead Cormorant gigante, fotografía en blanco y negro y capítulos numerados: un lookbook de maison." },
-      n: { title: "El sitio como la plataforma.", desc: "Canvas beige, profundidad navy y dorado Brandon: la paleta de Latam Network. Header flotante de vidrio, cuatro pilares que viajan de costado, el flujo del caso extranjero, todo el catálogo de productos y el equipo con nombre y apellido. La más completa de las cuatro." },
+      n: { title: "El sitio como la plataforma.", desc: "Canvas beige, profundidad navy y dorado Brandon: la paleta de Latam Network. Masthead centrado, header flotante de vidrio, cuatro pilares que viajan de costado, el flujo del caso extranjero, todo el catálogo de productos y el equipo con nombre y apellido. La más completa de las cinco." },
+      s: { title: "El campo de seda dorada.", desc: "El lenguaje Network abriendo en navy: una seda three.js de hilos dorados a pantalla completa que ondula sola, se levanta bajo el cursor y hace ondas al click. Detrás, los mismos pilares, flujo de casos y equipo." },
     },
   },
 } as const;
@@ -72,7 +74,7 @@ export default function Home() {
             <div style={{ position: "relative", height: 190, overflow: "hidden", background: "#f5f1e8", padding: "0 20px", display: "flex", alignItems: "center" }}>
               <div style={{ position: "absolute", right: -34, top: -44, width: 170, height: 170, borderRadius: "50%", background: "radial-gradient(circle, rgba(194,161,91,0.42), transparent 65%)" }} />
               <div style={{ position: "absolute", left: -40, bottom: -60, width: 150, height: 150, borderRadius: "50%", background: "radial-gradient(circle, rgba(20,34,74,0.14), transparent 66%)" }} />
-              <div style={{ position: "relative", fontFamily: "var(--font-bodoni), serif", fontSize: 26, lineHeight: 1.04, color: "#14224a", letterSpacing: "-0.02em" }}>
+              <div style={{ position: "relative", width: "100%", textAlign: "center", fontFamily: "var(--font-bodoni), serif", fontSize: 26, lineHeight: 1.04, color: "#14224a", letterSpacing: "-0.02em" }}>
                 Sixty years placing<br /><span style={{ fontStyle: "italic", color: "#b89a5e" }}>the cases others<br />turn away.</span>
               </div>
             </div>
@@ -129,6 +131,22 @@ export default function Home() {
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: GOLD_DEEP, marginBottom: 8 }}>04 Maison Editorial</div>
               <h2 style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 600, fontSize: 20, margin: "0 0 8px", color: NAVY }}>{t.cards.i.title}</h2>
               <p style={{ fontSize: 13, color: CARD_TEXT, fontWeight: 400, lineHeight: 1.55, margin: "0 0 14px" }}>{t.cards.i.desc}</p>
+              <span style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: NAVY }}>{t.open}</span>
+            </div>
+          </Link>
+
+          <Link href="/s" className={styles.card} style={{ border: CARD_BORDER, borderRadius: 12, overflow: "hidden", background: CARD_BG }}>
+            <div style={{ position: "relative", height: 190, overflow: "hidden", background: "#14224a", padding: "0 20px", display: "flex", alignItems: "center" }}>
+              <div style={{ position: "absolute", inset: 0, background: "radial-gradient(120% 90% at 78% 26%, rgba(194,161,91,0.32), transparent 55%), radial-gradient(90% 70% at 18% 96%, rgba(194,161,91,0.24), transparent 62%)" }} />
+              <div style={{ position: "absolute", inset: 0, background: "repeating-linear-gradient(174deg, transparent 0 9px, rgba(194,161,91,0.16) 9px 10px)", WebkitMaskImage: "radial-gradient(130% 110% at 62% 88%, #000 24%, transparent 72%)", maskImage: "radial-gradient(130% 110% at 62% 88%, #000 24%, transparent 72%)" }} />
+              <div style={{ position: "relative", fontFamily: "var(--font-bodoni), serif", fontSize: 26, lineHeight: 1.04, color: "#f5f1e8", letterSpacing: "-0.02em" }}>
+                Sixty years placing<br /><span style={{ fontStyle: "italic", color: "#c8a76a" }}>the cases others<br />turn away.</span>
+              </div>
+            </div>
+            <div style={{ padding: "20px 18px", borderTop: CARD_DIVIDER }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: GOLD_DEEP, marginBottom: 8 }}>05 Gold Silk</div>
+              <h2 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: 20, margin: "0 0 8px", color: NAVY }}>{t.cards.s.title}</h2>
+              <p style={{ fontSize: 13, color: CARD_TEXT, fontWeight: 400, lineHeight: 1.55, margin: "0 0 14px" }}>{t.cards.s.desc}</p>
               <span style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: NAVY }}>{t.open}</span>
             </div>
           </Link>
