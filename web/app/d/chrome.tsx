@@ -23,10 +23,12 @@ export function DHeader({
   lang,
   setLang,
   solid = false,
+  dark = false,
 }: {
   lang: Lang;
   setLang: (l: Lang) => void;
   solid?: boolean;
+  dark?: boolean;
 }) {
   const t = COPY[lang];
   const pathname = usePathname();
@@ -35,12 +37,14 @@ export function DHeader({
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 40));
   const firm = solid || scrolled;
+  // over the dark hero the bar flips to cream text until it firms up
+  const dusk = dark && !firm;
 
   const links = deepNav("/d", lang);
 
   return (
-    <header className={`${styles.headerBar} ${styles.headerFixed} ${firm ? styles.headerSolid : ""}`}>
-      <Link href="/d" className={styles.headerLogo}>
+    <header className={`${styles.headerBar} ${styles.headerFixed} ${firm ? styles.headerSolid : ""} ${dusk ? styles.headerDark : ""}`}>
+      <Link href="/d" className={styles.headerLogo} style={{ transition: "background 0.3s, padding 0.3s", ...(dusk ? { background: "rgba(243,239,230,0.94)", borderRadius: 999, padding: "6px 14px" } : null) }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" width={150} height={30} fetchPriority="high" style={{ height: 30, width: "auto" }} />
       </Link>
@@ -66,7 +70,7 @@ export function DHeader({
           {t.nav.assistant}
         </a>
 
-        <LangToggle lang={lang} setLang={setLang} color="rgba(18,41,74,0.55)" activeColor={NAVY} />
+        <LangToggle lang={lang} setLang={setLang} color={dusk ? "rgba(243,239,230,0.55)" : "rgba(18,41,74,0.55)"} activeColor={dusk ? "#f3efe6" : NAVY} />
 
         <Link href="/d/contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaGold} ${styles.ctaLineSm}`}>
           {t.cta.partnerCaps}
@@ -80,6 +84,7 @@ export function DHeader({
         panelBg={CREAM}
         textColor={NAVY}
         accentColor={NAVY}
+        toggleColor={dusk ? "#f3efe6" : NAVY}
       />
     </header>
   );

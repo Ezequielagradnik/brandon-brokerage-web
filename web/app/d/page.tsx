@@ -224,12 +224,10 @@ export default function ConceptD() {
   const x = EXTRA[lang];
   const OFFERINGS = OFFERINGS_I18N[lang];
   const pageRef = useRef<HTMLDivElement>(null);
-  const silkCanvas = useRef<HTMLCanvasElement>(null);
   const curtainCanvas = useRef<HTMLCanvasElement>(null);
   const silkRevealRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
 
-  useSilk(silkCanvas, true);
   useSilk(curtainCanvas);
   useScrollReveal(pageRef);
 
@@ -242,43 +240,60 @@ export default function ConceptD() {
     <div ref={pageRef} className={styles.page}>
       <ScrollProgress color={SAPPHIRE} />
 
-      <DHeader lang={lang} setLang={setLang} />
+      <DHeader lang={lang} setLang={setLang} dark />
 
-      {/* HERO , marbled sapphire ink. The shader draws veined ink across the
-          whole viewport, strongest away from the type; the ink curls around
-          the cursor and a click pulses through the veins. */}
-      <div id="top" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", padding: "120px clamp(20px,5vw,60px) 80px", background: "#f3efe6", overflow: "hidden" }}>
-        <canvas ref={silkCanvas} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block", zIndex: 0 }} />
+      {/* HERO , the lobby at night. Deep navy, one warm light breathing over
+          the masthead, a whisper of sapphire in the shadows, and nothing else
+          moves. The luxury is the stillness. */}
+      <div id="top" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", padding: "120px clamp(20px,5vw,60px) 80px", background: "#0a1424", overflow: "hidden" }}>
+        {/* the light */}
+        <motion.div
+          aria-hidden="true"
+          style={{ position: "absolute", top: "-42vh", left: "50%", x: "-50%", width: "min(130vh,1200px)", height: "min(130vh,1200px)", borderRadius: "50%", background: "radial-gradient(circle, rgba(211,171,92,0.17), rgba(211,171,92,0.05) 46%, rgba(211,171,92,0) 68%)", pointerEvents: "none" }}
+          animate={reduce ? undefined : { opacity: [0.72, 1, 0.72], scale: [1, 1.06, 1] }}
+          transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
+        />
+        {/* its pool on the floor */}
+        <motion.div
+          aria-hidden="true"
+          style={{ position: "absolute", bottom: "-26vh", left: "50%", x: "-50%", width: "min(110vh,1000px)", height: "min(60vh,560px)", borderRadius: "50%", background: "radial-gradient(ellipse, rgba(211,171,92,0.08), rgba(211,171,92,0) 66%)", pointerEvents: "none" }}
+          animate={reduce ? undefined : { opacity: [0.55, 1, 0.55] }}
+          transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+        />
+        {/* a whisper of sapphire in the shadows */}
+        <div aria-hidden="true" style={{ position: "absolute", left: "-16vw", bottom: "-24vh", width: "58vw", height: "62vh", background: "radial-gradient(circle, rgba(47,102,196,0.11), rgba(47,102,196,0) 65%)", pointerEvents: "none" }} />
+        <div className={styles.grainD} aria-hidden="true" />
+
         <div style={{ position: "relative", zIndex: 2, maxWidth: 1300, margin: "0 auto", width: "100%", textAlign: "center" }}>
           <div style={{ maxWidth: 880, margin: "0 auto" }}>
             <FadeIn delay={0.1} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 34 }}>
-              <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.3, ease: EASE }} style={{ width: 44, height: 1, background: SAPPHIRE, transformOrigin: "0 50%" }} />
-              <span style={{ fontSize: 12, letterSpacing: "0.32em", textTransform: "uppercase", color: SAPPHIRE_DEEP }}>{t.heroKicker}</span>
+              <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.3, ease: EASE }} style={{ width: 44, height: 1, background: "rgba(211,171,92,0.8)", transformOrigin: "0 50%" }} />
+              <span style={{ fontSize: 12, letterSpacing: "0.32em", textTransform: "uppercase", color: "#d3ab5c" }}>{t.heroKicker}</span>
             </FadeIn>
-            <h1 style={{ fontFamily: SERIF, fontWeight: 500, fontSize: "clamp(44px,6.2vw,94px)", lineHeight: 1.05, margin: "0 0 30px", color: NAVY, letterSpacing: "-0.015em", textWrap: "balance" }}>
+            <h1 style={{ fontFamily: SERIF, fontWeight: 500, fontSize: "clamp(44px,6.2vw,94px)", lineHeight: 1.05, margin: "0 0 30px", color: "#f3efe6", letterSpacing: "-0.015em", textWrap: "balance" }}>
               <WordsReveal
                 delay={0.25}
                 stagger={0.05}
                 segments={[
                   { text: x.heroLine1 + " " },
-                  { text: x.heroLine2, style: { fontStyle: "italic", color: SAPPHIRE } },
+                  { text: x.heroLine2, style: { fontStyle: "italic", color: "#d3ab5c" } },
                 ]}
               />
             </h1>
             <FadeIn delay={1.1}>
-              <p style={{ fontSize: "clamp(17px,1.5vw,20px)", lineHeight: 1.6, color: BODY, fontWeight: 400, maxWidth: 560, margin: "0 auto 42px" }}>{t.heroSub}</p>
+              <p style={{ fontSize: "clamp(17px,1.5vw,20px)", lineHeight: 1.6, color: "rgba(243,239,230,0.72)", fontWeight: 400, maxWidth: 560, margin: "0 auto 42px" }}>{t.heroSub}</p>
             </FadeIn>
             <FadeIn delay={1.3} style={{ display: "flex", gap: 26, alignItems: "center", justifyContent: "center", flexWrap: "wrap" }}>
               <Magnetic>
-                <Link href="/d/contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaLine}`} style={{ padding: "16px 34px", fontSize: 14, letterSpacing: "0.06em" }}>{t.cta.partner}</Link>
+                <Link href="/d/contact" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaGold}`} style={{ padding: "16px 34px", fontSize: 14, letterSpacing: "0.06em", border: "1px solid rgba(211,171,92,0.6)", color: "#f3efe6" }}>{t.cta.partner}</Link>
               </Magnetic>
-              <Link href="/d/products" className={styles.lnk} style={{ fontSize: 14, letterSpacing: "0.04em", color: NAVY }}>{t.cta.explore}</Link>
+              <Link href="/d/products" className={styles.lnk} style={{ fontSize: 14, letterSpacing: "0.04em", color: "rgba(243,239,230,0.85)" }}>{t.cta.explore}</Link>
             </FadeIn>
           </div>
         </div>
         <div style={{ position: "absolute", bottom: 34, left: "50%", transform: "translateX(-50%)", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
-          <span style={{ fontSize: 10.5, letterSpacing: "0.3em", textTransform: "uppercase", color: "#8b8574" }}>{t.scroll}</span>
-          <span style={{ width: 1, height: 38, background: `linear-gradient(${SAPPHIRE},transparent)` }} />
+          <span style={{ fontSize: 10.5, letterSpacing: "0.3em", textTransform: "uppercase", color: "rgba(243,239,230,0.4)" }}>{t.scroll}</span>
+          <span style={{ width: 1, height: 38, background: "linear-gradient(#d3ab5c,transparent)" }} />
         </div>
       </div>
 
