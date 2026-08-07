@@ -71,7 +71,10 @@ void main(){
     mask = smoothstep(0.44, 0.8, length(dd));
     mask *= smoothstep(1.0, 0.84, uv.y); // and stays clear of the nav
   }
-  col=mix(ivory,col, 0.08+0.92*mask);
+  // as the curtain (mk 0) the marble softens to a veined ivory veil: it still
+  // covers the swap behind it, but it wipes past instead of imposing
+  float strength = mk>0.5 ? (0.08+0.92*mask) : 0.45;
+  col=mix(ivory,col, strength);
   gl_FragColor=vec4(col,1.0);
 }
 `;
@@ -181,12 +184,13 @@ const D_CATS = {
 
 const dSeg = (p: number, a: number, b: number) => Math.min(1, Math.max(0, (p - a) / (b - a)));
 
-// curtain X (vw): parked offscreen except while sweeping across each boundary
+// curtain X (vw): parked offscreen except while sweeping across each boundary.
+// The window is tight on purpose: the sweep is a wipe, not a residence.
 function sweepX(p: number) {
   for (let j = 1; j <= 3; j++) {
     const c = j / 4;
-    if (Math.abs(p - c) <= 0.09) {
-      const t = (p - (c - 0.09)) / 0.18;
+    if (Math.abs(p - c) <= 0.05) {
+      const t = (p - (c - 0.05)) / 0.1;
       return -80 + 215 * t;
     }
   }
