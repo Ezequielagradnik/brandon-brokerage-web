@@ -128,11 +128,14 @@ export function MaskReveal({
   const seen = useInView(ref, { once: true, amount: 0.35 });
   const visible = reduce || !inView || seen;
   return (
-    <span ref={ref} style={{ display: "block", overflow: "hidden", ...style }}>
+    // The mask box hugs the line box, and tight display line-heights leave
+    // g/y descenders overhanging it: pad the window downward and pull the
+    // next line back up, so the glyphs render whole and the rhythm holds.
+    <span ref={ref} style={{ display: "block", overflow: "hidden", paddingBottom: "0.15em", marginBottom: "-0.15em", ...style }}>
       <motion.span
         style={{ display: "block" }}
-        initial={reduce ? false : { y: "112%" }}
-        animate={visible ? { y: "0%" } : { y: "112%" }}
+        initial={reduce ? false : { y: "125%" }}
+        animate={visible ? { y: "0%" } : { y: "125%" }}
         transition={{ duration, delay, ease: EASE }}
       >
         {children}
