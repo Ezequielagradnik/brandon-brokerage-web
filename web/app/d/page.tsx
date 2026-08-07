@@ -12,7 +12,6 @@ import { NETWORK_URL } from "@/lib/contact";
 import { DHeader, SectionHead, useLang } from "./chrome";
 import { BODY, CARRIERS, EASE, HAIR, HAIR_SAPPHIRE, MONO_K, MUTED, NAVY, SAPPHIRE, SAPPHIRE_DEEP, SERIF, EXTRA, OFFICE } from "./copy";
 import styles from "./page.module.css";
-import Guilloche from "./Guilloche";
 
 // Ivory & Sapphire. The landing carries the argument: the silk hero, the
 // platform hand-off, the four pillars behind the silk curtain, the specialty in one
@@ -225,10 +224,12 @@ export default function ConceptD() {
   const x = EXTRA[lang];
   const OFFERINGS = OFFERINGS_I18N[lang];
   const pageRef = useRef<HTMLDivElement>(null);
+  const silkCanvas = useRef<HTMLCanvasElement>(null);
   const curtainCanvas = useRef<HTMLCanvasElement>(null);
   const silkRevealRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
 
+  useSilk(silkCanvas, true);
   useSilk(curtainCanvas);
   useScrollReveal(pageRef);
 
@@ -243,14 +244,11 @@ export default function ConceptD() {
 
       <DHeader lang={lang} setLang={setLang} />
 
-      {/* HERO , the certificate. A guilloché rosette, the engraved pattern of
-          bonds and banknotes, turns almost imperceptibly behind the masthead;
-          a double hairline frames the page like a share certificate. Quiet
-          luxury: the room is still, one thing breathes. */}
+      {/* HERO , marbled sapphire ink. The shader draws veined ink across the
+          whole viewport, strongest away from the type; the ink curls around
+          the cursor and a click pulses through the veins. */}
       <div id="top" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", padding: "120px clamp(20px,5vw,60px) 80px", background: "#f3efe6", overflow: "hidden" }}>
-        <Guilloche />
-        <div aria-hidden="true" style={{ position: "absolute", inset: "clamp(16px,2.6vw,30px)", border: "1px solid rgba(18,41,74,0.22)", pointerEvents: "none" }} />
-        <div aria-hidden="true" style={{ position: "absolute", inset: "calc(clamp(16px,2.6vw,30px) + 7px)", border: "1px solid rgba(47,102,196,0.28)", pointerEvents: "none" }} />
+        <canvas ref={silkCanvas} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block", zIndex: 0 }} />
         <div style={{ position: "relative", zIndex: 2, maxWidth: 1300, margin: "0 auto", width: "100%", textAlign: "center" }}>
           <div style={{ maxWidth: 880, margin: "0 auto" }}>
             <FadeIn delay={0.1} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 34 }}>
