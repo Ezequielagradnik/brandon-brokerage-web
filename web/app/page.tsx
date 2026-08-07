@@ -16,7 +16,7 @@ const T = {
     open: "Open homepage →",
     cards: {
       g: { title: "Aligned with Brandon Latam.", desc: "Modeled on bblatam.com, the sister firm. Pinned card deck, the case-journey map, agent tools, insights, EN/ES toggle, Lora serif." },
-      d: { title: "Light, animated, premium.", desc: "Bodoni serif over a slow silk shader that follows the cursor, plus the 3D globe with LatAm→Miami arcs." },
+      d: { title: "Ivory and sapphire.", desc: "Cream canvas, Bodoni serif and sapphire blue as the accent. The silk shader lives in a framed pane that follows the cursor, plus the 3D globe with LatAm→Miami arcs in blue." },
       i: { title: "Paper, ink, oversized type.", desc: "Warm paper and near-black ink, giant Cormorant masthead, black & white photography and numbered chapters. A maison lookbook." },
       n: { title: "The site as the platform.", desc: "Beige canvas, navy depth and Brandon gold, the Latam Network palette. Centered masthead, floating glass header, four pillars travelling sideways, the foreign-national case flow, the full product shelf and the team by name. Deepest of the five." },
       s: { title: "The gold silk field.", desc: "The Network language opening on navy: a full-screen three.js silk of gold threads that swells on its own, lifts under the cursor and ripples on click. Behind it, the same pillars, case flow and desk." },
@@ -30,7 +30,7 @@ const T = {
     open: "Abrir home →",
     cards: {
       g: { title: "Alineada con Brandon Latam.", desc: "Modelada sobre bblatam.com, la firma hermana. Mazo de cartas pinneado, el mapa del viaje del caso, herramientas para agentes, insights, toggle EN/ES y serif Lora." },
-      d: { title: "Liviana, animada, premium.", desc: "Serif Bodoni sobre un shader de seda lento que sigue al cursor, más el globo 3D con arcos LatAm→Miami." },
+      d: { title: "Marfil y zafiro.", desc: "Canvas crema, serif Bodoni y azul zafiro como acento. La seda vive en un panel enmarcado que sigue al cursor, más el globo 3D con arcos LatAm→Miami en azul." },
       i: { title: "Papel, tinta y tipografía gigante.", desc: "Papel cálido y tinta casi negra, masthead Cormorant gigante, fotografía en blanco y negro y capítulos numerados: un lookbook de maison." },
       n: { title: "El sitio como la plataforma.", desc: "Canvas beige, profundidad navy y dorado Brandon: la paleta de Latam Network. Masthead centrado, header flotante de vidrio, cuatro pilares que viajan de costado, el flujo del caso extranjero, todo el catálogo de productos y el equipo con nombre y apellido. La más completa de las cinco." },
       s: { title: "El campo de seda dorada.", desc: "El lenguaje Network abriendo en navy: una seda three.js de hilos dorados a pantalla completa que ondula sola, se levanta bajo el cursor y hace ondas al click. Detrás, los mismos pilares, flujo de casos y equipo." },
@@ -109,7 +109,12 @@ export default function Home() {
 
 
           <Link href="/d" className={styles.card} style={{ border: CARD_BORDER, borderRadius: 12, overflow: "hidden", background: CARD_BG }}>
-            <div style={{ position: "relative", height: 190, background: "radial-gradient(90% 90% at 72% 40%, rgba(169,129,47,0.5), rgba(243,239,230,0) 60%), radial-gradient(80% 80% at 55% 72%, rgba(18,41,74,0.35), rgba(243,239,230,0) 60%), #f3efe6" }} />
+            <div style={{ position: "relative", height: 190, background: "#f3efe6", overflow: "hidden", display: "flex", alignItems: "center", padding: "0 20px", gap: 16 }}>
+              <div style={{ flex: 1, fontFamily: "var(--font-bodoni), serif", fontSize: 22, lineHeight: 1.06, color: "#12294a", letterSpacing: "-0.015em" }}>
+                Sixty years placing<br />the cases <span style={{ fontStyle: "italic", color: "#2f66c4" }}>others<br />turn away.</span>
+              </div>
+              <div style={{ position: "relative", width: 86, height: 128, border: "1px solid rgba(18,41,74,0.18)", borderTop: "2px solid #2f66c4", background: "radial-gradient(120% 90% at 70% 30%, rgba(47,102,196,0.55), transparent 65%), radial-gradient(100% 80% at 30% 85%, rgba(13,33,72,0.5), transparent 60%), #ece7db", boxShadow: "0 10px 26px rgba(18,41,74,0.16)" }} />
+            </div>
             <div style={{ padding: "20px 18px", borderTop: CARD_DIVIDER }}>
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: GOLD_DEEP, marginBottom: 8 }}>03 Ivory &amp; Sapphire</div>
               <h2 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: 19, margin: "0 0 8px", color: NAVY }}>{t.cards.d.title}</h2>
