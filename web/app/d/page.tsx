@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-import * as THREE from "three";
 import { useScrollReveal } from "@/hooks/useReveals";
 import GlobeArcs, { BLUE_ARCS } from "@/components/GlobeArcs";
 import { COPY, OFFERINGS_I18N, type Lang } from "@/lib/copy";
@@ -13,170 +12,13 @@ import { DHeader, SectionHead, useLang } from "./chrome";
 import { BODY, CARRIERS, EASE, HAIR, HAIR_SAPPHIRE, MONO_K, MUTED, NAVY, SAPPHIRE, SAPPHIRE_DEEP, SERIF, EXTRA, OFFICE } from "./copy";
 import styles from "./page.module.css";
 
-// Ivory & Sapphire. The landing carries the argument: the silk hero, the
-// platform hand-off, the four pillars behind the silk curtain, the specialty in one
+// Ivory & Sapphire. The landing carries the argument: the marble hero, the
+// platform hand-off, the four pillars dissolving over the same stone, the specialty in one
 // paragraph and the phone number. Everything that needs room , the firm, the
 // products, the foreign-national case flow, the forms desk , lives on its own
 // page, the way brandonbrokerage.com splits it.
 
-const VERTEX_SHADER = "varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position,1.0); }";
-
-// Marbled sapphire ink on ivory , domain-warped fbm draws veins like the
-// endpapers of a fine book. The ink curls around the cursor, and a click
-// sends a pulse through the veins. `mk` fades the field to ivory where the
-// type sits (left on landscape, top on portrait); the curtain passes 0.
-const FRAGMENT_SHADER = `
-precision highp float;
-varying vec2 vUv;
-uniform float t; uniform vec2 res; uniform vec2 m; uniform vec2 c; uniform float ca; uniform float mk;
-float hash(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
-float noise(vec2 p){ vec2 i=floor(p),f=fract(p); float a=hash(i),b=hash(i+vec2(1,0)),cc=hash(i+vec2(0,1)),d=hash(i+vec2(1,1)); vec2 u=f*f*(3.0-2.0*f); return mix(mix(a,b,u.x),mix(cc,d,u.x),u.y); }
-float fbm(vec2 p){ float v=0.0; float a=0.5; mat2 r=mat2(0.8,0.6,-0.6,0.8); for(int i=0;i<4;i++){ v+=a*noise(p); p=r*p*2.02; a*=0.5; } return v; }
-void main(){
-  vec2 uv=vUv;
-  float aspect=res.x/res.y;
-  vec2 p=vec2(uv.x*aspect, uv.y)*2.6;
-
-  // the ink curls around the cursor
-  vec2 mp=vec2(m.x*aspect, m.y)*2.6;
-  vec2 toM=p-mp; float dm=length(toM);
-  p+=0.38*exp(-dm*dm*2.0)*vec2(-toM.y,toM.x);
-
-  // a click pulses outward through the veins
-  vec2 cp=vec2(c.x*aspect, c.y)*2.6;
-  float ring=exp(-pow((distance(p,cp)-ca*1.7)*3.0,2.0))*exp(-ca*1.1);
-
-  vec2 q=vec2(fbm(p+t*0.05), fbm(p+vec2(5.2,1.3)-t*0.04));
-  vec2 w=vec2(fbm(p+3.0*q+vec2(1.7,9.2)), fbm(p+3.0*q+vec2(8.3,2.8)));
-  float v=fbm(p+3.2*w)+ring*0.28;
-
-  vec3 ivory=vec3(0.953,0.937,0.902);
-  vec3 pale=vec3(0.735,0.795,0.925);
-  vec3 sapphire=vec3(0.184,0.40,0.769);
-  vec3 depth=vec3(0.051,0.129,0.282);
-
-  vec3 col=ivory;
-  col=mix(col,pale, smoothstep(0.34,0.78,v)*0.55);
-  float vein=1.0-smoothstep(0.0,0.085,abs(v-0.52));
-  col=mix(col,sapphire, vein*0.92);
-  float deepVein=1.0-smoothstep(0.0,0.03,abs(v-0.40));
-  col=mix(col,depth, deepVein*0.62);
-  col+=(noise(p*7.0+t*0.1)-0.5)*0.025;
-
-  // the type floats in a calm ivory eye at the center; the ink blooms around it
-  float mask=1.0;
-  if (mk>0.5) {
-    vec2 dd = uv - vec2(0.5, 0.54);
-    if (res.x>res.y) { dd.x*=res.x/res.y; } else { dd.y*=1.6; }
-    mask = smoothstep(0.44, 0.8, length(dd));
-    mask *= smoothstep(1.0, 0.84, uv.y); // and stays clear of the nav
-  }
-  // as the curtain (mk 0) the marble softens to a veined ivory veil: it still
-  // covers the swap behind it, but it wipes past instead of imposing
-  float strength = mk>0.5 ? (0.08+0.92*mask) : 0.45;
-  col=mix(ivory,col, strength);
-  gl_FragColor=vec4(col,1.0);
-}
-`;
-
-function useSilk(canvasRef: React.RefObject<HTMLCanvasElement | null>, masked = false) {
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const parent = canvas.parentElement as HTMLElement;
-    let w = parent.clientWidth, h = parent.clientHeight;
-    let renderer: THREE.WebGLRenderer;
-    try {
-      renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-    } catch {
-      return;
-    }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
-    renderer.setSize(w, h, false);
-    const scene = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-    const uniforms = {
-      t: { value: 0 },
-      res: { value: new THREE.Vector2(w, h) },
-      m: { value: new THREE.Vector2(0.5, 0.5) },
-      c: { value: new THREE.Vector2(-10, -10) },
-      ca: { value: 9e9 },
-      mk: { value: masked ? 1 : 0 },
-    };
-    const mat = new THREE.ShaderMaterial({
-      uniforms,
-      vertexShader: VERTEX_SHADER,
-      fragmentShader: FRAGMENT_SHADER,
-    });
-    const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat);
-    scene.add(quad);
-
-    let alive = true, raf = 0;
-    let mx = 0.5, my = 0.5;
-    const onResize = () => {
-      w = parent.clientWidth; h = parent.clientHeight;
-      renderer.setSize(w, h, false);
-      uniforms.res.value.set(w, h);
-    };
-    window.addEventListener("resize", onResize);
-    // The ink flow leans gently toward the cursor.
-    const onMove = (e: PointerEvent) => {
-      mx = e.clientX / window.innerWidth;
-      my = 1 - e.clientY / window.innerHeight;
-    };
-    window.addEventListener("pointermove", onMove, { passive: true });
-    // A click lands as a pulse, in this canvas's own uv space.
-    const onDown = (e: PointerEvent) => {
-      const r = parent.getBoundingClientRect();
-      if (e.clientY < r.top || e.clientY > r.bottom || e.clientX < r.left || e.clientX > r.right) return;
-      uniforms.c.value.set((e.clientX - r.left) / r.width, 1 - (e.clientY - r.top) / r.height);
-      uniforms.ca.value = 0;
-    };
-    window.addEventListener("pointerdown", onDown, { passive: true });
-
-    const start = performance.now();
-    let last = start;
-    const tick = () => {
-      if (!alive) return;
-      const now = performance.now();
-      const dt = Math.min((now - last) / 1000, 0.05);
-      last = now;
-      // 40% slower than the original flow, so the text breathes.
-      uniforms.t.value = ((now - start) / 1000) * 0.6;
-      if (uniforms.ca.value < 9e8) uniforms.ca.value += dt;
-      uniforms.m.value.x += (mx - uniforms.m.value.x) * 0.03;
-      uniforms.m.value.y += (my - uniforms.m.value.y) * 0.03;
-      renderer.render(scene, camera);
-      raf = requestAnimationFrame(tick);
-    };
-
-    // render only while the canvas is actually on screen: the curtain spends
-    // most of the scroll parked offscreen and should cost nothing there
-    const io = new IntersectionObserver(
-      (entries) => {
-        const on = entries[0].isIntersecting;
-        if (on && !alive) { alive = true; last = performance.now(); tick(); }
-        else if (!on && alive) { alive = false; cancelAnimationFrame(raf); }
-      },
-      { threshold: 0.01 }
-    );
-    alive = false;
-    io.observe(parent);
-
-    return () => {
-      alive = false;
-      cancelAnimationFrame(raf);
-      io.disconnect();
-      window.removeEventListener("resize", onResize);
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerdown", onDown);
-      renderer.dispose();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-}
-
-// ----- Signature scroll moment: the silk curtain reveals each pillar -----
+// ----- Signature scroll moment: the pillars dissolve over the stone -----
 const D_CATS = {
   en: ["Specialty", "Support", "Operations", "Network"],
   es: ["Especialidad", "Soporte", "Operaciones", "Red"],
@@ -184,28 +26,17 @@ const D_CATS = {
 
 const dSeg = (p: number, a: number, b: number) => Math.min(1, Math.max(0, (p - a) / (b - a)));
 
-// curtain X (vw): parked offscreen except while sweeping across each boundary.
-// The window is tight on purpose: the sweep is a wipe, not a residence.
-function sweepX(p: number) {
-  for (let j = 1; j <= 3; j++) {
-    const c = j / 4;
-    if (Math.abs(p - c) <= 0.05) {
-      const t = (p - (c - 0.05)) / 0.1;
-      return -80 + 215 * t;
-    }
-  }
-  return -120;
-}
-
 function SilkPanel({ i, progress, reduce, lang }: { i: number; progress: MotionValue<number>; reduce: boolean; lang: Lang }) {
   const o = OFFERINGS_I18N[lang][i];
+  // without the curtain the swap must be clean: each pillar finishes leaving
+  // before the next arrives, with a beat of bare stone in between
   const op = useTransform(progress, (p) => {
     if (reduce) return i === 3 ? 1 : 0;
-    const fadeIn = i === 0 ? 1 : dSeg(p, i / 4 - 0.005, i / 4 + 0.012);
-    const fadeOut = i === 3 ? 0 : dSeg(p, (i + 1) / 4 - 0.012, (i + 1) / 4 + 0.005);
+    const fadeIn = i === 0 ? 1 : dSeg(p, i / 4 + 0.006, i / 4 + 0.034);
+    const fadeOut = i === 3 ? 0 : dSeg(p, (i + 1) / 4 - 0.034, (i + 1) / 4 - 0.006);
     return fadeIn * (1 - fadeOut);
   });
-  const y = useTransform(progress, (p) => (reduce ? 0 : 16 * (1 - dSeg(p, i / 4, i / 4 + 0.05))));
+  const y = useTransform(progress, (p) => (reduce ? 0 : 16 * (1 - dSeg(p, i / 4 + 0.006, i / 4 + 0.05))));
   return (
     <motion.div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", opacity: op, y, pointerEvents: "none" }}>
       <div style={{ maxWidth: 860, padding: "0 clamp(20px,5vw,60px)", textAlign: "center" }}>
@@ -228,17 +59,14 @@ export default function ConceptD() {
   const x = EXTRA[lang];
   const OFFERINGS = OFFERINGS_I18N[lang];
   const pageRef = useRef<HTMLDivElement>(null);
-  const curtainCanvas = useRef<HTMLCanvasElement>(null);
   const silkRevealRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
 
-  useSilk(curtainCanvas);
   useScrollReveal(pageRef);
 
   // scrub for the silk-curtain reveal
   const { scrollYProgress: silkRaw } = useScroll({ target: silkRevealRef, offset: ["start start", "end end"] });
   const silkProgress = useSpring(silkRaw, { stiffness: 90, damping: 28, mass: 0.4 });
-  const curtainX = useTransform(silkProgress, (p) => (reduce ? "-120vw" : `${sweepX(p)}vw`));
 
   return (
     <div ref={pageRef} className={styles.page}>
@@ -358,9 +186,13 @@ export default function ConceptD() {
         </div>
       </div>
 
-      {/* WHAT WE OFFER , signature scroll moment: the silk curtain reveals each pillar */}
+      {/* WHAT WE OFFER , the pillars dissolve one after another over the same
+          stone the hero opens on: no curtain, just matter and type */}
       <div id="why" ref={silkRevealRef} className={styles.silkSection}>
         <div className={styles.silkPin}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/marble-carrara.jpg" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "saturate(0.55) brightness(1.03)" }} />
+          <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 62% 55% at 50% 52%, rgba(243,239,230,0.95), rgba(243,239,230,0.72) 60%, rgba(243,239,230,0.4))" }} />
           {/* clears the fixed header, which is ~74px tall over this pin */}
           <div style={{ position: "absolute", top: "clamp(92px,13vh,124px)", left: "clamp(20px,5vw,60px)", right: "clamp(20px,5vw,60px)" }}>
             <div style={{ ...MONO_K, color: SAPPHIRE_DEEP, marginBottom: 14 }}>01 / {t.offerKicker}</div>
@@ -370,11 +202,6 @@ export default function ConceptD() {
           {OFFERINGS.map((_, i) => (
             <SilkPanel key={i} i={i} progress={silkProgress} reduce={!!reduce} lang={lang} />
           ))}
-
-          {/* the silk curtain that sweeps between pillars */}
-          <motion.div className={styles.silkCurtain} style={{ x: curtainX }}>
-            <canvas ref={curtainCanvas} style={{ width: "100%", height: "100%", display: "block" }} />
-          </motion.div>
 
           <div style={{ position: "absolute", right: "clamp(20px,5vw,60px)", bottom: 24, fontFamily: "var(--font-plex-mono), monospace", fontSize: 10.5, letterSpacing: "0.3em", color: "#8b8574" }}>{lang === "es" ? "SCROLLEÁ PARA REVELAR" : "SCROLL TO REVEAL"}</div>
           {/* progress ticks */}

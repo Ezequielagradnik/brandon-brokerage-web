@@ -120,16 +120,6 @@
   height: 100vh;
   overflow: hidden;
 }
-.silkCurtain {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 70vw;
-  pointer-events: none;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
-}
 .silkMobile {
   display: none;
 }
