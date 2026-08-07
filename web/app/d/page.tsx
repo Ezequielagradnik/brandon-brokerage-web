@@ -20,32 +20,59 @@ import styles from "./page.module.css";
 // page, the way brandonbrokerage.com splits it.
 
 const VERTEX_SHADER = "varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position,1.0); }";
+
+// Marbled sapphire ink on ivory , domain-warped fbm draws veins like the
+// endpapers of a fine book. The ink curls around the cursor, and a click
+// sends a pulse through the veins. `mk` fades the field to ivory where the
+// type sits (left on landscape, top on portrait); the curtain passes 0.
 const FRAGMENT_SHADER = `
 precision highp float;
-varying vec2 vUv; uniform float t; uniform vec2 res; uniform vec2 m;
+varying vec2 vUv;
+uniform float t; uniform vec2 res; uniform vec2 m; uniform vec2 c; uniform float ca; uniform float mk;
 float hash(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
-float noise(vec2 p){ vec2 i=floor(p),f=fract(p); float a=hash(i),b=hash(i+vec2(1,0)),c=hash(i+vec2(0,1)),d=hash(i+vec2(1,1)); vec2 u=f*f*(3.0-2.0*f); return mix(mix(a,b,u.x),mix(c,d,u.x),u.y); }
+float noise(vec2 p){ vec2 i=floor(p),f=fract(p); float a=hash(i),b=hash(i+vec2(1,0)),cc=hash(i+vec2(0,1)),d=hash(i+vec2(1,1)); vec2 u=f*f*(3.0-2.0*f); return mix(mix(a,b,u.x),mix(cc,d,u.x),u.y); }
+float fbm(vec2 p){ float v=0.0; float a=0.5; mat2 r=mat2(0.8,0.6,-0.6,0.8); for(int i=0;i<4;i++){ v+=a*noise(p); p=r*p*2.02; a*=0.5; } return v; }
 void main(){
-  vec2 uv=vUv; uv.x*=res.x/res.y;
-  float n=noise(uv*2.0+vec2(t*0.05,t*0.03)+(m-0.5)*0.35)*0.6+noise(uv*4.0-vec2(t*0.04))*0.4;
-  vec2 c1=vec2(0.72+0.12*sin(t*0.12), 0.42+0.10*cos(t*0.10))+(m-0.5)*0.12;
-  vec2 c2=vec2(0.55+0.10*cos(t*0.09), 0.72+0.10*sin(t*0.11))-(m-0.5)*0.08;
-  vec2 p=vUv; p.x*=res.x/res.y;
-  float d1=distance(p,vec2(c1.x*res.x/res.y,c1.y));
-  float d2=distance(p,vec2(c2.x*res.x/res.y,c2.y));
+  vec2 uv=vUv;
+  float aspect=res.x/res.y;
+  vec2 p=vec2(uv.x*aspect, uv.y)*2.6;
+
+  // the ink curls around the cursor
+  vec2 mp=vec2(m.x*aspect, m.y)*2.6;
+  vec2 toM=p-mp; float dm=length(toM);
+  p+=0.38*exp(-dm*dm*2.0)*vec2(-toM.y,toM.x);
+
+  // a click pulses outward through the veins
+  vec2 cp=vec2(c.x*aspect, c.y)*2.6;
+  float ring=exp(-pow((distance(p,cp)-ca*1.7)*3.0,2.0))*exp(-ca*1.1);
+
+  vec2 q=vec2(fbm(p+t*0.05), fbm(p+vec2(5.2,1.3)-t*0.04));
+  vec2 w=vec2(fbm(p+3.0*q+vec2(1.7,9.2)), fbm(p+3.0*q+vec2(8.3,2.8)));
+  float v=fbm(p+3.2*w)+ring*0.28;
+
   vec3 ivory=vec3(0.953,0.937,0.902);
+  vec3 pale=vec3(0.735,0.795,0.925);
   vec3 sapphire=vec3(0.184,0.40,0.769);
   vec3 depth=vec3(0.051,0.129,0.282);
+
   vec3 col=ivory;
-  col=mix(col,sapphire, smoothstep(0.55,0.0,d1)*(0.55+0.2*n));
-  col=mix(col,depth, smoothstep(0.6,0.0,d2)*(0.38+0.15*n));
-  col+= (n-0.5)*0.03;
-  col=mix(col,ivory,0.18);
+  col=mix(col,pale, smoothstep(0.34,0.78,v)*0.55);
+  float vein=1.0-smoothstep(0.0,0.085,abs(v-0.52));
+  col=mix(col,sapphire, vein*0.92);
+  float deepVein=1.0-smoothstep(0.0,0.03,abs(v-0.40));
+  col=mix(col,depth, deepVein*0.62);
+  col+=(noise(p*7.0+t*0.1)-0.5)*0.025;
+
+  float mask = mk>0.5
+    ? (res.x>res.y ? smoothstep(0.26,0.78,uv.x) : smoothstep(0.52,0.13,uv.y))
+    : 1.0;
+  if (mk>0.5) { mask*=smoothstep(1.0,0.84,uv.y); } // the ink stays clear of the nav
+  col=mix(ivory,col, 0.08+0.92*mask);
   gl_FragColor=vec4(col,1.0);
 }
 `;
 
-function useSilk(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
+function useSilk(canvasRef: React.RefObject<HTMLCanvasElement | null>, masked = false) {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -57,7 +84,7 @@ function useSilk(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     } catch {
       return;
     }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
     renderer.setSize(w, h, false);
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
@@ -65,6 +92,9 @@ function useSilk(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
       t: { value: 0 },
       res: { value: new THREE.Vector2(w, h) },
       m: { value: new THREE.Vector2(0.5, 0.5) },
+      c: { value: new THREE.Vector2(-10, -10) },
+      ca: { value: 9e9 },
+      mk: { value: masked ? 1 : 0 },
     };
     const mat = new THREE.ShaderMaterial({
       uniforms,
@@ -82,18 +112,31 @@ function useSilk(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
       uniforms.res.value.set(w, h);
     };
     window.addEventListener("resize", onResize);
-    // The silk flow leans gently toward the cursor.
+    // The ink flow leans gently toward the cursor.
     const onMove = (e: PointerEvent) => {
       mx = e.clientX / window.innerWidth;
       my = 1 - e.clientY / window.innerHeight;
     };
     window.addEventListener("pointermove", onMove, { passive: true });
+    // A click lands as a pulse, in this canvas's own uv space.
+    const onDown = (e: PointerEvent) => {
+      const r = parent.getBoundingClientRect();
+      if (e.clientY < r.top || e.clientY > r.bottom || e.clientX < r.left || e.clientX > r.right) return;
+      uniforms.c.value.set((e.clientX - r.left) / r.width, 1 - (e.clientY - r.top) / r.height);
+      uniforms.ca.value = 0;
+    };
+    window.addEventListener("pointerdown", onDown, { passive: true });
 
     const start = performance.now();
+    let last = start;
     const tick = () => {
       if (!alive) return;
+      const now = performance.now();
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
       // 40% slower than the original flow, so the text breathes.
-      uniforms.t.value = ((performance.now() - start) / 1000) * 0.6;
+      uniforms.t.value = ((now - start) / 1000) * 0.6;
+      if (uniforms.ca.value < 9e8) uniforms.ca.value += dt;
       uniforms.m.value.x += (mx - uniforms.m.value.x) * 0.03;
       uniforms.m.value.y += (my - uniforms.m.value.y) * 0.03;
       renderer.render(scene, camera);
@@ -106,6 +149,7 @@ function useSilk(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerdown", onDown);
       renderer.dispose();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -168,7 +212,7 @@ export default function ConceptD() {
   const silkRevealRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
 
-  useSilk(silkCanvas);
+  useSilk(silkCanvas, true);
   useSilk(curtainCanvas);
   useScrollReveal(pageRef);
 
@@ -183,18 +227,18 @@ export default function ConceptD() {
 
       <DHeader lang={lang} setLang={setLang} />
 
-      {/* HERO , the framed silk pane. The shader used to wash the whole
-          viewport and muddied it; framing it as one tall pane on the cream ,
-          a living artwork on a gallery wall , keeps the animation and returns
-          the hero to type, air and a single hairline. */}
-      <div id="top" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", padding: "120px clamp(20px,5vw,60px) 80px", background: "#f3efe6" }}>
-        <div className={styles.heroGridD}>
-          <div>
+      {/* HERO , marbled sapphire ink. The shader draws veined ink across the
+          whole viewport, strongest away from the type; the ink curls around
+          the cursor and a click pulses through the veins. */}
+      <div id="top" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", padding: "120px clamp(20px,5vw,60px) 80px", background: "#f3efe6", overflow: "hidden" }}>
+        <canvas ref={silkCanvas} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block", zIndex: 0 }} />
+        <div style={{ position: "relative", zIndex: 2, maxWidth: 1300, margin: "0 auto", width: "100%" }}>
+          <div style={{ maxWidth: 820 }}>
             <FadeIn delay={0.1} style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 34 }}>
               <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.3, ease: EASE }} style={{ width: 44, height: 1, background: SAPPHIRE, transformOrigin: "0 50%" }} />
               <span style={{ fontSize: 12, letterSpacing: "0.32em", textTransform: "uppercase", color: SAPPHIRE_DEEP }}>{t.heroKicker}</span>
             </FadeIn>
-            <h1 style={{ fontFamily: SERIF, fontWeight: 500, fontSize: "clamp(42px,5.8vw,86px)", lineHeight: 1.06, margin: "0 0 30px", color: NAVY, letterSpacing: "-0.015em", textWrap: "balance" }}>
+            <h1 style={{ fontFamily: SERIF, fontWeight: 500, fontSize: "clamp(44px,6.2vw,94px)", lineHeight: 1.05, margin: "0 0 30px", color: NAVY, letterSpacing: "-0.015em", textWrap: "balance" }}>
               <WordsReveal
                 delay={0.25}
                 stagger={0.05}
@@ -214,11 +258,6 @@ export default function ConceptD() {
               <Link href="/d/products" className={styles.lnk} style={{ fontSize: 14, letterSpacing: "0.04em", color: NAVY }}>{t.cta.explore}</Link>
             </FadeIn>
           </div>
-          {/* the pane: the only thing on the page that moves at rest */}
-          <FadeIn delay={0.6} className={styles.heroPaneD}>
-            <span style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: SAPPHIRE, zIndex: 2 }} aria-hidden="true" />
-            <canvas ref={silkCanvas} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" }} />
-          </FadeIn>
         </div>
         <div style={{ position: "absolute", bottom: 34, left: "50%", transform: "translateX(-50%)", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
           <span style={{ fontSize: 10.5, letterSpacing: "0.3em", textTransform: "uppercase", color: "#8b8574" }}>{t.scroll}</span>

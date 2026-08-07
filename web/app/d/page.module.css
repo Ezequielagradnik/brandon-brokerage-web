@@ -109,38 +109,6 @@
 }
 
 /* Signature scroll moment: the silk curtain reveals each pillar */
-/* ————— hero: the framed silk pane ————— */
-.heroGridD {
-  position: relative;
-  z-index: 2;
-  max-width: 1300px;
-  margin: 0 auto;
-  width: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) clamp(300px, 30vw, 430px);
-  gap: clamp(36px, 6vw, 90px);
-  align-items: center;
-}
-.heroPaneD {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 3 / 4.1;
-  border: 1px solid rgba(18, 41, 74, 0.18);
-  box-shadow: 0 30px 80px rgba(18, 41, 74, 0.14);
-  background: #e7e1d3;
-}
-@media (max-width: 900px) {
-  .heroGridD {
-    grid-template-columns: 1fr;
-    gap: 44px;
-  }
-  .heroPaneD {
-    width: 100%;
-    max-width: 420px;
-    aspect-ratio: 4 / 3;
-  }
-}
-
 .silkSection {
   position: relative;
   height: 260vh;
