@@ -141,9 +141,11 @@ export default function HeroField() {
 
   useEffect(() => {
     if (reduce || failed) return;
-    const wrap = wrapRef.current;
+    const wrapNullable = wrapRef.current;
     const canvas = canvasRef.current;
-    if (!wrap || !canvas) return;
+    if (!wrapNullable || !canvas) return;
+    // narrowing does not reach the hoisted tick(); pin the non-null alias
+    const wrap: HTMLDivElement = wrapNullable;
 
     let w = wrap.clientWidth, h = wrap.clientHeight;
     let renderer: THREE.WebGLRenderer;
