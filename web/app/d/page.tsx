@@ -4,13 +4,13 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import * as THREE from "three";
 import { useScrollReveal } from "@/hooks/useReveals";
-import GlobeArcs, { GOLD_ARCS } from "@/components/GlobeArcs";
+import GlobeArcs, { BLUE_ARCS } from "@/components/GlobeArcs";
 import { COPY, OFFERINGS_I18N, type Lang } from "@/lib/copy";
 import { ScrollProgress, WordsReveal, FadeIn, CountUp, GrowLine, Magnetic, MaskReveal, ctaFillFromCursor } from "@/components/motion";
 import { motion, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { NETWORK_URL } from "@/lib/contact";
 import { DHeader, SectionHead, useLang } from "./chrome";
-import { BODY, CARRIERS, EASE, GOLD, GOLD_DIM, HAIR, MONO_K, MUTED, NAVY, SERIF, EXTRA, OFFICE } from "./copy";
+import { BODY, CARRIERS, EASE, HAIR, HAIR_SAPPHIRE, MONO_K, MUTED, NAVY, SAPPHIRE, SAPPHIRE_DEEP, SERIF, EXTRA, OFFICE } from "./copy";
 import styles from "./page.module.css";
 
 // Ivory & Sapphire. The landing carries the argument: the silk hero, the
@@ -34,13 +34,13 @@ void main(){
   float d1=distance(p,vec2(c1.x*res.x/res.y,c1.y));
   float d2=distance(p,vec2(c2.x*res.x/res.y,c2.y));
   vec3 ivory=vec3(0.953,0.937,0.902);
-  vec3 gold=vec3(0.78,0.60,0.24);
-  vec3 navy=vec3(0.07,0.16,0.29);
+  vec3 sapphire=vec3(0.184,0.40,0.769);
+  vec3 depth=vec3(0.051,0.129,0.282);
   vec3 col=ivory;
-  col=mix(col,gold, smoothstep(0.55,0.0,d1)*(0.5+0.2*n));
-  col=mix(col,navy, smoothstep(0.6,0.0,d2)*(0.32+0.15*n));
+  col=mix(col,sapphire, smoothstep(0.55,0.0,d1)*(0.55+0.2*n));
+  col=mix(col,depth, smoothstep(0.6,0.0,d2)*(0.38+0.15*n));
   col+= (n-0.5)*0.03;
-  col=mix(col,ivory,0.3);
+  col=mix(col,ivory,0.18);
   gl_FragColor=vec4(col,1.0);
 }
 `;
@@ -144,7 +144,7 @@ function SilkPanel({ i, progress, reduce, lang }: { i: number; progress: MotionV
   return (
     <motion.div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", opacity: op, y, pointerEvents: "none" }}>
       <div style={{ maxWidth: 860, padding: "0 clamp(20px,5vw,60px)", textAlign: "center" }}>
-        <div style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 11.5, letterSpacing: "0.26em", textTransform: "uppercase", color: GOLD, marginBottom: 24 }}>0{i + 1} / {D_CATS[lang][i]}</div>
+        <div style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 11.5, letterSpacing: "0.26em", textTransform: "uppercase", color: SAPPHIRE_DEEP, marginBottom: 24 }}>0{i + 1} / {D_CATS[lang][i]}</div>
         <h3 style={{ fontFamily: SERIF, fontWeight: 500, fontSize: "clamp(36px,5.5vw,84px)", lineHeight: 1.04, letterSpacing: "-0.01em", margin: "0 0 22px", color: NAVY }}>{o.title}</h3>
         <p style={{ fontSize: "clamp(15px,1.4vw,18px)", lineHeight: 1.65, color: BODY, margin: "0 auto", maxWidth: 520 }}>{o.blurb}</p>
       </div>
@@ -154,7 +154,7 @@ function SilkPanel({ i, progress, reduce, lang }: { i: number; progress: MotionV
 
 function SilkTick({ i, progress }: { i: number; progress: MotionValue<number> }) {
   const op = useTransform(progress, (p) => (p >= (i === 0 ? -1 : i / 4) && p < (i + 1) / 4 + (i === 3 ? 1 : 0) ? 1 : 0.3));
-  return <motion.span style={{ width: 26, height: 2, background: GOLD, opacity: op, display: "block" }} />;
+  return <motion.span style={{ width: 26, height: 2, background: SAPPHIRE, opacity: op, display: "block" }} />;
 }
 
 export default function ConceptD() {
@@ -179,27 +179,28 @@ export default function ConceptD() {
 
   return (
     <div ref={pageRef} className={styles.page}>
-      <ScrollProgress color={GOLD} />
+      <ScrollProgress color={SAPPHIRE} />
 
       <DHeader lang={lang} setLang={setLang} />
 
-      {/* HERO with shader silk */}
+      {/* HERO , the framed silk pane. The shader used to wash the whole
+          viewport and muddied it; framing it as one tall pane on the cream ,
+          a living artwork on a gallery wall , keeps the animation and returns
+          the hero to type, air and a single hairline. */}
       <div id="top" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", padding: "120px clamp(20px,5vw,60px) 80px", background: "#f3efe6" }}>
-        <canvas ref={silkCanvas} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block", zIndex: 0 }} />
-        <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(90deg,#f3efe6 5%,rgba(243,239,230,0.86) 32%,rgba(243,239,230,0.25) 60%,rgba(243,239,230,0) 80%)" }} />
-        <div style={{ position: "relative", zIndex: 2, maxWidth: 1300, margin: "0 auto", width: "100%" }}>
-          <div style={{ maxWidth: 760 }}>
+        <div className={styles.heroGridD}>
+          <div>
             <FadeIn delay={0.1} style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 34 }}>
-              <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.3, ease: EASE }} style={{ width: 44, height: 1, background: GOLD, transformOrigin: "0 50%" }} />
-              <span style={{ fontSize: 12, letterSpacing: "0.32em", textTransform: "uppercase", color: GOLD_DIM }}>{t.heroKicker}</span>
+              <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.3, ease: EASE }} style={{ width: 44, height: 1, background: SAPPHIRE, transformOrigin: "0 50%" }} />
+              <span style={{ fontSize: 12, letterSpacing: "0.32em", textTransform: "uppercase", color: SAPPHIRE_DEEP }}>{t.heroKicker}</span>
             </FadeIn>
-            <h1 style={{ fontFamily: SERIF, fontWeight: 500, fontSize: "clamp(38px,5.6vw,74px)", lineHeight: 1.08, margin: "0 0 30px", color: NAVY, letterSpacing: "-0.01em" }}>
+            <h1 style={{ fontFamily: SERIF, fontWeight: 500, fontSize: "clamp(42px,5.8vw,86px)", lineHeight: 1.06, margin: "0 0 30px", color: NAVY, letterSpacing: "-0.015em", textWrap: "balance" }}>
               <WordsReveal
                 delay={0.25}
-                stagger={0.045}
+                stagger={0.05}
                 segments={[
-                  { text: t.heroTitleA },
-                  { text: t.heroTitleB, style: { fontStyle: "italic", color: GOLD } },
+                  { text: x.heroLine1 + " " },
+                  { text: x.heroLine2, style: { fontStyle: "italic", color: SAPPHIRE } },
                 ]}
               />
             </h1>
@@ -213,10 +214,15 @@ export default function ConceptD() {
               <Link href="/d/products" className={styles.lnk} style={{ fontSize: 14, letterSpacing: "0.04em", color: NAVY }}>{t.cta.explore}</Link>
             </FadeIn>
           </div>
+          {/* the pane: the only thing on the page that moves at rest */}
+          <FadeIn delay={0.6} className={styles.heroPaneD}>
+            <span style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: SAPPHIRE, zIndex: 2 }} aria-hidden="true" />
+            <canvas ref={silkCanvas} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" }} />
+          </FadeIn>
         </div>
         <div style={{ position: "absolute", bottom: 34, left: "50%", transform: "translateX(-50%)", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
           <span style={{ fontSize: 10.5, letterSpacing: "0.3em", textTransform: "uppercase", color: "#8b8574" }}>{t.scroll}</span>
-          <span style={{ width: 1, height: 38, background: "linear-gradient(#a9812f,transparent)" }} />
+          <span style={{ width: 1, height: 38, background: `linear-gradient(${SAPPHIRE},transparent)` }} />
         </div>
       </div>
 
@@ -259,7 +265,7 @@ export default function ConceptD() {
             { num: 50, suffix: "", label: t.stats.states },
           ].map((s, i) => (
             <div key={s.label}>
-              <GrowLine color={GOLD} delay={i * 0.12} />
+              <GrowLine color={SAPPHIRE} delay={i * 0.12} />
               <div style={{ paddingTop: 20 }}>
                 <div style={{ fontFamily: SERIF, fontSize: "clamp(36px,4vw,54px)", fontWeight: 500, color: NAVY, lineHeight: 1 }}>
                   <CountUp to={s.num} suffix={s.suffix} />
@@ -276,8 +282,8 @@ export default function ConceptD() {
         <div className={styles.silkPin}>
           {/* clears the fixed header, which is ~74px tall over this pin */}
           <div style={{ position: "absolute", top: "clamp(92px,13vh,124px)", left: "clamp(20px,5vw,60px)", right: "clamp(20px,5vw,60px)" }}>
-            <div style={{ ...MONO_K, marginBottom: 14 }}>01 / {t.offerKicker}</div>
-            <GrowLine color={HAIR} />
+            <div style={{ ...MONO_K, color: SAPPHIRE_DEEP, marginBottom: 14 }}>01 / {t.offerKicker}</div>
+            <GrowLine color={HAIR_SAPPHIRE} />
           </div>
 
           {OFFERINGS.map((_, i) => (
@@ -306,7 +312,7 @@ export default function ConceptD() {
           </div>
           {OFFERINGS.map((o, i) => (
             <div key={o.n} data-reveal style={{ padding: "26px 0", borderBottom: "1px solid rgba(18,41,74,0.14)" }}>
-              <div style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: GOLD, marginBottom: 12 }}>0{i + 1} / {D_CATS[lang][i]}</div>
+              <div style={{ fontFamily: "var(--font-plex-mono), monospace", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: SAPPHIRE_DEEP, marginBottom: 12 }}>0{i + 1} / {D_CATS[lang][i]}</div>
               <h3 style={{ fontFamily: SERIF, fontWeight: 500, fontSize: "clamp(26px,6vw,36px)", margin: "0 0 10px", color: NAVY, lineHeight: 1.1 }}>{o.title}</h3>
               <p style={{ fontSize: 14.5, lineHeight: 1.6, color: BODY, margin: 0 }}>{o.blurb}</p>
             </div>
@@ -318,7 +324,7 @@ export default function ConceptD() {
       <div id="foreign" style={{ position: "relative", padding: "clamp(80px,11vw,150px) clamp(20px,5vw,60px)", background: "#ece7db", borderTop: "1px solid rgba(18,41,74,0.12)", overflow: "hidden" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))", gap: "clamp(40px,6vw,80px)", alignItems: "center" }}>
           <div>
-            <SectionHead index="02" kicker={x.fnKicker} style={{ marginBottom: 30 }} />
+            <SectionHead index="02" kicker={x.fnKicker} accent={{ text: SAPPHIRE_DEEP, rule: HAIR_SAPPHIRE }} style={{ marginBottom: 30 }} />
             <h2 className={styles.displayD} style={{ fontSize: "clamp(32px,4.6vw,64px)", margin: "0 0 28px", maxWidth: 620 }}>
               <MaskReveal inView delay={0.05}>{x.fnTitle1}</MaskReveal>
               <MaskReveal inView delay={0.2}><span className={styles.displayItalicD}>{x.fnTitle2}</span></MaskReveal>
@@ -327,7 +333,7 @@ export default function ConceptD() {
             <Link data-reveal href="/d/foreign-nationals" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaLine}`}>{x.fnTeaserCta} →</Link>
           </div>
           <div data-reveal style={{ position: "relative", borderRadius: "50%", overflow: "hidden", background: "radial-gradient(circle at 38% 30%, #16304f, #081221 74%)", boxShadow: "0 34px 90px rgba(12,28,51,0.3)", maxWidth: 520, width: "100%", margin: "0 auto" }}>
-            <GlobeArcs palette={GOLD_ARCS} />
+            <GlobeArcs palette={BLUE_ARCS} />
           </div>
         </div>
       </div>
@@ -343,7 +349,7 @@ export default function ConceptD() {
                 <span key={rep} style={{ display: "flex", alignItems: "center", columnGap: "clamp(30px,4vw,64px)" }} aria-hidden={rep === 1}>
                   {CARRIERS.map((c) => (
                     <span key={c} style={{ display: "flex", alignItems: "center", columnGap: "clamp(30px,4vw,64px)" }}>
-                      <span>{c}</span><span style={{ color: GOLD }}>·</span>
+                      <span>{c}</span><span style={{ color: SAPPHIRE }}>·</span>
                     </span>
                   ))}
                 </span>
@@ -360,8 +366,8 @@ export default function ConceptD() {
         <div className={styles.wrapD}>
           <div data-reveal style={{ maxWidth: 760 }}>
             {/* 03 now: the go-deeper signposts used to sit between 02 and this */}
-            <div style={{ ...MONO_K, marginBottom: 14 }}>03 / {t.contactKicker}</div>
-            <GrowLine color={HAIR} style={{ marginBottom: 26 }} />
+            <div style={{ ...MONO_K, color: SAPPHIRE_DEEP, marginBottom: 14 }}>03 / {t.contactKicker}</div>
+            <GrowLine color={HAIR_SAPPHIRE} style={{ marginBottom: 26 }} />
             <h2 style={{ fontFamily: SERIF, fontWeight: 500, fontSize: "clamp(38px,5.5vw,72px)", lineHeight: 1.02, margin: "0 0 28px", color: NAVY }}>{t.contactTitle}</h2>
             <p style={{ fontSize: 17, lineHeight: 1.66, color: BODY, fontWeight: 400, margin: 0, maxWidth: 480 }}>{t.contactBody}</p>
           </div>

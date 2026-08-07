@@ -186,14 +186,14 @@ export function DFooter({ lang, flush = false }: { lang: Lang; flush?: boolean }
 
 /* A numbered mono head with its drawn hairline: the section furniture the whole
    concept is built on. */
-export function SectionHead({ index, kicker, style }: { index?: string; kicker: string; style?: React.CSSProperties }) {
+export function SectionHead({ index, kicker, style, accent }: { index?: string; kicker: string; style?: React.CSSProperties; accent?: { text: string; rule: string } }) {
   return (
     <div data-reveal style={{ marginBottom: 24, ...style }}>
-      <div style={{ ...MONO_K, marginBottom: 14 }}>
+      <div style={{ ...MONO_K, ...(accent ? { color: accent.text } : null), marginBottom: 14 }}>
         {index ? `${index} / ` : ""}
         {kicker}
       </div>
-      <GrowLine color={HAIR} />
+      <GrowLine color={accent ? accent.rule : HAIR} />
     </div>
   );
 }

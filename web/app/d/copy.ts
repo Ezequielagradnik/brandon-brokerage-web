@@ -11,6 +11,12 @@ export const INK = "#1a2536";
 export const GOLD = "#a9812f";
 export const GOLD_DIM = "#9a7526";
 export const GOLD_SOFT = "#d3ab5c";
+/* The sapphire half of "Ivory & Sapphire": the landing's chapter accent.
+   Gold survives as the assistant's color (the pulsing dot) and on the inner
+   pages; sapphire owns Brandon's own argument on the landing. */
+export const SAPPHIRE = "#2f66c4";
+export const SAPPHIRE_DEEP = "#234e9d";
+export const HAIR_SAPPHIRE = "rgba(47,102,196,0.42)";
 export const MUTED = "#6b7482";
 export const BODY = "#4a5568";
 export const HAIR = "rgba(169,129,47,0.45)";
