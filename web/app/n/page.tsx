@@ -94,7 +94,7 @@ export default function ConceptN() {
       <section id="top" ref={heroRef} className={styles.hero}>
         <motion.div className={styles.heroGlow} style={{ y: reduce ? 0 : glowY }} aria-hidden="true" />
         <motion.div className={styles.heroGlow2} style={{ y: reduce ? 0 : glowY2 }} aria-hidden="true" />
-        <motion.div className={styles.wrap} style={{ position: "relative", width: "100%", opacity: reduce ? 1 : heroFade }}>
+        <motion.div className={styles.wrap} style={{ position: "relative", zIndex: 2, width: "100%", opacity: reduce ? 1 : heroFade }}>
           <FadeIn delay={0.1} style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 30 }}>
             <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.3, ease: EASE }} style={{ width: 40, height: 1, background: GOLD, transformOrigin: "0 50%" }} />
             <span className={styles.kicker}>{t.heroKicker}</span>
@@ -121,40 +121,15 @@ export default function ConceptN() {
         </motion.div>
       </section>
 
-      {/* ----- trust line ----- */}
-      <div data-reveal style={{ borderTop: `1px solid ${HAIR}`, borderBottom: `1px solid ${HAIR}`, padding: "16px 0" }}>
+      {/* ----- trust line ----- Tellus/Crump is the strongest third-party
+          proof on the page, so it reads as a line, not as a footnote */}
+      <div data-reveal style={{ borderTop: `1px solid ${HAIR}`, borderBottom: `1px solid ${HAIR}`, padding: "clamp(20px,2.6vw,30px) 0" }}>
         <div className={styles.wrap}>
-          <div className={styles.kicker} style={{ color: INK_MUTED, textAlign: "center", fontSize: 10.5 }}>
-            {t.footAbout.replace(/\.$/, "")}
-          </div>
+          <p style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(17px,1.6vw,23px)", lineHeight: 1.45, letterSpacing: "-0.005em", color: NAVY, textAlign: "center", textWrap: "balance", margin: 0 }}>
+            {t.footAbout}
+          </p>
         </div>
       </div>
-
-      {/* ----- the platform: hands off to the real assistant -----
-          It leaves the site, so it is a card on the beige and not a navy
-          chapter: the chapters here argue for Brandon, this one points away. */}
-      <section style={{ padding: "clamp(38px,5vw,66px) 0" }}>
-        <div className={styles.wrap}>
-          <a data-reveal href={NETWORK_URL} target="_blank" rel="noopener noreferrer" className={styles.aiCard}>
-            <div className={styles.aiCardRow}>
-              <div className={styles.aiCardText}>
-                <div className={styles.aiCardHead}>
-                  <span className={styles.aiPulse} aria-hidden="true" />
-                  <span className={styles.kicker} style={{ color: GOLD_DEEP, fontSize: 10 }}>{x.aiKicker}</span>
-                </div>
-                <div className={styles.aiCardTitle}>
-                  {x.aiTitle.split(" ").slice(0, -1).join(" ")}{" "}
-                  <span className={styles.displayItalic}>{x.aiTitle.split(" ").slice(-1)}</span>
-                </div>
-                <p className={styles.aiCardBody}>{x.aiBody}</p>
-              </div>
-              <span className={styles.aiCta}>
-                {x.aiCta} <span className={styles.aiArrow} aria-hidden="true">↗</span>
-              </span>
-            </div>
-          </a>
-        </div>
-      </section>
 
       {/* ----- the statement and the numbers behind it ----- */}
       <section style={{ padding: "clamp(56px,7vw,104px) 0" }}>
@@ -198,15 +173,40 @@ export default function ConceptN() {
         </div>
       </section>
 
+      {/* ----- the platform: hands off to the real assistant -----
+          It leaves the site, so it sits after the pillars have argued for
+          Brandon: a card on the beige, never a navy chapter of its own. */}
+      <section style={{ padding: "clamp(38px,5vw,66px) 0" }}>
+        <div className={styles.wrap}>
+          <a data-reveal href={NETWORK_URL} target="_blank" rel="noopener noreferrer" className={styles.aiCard}>
+            <div className={styles.aiCardRow}>
+              <div className={styles.aiCardText}>
+                <div className={styles.aiCardHead}>
+                  <span className={styles.aiPulse} aria-hidden="true" />
+                  <span className={styles.kicker} style={{ color: GOLD_DEEP, fontSize: 10 }}>{x.aiKicker}</span>
+                </div>
+                <div className={styles.aiCardTitle}>{x.aiTitle}</div>
+                <p className={styles.aiCardBody}>{x.aiBody}</p>
+              </div>
+              <span className={styles.aiCta}>
+                {x.aiCta} <span className={styles.aiArrow} aria-hidden="true">↗</span>
+              </span>
+            </div>
+          </a>
+        </div>
+      </section>
+
       {/* ----- the specialty, in short: the depth lives on its own page ----- */}
       <section id="foreign" style={{ position: "relative", padding: "clamp(64px,8vw,110px) 0", background: "#f0ece1", overflow: "hidden" }}>
         <SectionMark n="02" />
         <div className={styles.wrap} style={{ position: "relative", zIndex: 2 }}>
           <GrowLine color={HAIR} />
           <div className={styles.kicker} style={{ color: GOLD_DEEP, marginTop: "clamp(26px,3vw,40px)", marginBottom: 18, fontSize: 10.5 }}>{x.fnKicker}</div>
+          {/* the italic-gold second line lives in the hero only; here the two
+              lines hold the same ink and the kicker carries the color */}
           <h2 className={styles.display} style={{ fontSize: "clamp(30px,4.2vw,64px)", margin: "0 0 24px", maxWidth: 820 }}>
             <MaskReveal inView delay={0.1}>{x.fnTitle1}</MaskReveal>
-            <MaskReveal inView delay={0.25}><span className={styles.displayItalic}>{x.fnTitle2}</span></MaskReveal>
+            <MaskReveal inView delay={0.25}>{x.fnTitle2}</MaskReveal>
           </h2>
           <p data-reveal style={{ fontSize: "clamp(15px,1.35vw,17.5px)", lineHeight: 1.7, color: INK_MUTED, margin: "0 0 30px", maxWidth: 680 }}>{x.fnTeaser}</p>
           <Link data-reveal href="/n/foreign-nationals" onPointerEnter={ctaFillFromCursor} className={styles.cta}>{x.fnTeaserCta} →</Link>
