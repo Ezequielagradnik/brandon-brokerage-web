@@ -10,6 +10,7 @@ import { NETWORK_URL } from "@/lib/contact";
 import { GHeader, SectionHead, useLang } from "./chrome";
 import { CARRIERS, CONTACT, EASE, EXTRA, G, GOLD, GRAY, HAIR, MASTHEAD, NAVY, OFFWHITE, deepNav, mono, monoEyebrow, sans, serif } from "./copy";
 import styles from "./page.module.css";
+import WaterPhoto from "./WaterPhoto";
 
 // Boutique Latam , white canvas, navy and gold, Lora on Plex Mono. Two tones
 // carry the whole concept: white for the page, #f4f1e9 for anything recessed.
@@ -127,8 +128,6 @@ export default function ConceptG() {
   useScrollReveal(pageRef);
 
   // Hero photo: 8% parallax on scroll (on top of the slow Ken Burns)
-  const { scrollYProgress: heroScroll } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const heroY = useTransform(heroScroll, [0, 1], ["0%", "8%"]);
 
   // Deck scrub: spring-smoothed scroll progress across the 300vh section
   const { scrollYProgress: deckRaw } = useScroll({ target: deckRef, offset: ["start start", "end end"] });
@@ -155,17 +154,10 @@ export default function ConceptG() {
       {/* HERO , full-screen photo, slow Ken Burns + parallax, 3-line masthead */}
       <div id="top" ref={heroRef} style={{ position: "relative", minHeight: "100svh", display: "flex", alignItems: "flex-end", overflow: "hidden", padding: "clamp(120px,14vw,180px) clamp(20px,5vw,60px) clamp(60px,8vw,100px)" }}>
         <div style={{ position: "absolute", inset: 0 }}>
-          <motion.img
-            src="/images/miami-sunset.jpg"
-            alt=""
-            data-photo-slot="hero"
-            style={{ width: "100%", height: "112%", objectFit: "cover", y: reduce ? 0 : heroY }}
-            initial={{ opacity: 0 }}
-            animate={reduce ? { opacity: 1 } : { opacity: 1, scale: [1, 1.06] }}
-            transition={{ opacity: { duration: 1.4 }, scale: { duration: 22, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" } }}
-          />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(16,24,40,0.62), rgba(16,24,40,0.32) 45%, rgba(16,24,40,0.85) 92%)" }} />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(16,24,40,0.55), rgba(16,24,40,0.1) 60%)" }} />
+          {/* the photo with the bay alive: waves, cursor wake, click ripples */}
+          <WaterPhoto />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(16,24,40,0.62), rgba(16,24,40,0.32) 45%, rgba(16,24,40,0.85) 92%)", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(16,24,40,0.55), rgba(16,24,40,0.1) 60%)", pointerEvents: "none" }} />
         </div>
         <div style={{ position: "relative", zIndex: 2, maxWidth: 1240, margin: "0 auto", width: "100%" }}>
           <FadeIn delay={0.1} style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 26 }}>
