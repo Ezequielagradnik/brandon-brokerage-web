@@ -23,7 +23,6 @@ uniform sampler2D tex;
 uniform float t; uniform vec2 res; uniform float imgA;
 uniform float ken;   // ken-burns zoom
 uniform float par;   // scroll parallax, in image uv
-uniform vec2 m;      // pointer, canvas uv
 uniform vec2 c; uniform float ca; // click + seconds since
 uniform float water;
 float hash(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
@@ -48,20 +47,14 @@ void main(){
     float w1 = sin(iuv.x*70.0 + t*1.1 + sin(iuv.y*90.0 + t*0.7)*1.4);
     float w2 = noise(vec2(iuv.x*26.0, iuv.y*60.0 - t*0.55))*2.0 - 1.0;
 
-    // the cursor drags a wake when it is over the water
-    vec2 mi = toImg(m);
-    float overWater = step(mi.y, water);
-    float dm = distance(vec2(iuv.x, iuv.y*2.2), vec2(mi.x, mi.y*2.2));
-    float wake = exp(-dm*dm*220.0) * sin(dm*90.0 - t*7.0) * overWater;
-
     // a click drops an expanding ring, stretched by the same foreshortening
     vec2 ci = toImg(c);
     float dc = distance(vec2(iuv.x, iuv.y*2.2), vec2(ci.x, ci.y*2.2));
     float ring = exp(-pow((dc - ca*0.22)*26.0, 2.0)) * exp(-ca*1.4) * sin(dc*110.0 - ca*9.0);
 
-    float wave = (w1*0.5 + w2*0.5) * 0.008 * amp + wake*0.012 + ring*0.02;
+    float wave = (w1*0.5 + w2*0.5) * 0.008 * amp + ring*0.02;
     suv.y = iuv.y + wave;
-    suv.x = iuv.x + (w2*0.35 + wake*0.5 + ring*0.6) * 0.006 * amp;
+    suv.x = iuv.x + (w2*0.35 + ring*0.6) * 0.006 * amp;
     glint = max(0.0, wave) * 26.0 * amp;
   }
   vec3 col = texture2D(tex, suv).rgb;
@@ -104,7 +97,6 @@ export default function WaterPhoto() {
       imgA: { value: IMG_ASPECT },
       ken: { value: 1 },
       par: { value: 0 },
-      m: { value: new THREE.Vector2(0.5, 2) },
       c: { value: new THREE.Vector2(-10, -10) },
       ca: { value: 9e9 },
       water: { value: WATERLINE },
@@ -119,19 +111,12 @@ export default function WaterPhoto() {
     };
     window.addEventListener("resize", onResize);
 
-    let mx = 0.5, my = 2; // parked off the water until the pointer arrives
-    const onMove = (e: PointerEvent) => {
-      const r = wrap.getBoundingClientRect();
-      mx = (e.clientX - r.left) / r.width;
-      my = 1 - (e.clientY - r.top) / r.height;
-    };
     const onDown = (e: PointerEvent) => {
       const r = wrap.getBoundingClientRect();
       if (e.clientY < r.top || e.clientY > r.bottom || e.clientX < r.left || e.clientX > r.right) return;
       uniforms.c.value.set((e.clientX - r.left) / r.width, 1 - (e.clientY - r.top) / r.height);
       uniforms.ca.value = 0;
     };
-    window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerdown", onDown, { passive: true });
 
     let active = false;
@@ -160,9 +145,6 @@ export default function WaterPhoto() {
       const p = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height)));
       uniforms.par.value = p * 0.05;
 
-      uniforms.m.value.x += (mx - uniforms.m.value.x) * Math.min(1, dt * 8);
-      uniforms.m.value.y += (my - uniforms.m.value.y) * Math.min(1, dt * 8);
-
       renderer.render(scene, camera);
       raf = requestAnimationFrame(tick);
     }
@@ -172,7 +154,6 @@ export default function WaterPhoto() {
       cancelAnimationFrame(raf);
       io.disconnect();
       window.removeEventListener("resize", onResize);
-      window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerdown", onDown);
       tex.dispose();
       mat.dispose();
