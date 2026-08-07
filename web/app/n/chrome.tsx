@@ -17,7 +17,7 @@ import styles from "./page.module.css";
 
 /* The floating pill. On the landing it starts translucent over the hero and
    firms up on scroll; on the inner pages there is no hero, so it starts solid. */
-export function NHeader({ lang, setLang, solid = false }: { lang: Lang; setLang: (l: Lang) => void; solid?: boolean }) {
+export function NHeader({ lang, setLang, solid = false, home = "/n" }: { lang: Lang; setLang: (l: Lang) => void; solid?: boolean; home?: string }) {
   const t = COPY[lang];
   const x = EXTRA[lang];
   const pathname = usePathname();
@@ -31,7 +31,7 @@ export function NHeader({ lang, setLang, solid = false }: { lang: Lang; setLang:
 
   return (
     <header className={`${styles.header} ${firm ? styles.headerSolid : ""}`}>
-      <Link href="/n" className={styles.headerLogo}>
+      <Link href={home} className={styles.headerLogo}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/assets/brandon-logo.png"
