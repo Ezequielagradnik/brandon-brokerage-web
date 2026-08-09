@@ -9,31 +9,33 @@ import styles from "./page.module.css";
 // Picker copy , the landings themselves carry their own bilingual dictionaries.
 const T = {
   en: {
-    kicker: "Website redesign · Five directions",
+    kicker: "Website redesign · Six directions",
     titleA: "Pick a ",
     titleB: "direction",
-    intro: "Five design languages sharing the same real homepage copy. Direction 02 is modeled on bblatam.com, the sister firm, so brandonbrokerage.com feels part of the same visual family. Every landing ships in English with an ES toggle. Open any one to see the full homepage.",
+    intro: "Six design languages sharing the same real homepage copy. Direction 02 is modeled on bblatam.com, the sister firm, so brandonbrokerage.com feels part of the same visual family. Every landing ships in English with an ES toggle. Open any one to see the full homepage.",
     open: "Open homepage →",
     cards: {
       g: { title: "Aligned with Brandon Latam.", desc: "Modeled on bblatam.com, the sister firm. Pinned card deck, the case-journey map, agent tools, insights, EN/ES toggle, Lora serif." },
-      d: { title: "Ivory and sapphire.", desc: "The masthead sets over real Carrara marble under an ivory veil, the four pillars reveal one by one as you scroll, and the 3D globe carries the LatAm→Miami arcs in blue. The quietest of the five." },
+      d: { title: "Ivory and sapphire.", desc: "The masthead sets over real Carrara marble under an ivory veil, the four pillars reveal one by one as you scroll, and the 3D globe carries the LatAm→Miami arcs in blue. The quietest of the six." },
       i: { title: "Paper, ink, oversized type.", desc: "Warm paper and near-black ink, giant Cormorant masthead, black & white photography and numbered chapters. A maison lookbook." },
-      n: { title: "The site as the platform.", desc: "Beige canvas, navy depth and Brandon gold, the Latam Network palette. Centered masthead, floating glass header, four pillars travelling sideways, the foreign-national case flow, the full product shelf and the team by name. Deepest of the five." },
+      n: { title: "The site as the platform.", desc: "Beige canvas, navy depth and Brandon gold, the Latam Network palette. Centered masthead, floating glass header, four pillars travelling sideways, the foreign-national case flow, the full product shelf and the team by name. Deepest of the six." },
       s: { title: "The gold silk field.", desc: "The Network language opening on navy: a full-screen three.js silk of gold threads that swells on its own, lifts under the cursor and ripples on click. Behind it, the same pillars, case flow and desk." },
+      m: { title: "Modern software company.", desc: "The language of today's best product sites: a graded Miami vista behind a centered geometric masthead, one floating case-desk card, warm bone sections with hairline-numbered pillars, giant stat figures and pill controls. The most contemporary of the six." },
     },
   },
   es: {
-    kicker: "Rediseño del sitio · Cinco direcciones",
+    kicker: "Rediseño del sitio · Seis direcciones",
     titleA: "Elegí una ",
     titleB: "dirección",
-    intro: "Cinco lenguajes de diseño con el mismo copy real de la home. La dirección 02 está modelada sobre bblatam.com, la firma hermana, para que brandonbrokerage.com se sienta parte de la misma familia visual. Todas abren en inglés y tienen toggle ES. Abrí cualquiera para ver la home completa.",
+    intro: "Seis lenguajes de diseño con el mismo copy real de la home. La dirección 02 está modelada sobre bblatam.com, la firma hermana, para que brandonbrokerage.com se sienta parte de la misma familia visual. Todas abren en inglés y tienen toggle ES. Abrí cualquiera para ver la home completa.",
     open: "Abrir home →",
     cards: {
       g: { title: "Alineada con Brandon Latam.", desc: "Modelada sobre bblatam.com, la firma hermana. Mazo de cartas pinneado, el mapa del viaje del caso, herramientas para agentes, insights, toggle EN/ES y serif Lora." },
-      d: { title: "Marfil y zafiro.", desc: "El masthead se asienta sobre mármol de Carrara real bajo un velo marfil, los cuatro pilares se revelan uno a uno con el scroll, y el globo 3D lleva los arcos LatAm→Miami en azul. La más silenciosa de las cinco." },
+      d: { title: "Marfil y zafiro.", desc: "El masthead se asienta sobre mármol de Carrara real bajo un velo marfil, los cuatro pilares se revelan uno a uno con el scroll, y el globo 3D lleva los arcos LatAm→Miami en azul. La más silenciosa de las seis." },
       i: { title: "Papel, tinta y tipografía gigante.", desc: "Papel cálido y tinta casi negra, masthead Cormorant gigante, fotografía en blanco y negro y capítulos numerados: un lookbook de maison." },
-      n: { title: "El sitio como la plataforma.", desc: "Canvas beige, profundidad navy y dorado Brandon: la paleta de Latam Network. Masthead centrado, header flotante de vidrio, cuatro pilares que viajan de costado, el flujo del caso extranjero, todo el catálogo de productos y el equipo con nombre y apellido. La más completa de las cinco." },
+      n: { title: "El sitio como la plataforma.", desc: "Canvas beige, profundidad navy y dorado Brandon: la paleta de Latam Network. Masthead centrado, header flotante de vidrio, cuatro pilares que viajan de costado, el flujo del caso extranjero, todo el catálogo de productos y el equipo con nombre y apellido. La más completa de las seis." },
       s: { title: "El campo de seda dorada.", desc: "El lenguaje Network abriendo en navy: una seda three.js de hilos dorados a pantalla completa que ondula sola, se levanta bajo el cursor y hace ondas al click. Detrás, los mismos pilares, flujo de casos y equipo." },
+      m: { title: "Empresa de software moderna.", desc: "El lenguaje de los mejores sitios de producto actuales: una vista de Miami graduada detrás de un masthead geométrico centrado, una card flotante de mesa de casos, secciones en bone cálido con pilares numerados sobre hairlines, cifras gigantes y controles tipo píldora. La más contemporánea de las seis." },
     },
   },
 } as const;
@@ -154,6 +156,29 @@ export default function Home() {
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: GOLD_DEEP, marginBottom: 8 }}>05 Gold Silk</div>
               <h2 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: 20, margin: "0 0 8px", color: NAVY }}>{t.cards.s.title}</h2>
               <p style={{ fontSize: 13, color: CARD_TEXT, fontWeight: 400, lineHeight: 1.55, margin: "0 0 14px" }}>{t.cards.s.desc}</p>
+              <span style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: NAVY }}>{t.open}</span>
+            </div>
+          </Link>
+
+          <Link href="/m" className={styles.card} style={{ border: CARD_BORDER, borderRadius: 12, overflow: "hidden", background: CARD_BG }}>
+            <div style={{ position: "relative", height: 190, overflow: "hidden", background: "#0f1a38", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 18px" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/miami-aerial-day.jpg" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "saturate(0.62) brightness(0.95) contrast(1.08)" }} />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(15,26,56,0.6), rgba(15,26,56,0.52) 48%, rgba(15,26,56,0.82))" }} />
+              <div style={{ position: "relative", textAlign: "center" }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 11px", borderRadius: 999, border: "1px solid rgba(194,161,91,0.55)", fontSize: 8.5, color: "rgba(245,241,232,0.9)", marginBottom: 10 }}>
+                  <span style={{ width: 3, height: 3, borderRadius: "50%", background: GOLD }} />
+                  Coral Gables · Since the 1960s
+                </span>
+                <div style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 700, fontSize: 21, lineHeight: 0.98, letterSpacing: "-0.035em", color: "#fff" }}>
+                  Sixty years placing<br />the cases others<br />turn away.
+                </div>
+              </div>
+            </div>
+            <div style={{ padding: "20px 18px", borderTop: CARD_DIVIDER }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: GOLD_DEEP, marginBottom: 8 }}>06 Meridian</div>
+              <h2 style={{ fontFamily: "var(--font-manrope), sans-serif", fontWeight: 700, fontSize: 20, letterSpacing: "-0.02em", margin: "0 0 8px", color: NAVY }}>{t.cards.m.title}</h2>
+              <p style={{ fontSize: 13, color: CARD_TEXT, fontWeight: 400, lineHeight: 1.55, margin: "0 0 14px" }}>{t.cards.m.desc}</p>
               <span style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: NAVY }}>{t.open}</span>
             </div>
           </Link>
