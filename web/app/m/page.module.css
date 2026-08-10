@@ -139,12 +139,12 @@
   backdrop-filter: blur(16px) saturate(150%);
   -webkit-backdrop-filter: blur(16px) saturate(150%);
   border: 1px solid rgba(20, 34, 74, 0.07);
-  box-shadow: 0 10px 34px rgba(10, 20, 45, 0.14);
+  box-shadow: 0 10px 34px rgba(10, 20, 45, 0.09);
   transition: background 0.4s var(--ease), box-shadow 0.4s var(--ease);
 }
 .headerSolid {
   background: rgba(255, 255, 255, 0.97);
-  box-shadow: 0 12px 40px rgba(10, 20, 45, 0.12);
+  box-shadow: 0 12px 40px rgba(10, 20, 45, 0.08);
 }
 .logoChip {
   display: inline-flex;
@@ -223,6 +223,7 @@
 }
 .pill:active {
   transform: scale(0.98);
+  transition-duration: 150ms;
 }
 /* the trailing arrow rides in its own disc, never naked beside the label */
 .pillDisc {
@@ -236,8 +237,12 @@
   flex-shrink: 0;
   transition: transform 0.3s var(--ease), background 0.3s var(--ease);
 }
-.pill:hover .pillDisc {
-  transform: translate(2px, -1px) scale(1.06);
+/* gated: same reason as .cardImg above — a tap must not leave the disc
+   permanently nudged on touch devices */
+@media (hover: hover) and (pointer: fine) {
+  .pill:hover .pillDisc {
+    transform: translate(2px, -1px) scale(1.06);
+  }
 }
 .pillPlain {
   padding: 12px 24px;
@@ -521,8 +526,12 @@
   filter: saturate(0.55) brightness(0.9);
   transition: transform 0.9s var(--ease);
 }
-.card:hover .cardImg {
-  transform: scale(1.04);
+/* gated: on touch, :hover fires on tap and never un-fires, so the zoom would
+   stay pinned until the visitor taps somewhere else */
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .cardImg {
+    transform: scale(1.04);
+  }
 }
 
 /* spans */

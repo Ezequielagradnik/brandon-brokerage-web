@@ -182,21 +182,45 @@ export default function ConceptM() {
         <div className={styles.heroWash} aria-hidden="true" />
 
         <div className={styles.heroInner}>
-          <motion.span className={styles.badge} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE }}>
+          {/* the choreography runs as full transform strings, not the x/y
+              shorthand: this fires exactly when the main thread is busiest
+              (the hero photo and fonts are still loading), and only the full
+              string form gets GPU compositing under that load */}
+          <motion.span
+            className={styles.badge}
+            initial={{ opacity: 0, transform: "translateY(12px)" }}
+            animate={{ opacity: 1, transform: "translateY(0px)" }}
+            transition={{ duration: 0.7, ease: EASE }}
+          >
             <span className={styles.badgeDot} aria-hidden="true" />
             {t.heroKicker}
           </motion.span>
 
-          <motion.h1 className={`${styles.display} ${styles.heroTitle}`} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.1, ease: EASE }}>
+          <motion.h1
+            className={`${styles.display} ${styles.heroTitle}`}
+            initial={{ opacity: 0, transform: "translateY(18px)" }}
+            animate={{ opacity: 1, transform: "translateY(0px)" }}
+            transition={{ duration: 0.9, delay: 0.1, ease: EASE }}
+          >
             {d.heroLine1} {d.heroLine2}
           </motion.h1>
 
-          <motion.p className={styles.heroSub} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.85, delay: 0.22, ease: EASE }}>
+          <motion.p
+            className={styles.heroSub}
+            initial={{ opacity: 0, transform: "translateY(14px)" }}
+            animate={{ opacity: 1, transform: "translateY(0px)" }}
+            transition={{ duration: 0.85, delay: 0.22, ease: EASE }}
+          >
             {t.heroSub}
           </motion.p>
 
           {/* the desk, nested: a glass shell around a cream core */}
-          <motion.div className={styles.heroShell} initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.95, delay: 0.34, ease: EASE }}>
+          <motion.div
+            className={styles.heroShell}
+            initial={{ opacity: 0, transform: "translateY(22px)" }}
+            animate={{ opacity: 1, transform: "translateY(0px)" }}
+            transition={{ duration: 0.95, delay: 0.34, ease: EASE }}
+          >
             <div className={styles.heroCard}>
               <div className={styles.heroCardCopy}>
                 <span className={styles.kicker}>{m.heroCardKicker}</span>
@@ -257,14 +281,19 @@ export default function ConceptM() {
           ))}
         </section>
 
-        {/* the numbers, one card each */}
+        {/* the numbers, one card each. The reference's own stat row runs
+            four distinct surfaces (dark green, lime, black, photo) — one
+            gold card here borrows that rhythm instead of leaving the token
+            unused. Both bone and gold inherit --ink from the canvas, so
+            unlike the navy card that used to sit here, neither needs a
+            color override. */}
         <section className={styles.bento}>
           {STATS.map((s, i) => (
-            <article key={s.label} data-reveal className={`${styles.card} ${i === 1 ? styles.cardNavy : styles.cardBone} ${styles.colQuarter}`}>
-              <div className={styles.statNum} style={{ color: i === 1 ? "#fff" : "var(--navy)" }}>
+            <article key={s.label} data-reveal className={`${styles.card} ${i === 1 ? styles.cardGold : styles.cardBone} ${styles.colQuarter}`}>
+              <div className={styles.statNum}>
                 <CountUp to={s.num} suffix={s.suffix} />
               </div>
-              <div className={styles.statRule} style={{ color: i === 1 ? "var(--gold-soft)" : "var(--navy)" }}>
+              <div className={styles.statRule}>
                 <span className={styles.statDot} />
               </div>
               <div className={styles.statLabel}>{s.label}</div>
