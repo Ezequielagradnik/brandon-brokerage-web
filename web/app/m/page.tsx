@@ -1,65 +1,24 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Link from "next/link";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useReveals";
-import { useLang } from "@/hooks/useLang";
-import LangToggle from "@/components/LangToggle";
-import MobileMenu from "@/components/MobileMenu";
 import { CountUp } from "@/components/motion";
 import { COPY, OFFERINGS_I18N } from "@/lib/copy";
 import { CARRIERS, DEEP, OFFICE } from "@/lib/deep";
 import { NETWORK_URL } from "@/lib/contact";
+import { MHeader, MFooter, MClosing, Tag, useLang } from "./chrome";
 import styles from "./page.module.css";
 
 // Meridian , boutique block architecture. The hero runs full bleed, and
 // everything after it is a stack of rounded blocks inset on a bone canvas,
 // with cards nested inside them at concentric radii and a glyph-and-pill tag
 // opening every chapter. Navy carries the weight, gold the accent, and every
-// word is Brandon's own.
+// word is Brandon's own. The header, the closing band and the footer are
+// shared with the five inner pages via ./chrome, so all six pages end the
+// same way and the nav highlights the page you're actually on.
 
 const EASE = [0.32, 0.72, 0, 1] as const;
-
-/* Ultra-light line glyphs, one per chapter. Drawn here rather than pulled
-   from an icon set so the stroke weight matches the hairlines around them. */
-function Glyph({ name }: { name: "compass" | "globe" | "layers" | "shield" | "quote" }) {
-  const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
-  return (
-    <svg className={styles.tagGlyph} viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="12" r="9.2" {...common} opacity="0.45" />
-      {name === "compass" && <path d="M15.2 8.8l-2 4.4-4.4 2 2-4.4z" {...common} />}
-      {name === "globe" && <><path d="M2.8 12h18.4" {...common} /><path d="M12 2.8c2.4 2.5 3.7 5.8 3.7 9.2s-1.3 6.7-3.7 9.2c-2.4-2.5-3.7-5.8-3.7-9.2S9.6 5.3 12 2.8z" {...common} /></>}
-      {name === "layers" && <><path d="M12 6.6l5 2.9-5 2.9-5-2.9z" {...common} /><path d="M7 13.1l5 2.9 5-2.9" {...common} /></>}
-      {name === "shield" && <path d="M12 6.2l4 1.7v3.4c0 2.6-1.6 4.6-4 5.5-2.4-.9-4-2.9-4-5.5V7.9z" {...common} />}
-      {name === "quote" && <path d="M9.6 14.4c-1.2 0-2-.9-2-2.1 0-2 1.5-3.7 3.4-4.3M16 14.4c-1.2 0-2-.9-2-2.1 0-2 1.5-3.7 3.4-4.3" {...common} />}
-    </svg>
-  );
-}
-
-function Tag({ glyph, children, dark = false }: { glyph: "compass" | "globe" | "layers" | "shield" | "quote"; children: React.ReactNode; dark?: boolean }) {
-  return (
-    <div className={`${styles.tagRow} ${dark ? styles.tagDark : ""}`}>
-      <Glyph name={glyph} />
-      <span className={styles.tag}>{children}</span>
-    </div>
-  );
-}
-
-const NAV = {
-  en: [
-    { href: "#offer", label: "What we offer" },
-    { href: "#specialty", label: "Foreign nationals" },
-    { href: "#products", label: "Products" },
-    { href: "#firm", label: "The firm" },
-  ],
-  es: [
-    { href: "#offer", label: "Qué ofrecemos" },
-    { href: "#specialty", label: "Clientes extranjeros" },
-    { href: "#products", label: "Productos" },
-    { href: "#firm", label: "La firma" },
-  ],
-} as const;
 
 const T = {
   en: {
@@ -81,11 +40,6 @@ const T = {
     firmTitle: "The firms that place difficult business place it here.",
     firmBody: "Our customers are other businesses looking to expand their book by offering life insurance alongside their core line: P&C agencies, law firms, banks, financial advisors, accountants and independent agents.",
     quoteTag: "The Brandon standard",
-    closingBody: "Tell us about your case or your book of business. A brokerage director responds within one business day.",
-    footProduct: "Product",
-    footFirm: "Firm",
-    footContact: "Contact",
-    footAbout: "Advanced sales support, full case management and 30+ top-rated carriers, from one Coral Gables office.",
   },
   es: {
     heroCardKicker: "La mesa de casos",
@@ -106,11 +60,6 @@ const T = {
     firmTitle: "Las firmas que colocan negocio difícil lo colocan acá.",
     firmBody: "Nuestros clientes son otras empresas que buscan ampliar su cartera ofreciendo seguros de vida junto a su línea principal: agencias de P&C, estudios jurídicos, bancos, asesores financieros, contadores y agentes independientes.",
     quoteTag: "El estándar Brandon",
-    closingBody: "Cuéntenos sobre su caso o su cartera. Un director de brokerage responde dentro de un día hábil.",
-    footProduct: "Producto",
-    footFirm: "Firma",
-    footContact: "Contacto",
-    footAbout: "Soporte avanzado de ventas, gestión integral de casos y más de 30 aseguradoras de primer nivel, desde una oficina en Coral Gables.",
   },
 } as const;
 
@@ -136,42 +85,7 @@ export default function ConceptM() {
 
   return (
     <div ref={pageRef} className={styles.page}>
-      {/* ————— header: a white pill floating over the hero ————— */}
-      <header className={`${styles.header} ${scrolled ? styles.headerSolid : ""}`}>
-        <Link href="#top" className={styles.logoChip}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" width={140} height={28} fetchPriority="high" style={{ height: 28, width: "auto" }} />
-        </Link>
-
-        <nav className={styles.nav}>
-          {NAV[lang].map((l) => (
-            <a key={l.href} href={l.href} className={`${styles.navLink} ${styles.navHideMd}`}>
-              {l.label}
-            </a>
-          ))}
-          <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" className={`${styles.navLink} ${styles.navTool} ${styles.navHideSm}`}>
-            <span className={styles.navDot} aria-hidden="true" />
-            {t.nav.assistant}
-          </a>
-          <span className={`${styles.navRule} ${styles.navHideSm}`} aria-hidden="true" />
-          <LangToggle lang={lang} setLang={setLang} color="rgba(74,85,104,0.7)" activeColor="#14224a" />
-          <a href={OFFICE.phoneHref} className={`${styles.pill} ${styles.pillDark} ${styles.pillSm} ${styles.pillPlain} ${styles.navHideSm}`}>
-            {t.cta.partner}
-          </a>
-
-          <span className={styles.navBurger}>
-            <MobileMenu
-              links={[...NAV[lang], { href: NETWORK_URL, label: t.nav.assistant }]}
-              ctaLabel={t.cta.partner}
-              ctaHref={OFFICE.phoneHref}
-              panelBg="#0d1730"
-              textColor="#f5f1e8"
-              accentColor="#c2a15b"
-              toggleColor="#14224a"
-            />
-          </span>
-        </nav>
-      </header>
+      <MHeader lang={lang} setLang={setLang} scrolled={scrolled} />
 
       {/* ————— hero: full bleed, edge to edge. The block architecture starts
           below it, so the page opens on the vista and only then settles into
@@ -228,7 +142,7 @@ export default function ConceptM() {
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: "flex-start" }}>
                 <a href={OFFICE.phoneHref} className={styles.heroPhone}>{OFFICE.phone}</a>
-                <a href="#contact" className={`${styles.pill} ${styles.pillDark} ${styles.pillSm}`}>
+                <a href="/m/contact" className={`${styles.pill} ${styles.pillDark} ${styles.pillSm}`}>
                   {t.cta.partner} <span className={styles.pillDisc} aria-hidden="true">→</span>
                 </a>
               </div>
@@ -328,7 +242,7 @@ export default function ConceptM() {
             </div>
 
             <div className={styles.cardFoot}>
-              <a href="#contact" className={`${styles.pill} ${styles.pillDark}`}>
+              <a href="/m/foreign-nationals" className={`${styles.pill} ${styles.pillDark}`}>
                 {m.fnCta} <span className={styles.pillDisc} aria-hidden="true">→</span>
               </a>
             </div>
@@ -361,6 +275,11 @@ export default function ConceptM() {
                 </div>
               ))}
             </div>
+            <div className={styles.cardFoot}>
+              <a href="/m/products" className={`${styles.pill} ${styles.pillLine}`}>
+                {t.cta.explore} <span className={styles.pillDisc} aria-hidden="true">→</span>
+              </a>
+            </div>
           </article>
         </section>
 
@@ -391,6 +310,11 @@ export default function ConceptM() {
               <div className={styles.kicker} style={{ marginBottom: 10 }}>{t.carriersLabel}</div>
               <p style={{ fontSize: 14, lineHeight: 1.65, color: "var(--body)", margin: 0 }}>{d.tellusBody}</p>
             </div>
+            <div className={styles.cardFoot}>
+              <a href="/m/firm" className={`${styles.pill} ${styles.pillLine}`}>
+                {t.nav.firm} <span className={styles.pillDisc} aria-hidden="true">→</span>
+              </a>
+            </div>
           </article>
 
           <article data-reveal className={`${styles.card} ${styles.cardPhoto} ${styles.colHalf}`}>
@@ -399,67 +323,8 @@ export default function ConceptM() {
           </article>
         </section>
 
-        {/* closing block */}
-        <section id="contact" className={`${styles.block} ${styles.closing}`}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/miami-sunset.jpg" alt="" className={styles.heroPhoto} loading="lazy" />
-          <div className={styles.heroWash} aria-hidden="true" />
-          <div style={{ position: "relative", zIndex: 2 }}>
-            <h2 data-reveal className={`${styles.display} ${styles.closingTitle}`}>{t.contactTitle}</h2>
-            <p data-reveal className={styles.closingBody}>{m.closingBody}</p>
-            <div data-reveal style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-              <a href={OFFICE.phoneHref} className={`${styles.pill} ${styles.pillLight}`}>
-                {OFFICE.phone} <span className={styles.pillDisc} aria-hidden="true">→</span>
-              </a>
-              {/* the second control is the toll-free desk: both numbers here
-                  are the firm's real ones, no invented inbox */}
-              <a href={OFFICE.tollFreeHref} className={`${styles.pill} ${styles.pillGhost} ${styles.pillPlain}`}>
-                {OFFICE.tollFree}
-              </a>
-            </div>
-          </div>
-        </section>
-
-        {/* footer block */}
-        <footer className={`${styles.block} ${styles.footer}`}>
-          <div className={styles.footGrid}>
-            <div>
-              <div style={{ background: "rgba(245,241,232,0.94)", borderRadius: 999, padding: "8px 16px", display: "inline-flex", marginBottom: 18 }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/assets/brandon-logo.png" alt="Brandon Brokerage Group" style={{ height: 24, width: "auto" }} />
-              </div>
-              <p style={{ fontSize: 14.5, lineHeight: 1.65, color: "rgba(245,241,232,0.68)", margin: 0, maxWidth: 340 }}>{m.footAbout}</p>
-            </div>
-
-            <div>
-              <div className={styles.footHead}>{m.footProduct}</div>
-              {t.products.map((p) => (
-                <a key={p.name} href="#products" className={styles.footLink}>{p.name}</a>
-              ))}
-            </div>
-
-            <div>
-              <div className={styles.footHead}>{m.footFirm}</div>
-              <a href="#offer" className={styles.footLink}>{m.offerTag}</a>
-              <a href="#specialty" className={styles.footLink}>{d.nav.foreign}</a>
-              <a href="#firm" className={styles.footLink}>{d.nav.firm}</a>
-              <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" className={styles.footLink}>{t.nav.assistant} ↗</a>
-            </div>
-
-            <div>
-              <div className={styles.footHead}>{m.footContact}</div>
-              <a href={OFFICE.phoneHref} className={styles.footLink}>{OFFICE.phone}</a>
-              <a href={OFFICE.tollFreeHref} className={styles.footLink}>{OFFICE.tollFree}</a>
-              <span className={styles.footLink} style={{ opacity: 0.75 }}>{OFFICE.street}</span>
-              <span className={styles.footLink} style={{ opacity: 0.75 }}>{OFFICE.city}</span>
-            </div>
-          </div>
-
-          <div className={styles.footBottom}>
-            <span>{t.rights}</span>
-            <span>{t.licensed}</span>
-          </div>
-        </footer>
+        <MClosing lang={lang} />
+        <MFooter lang={lang} />
       </div>
     </div>
   );
