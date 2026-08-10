@@ -117,7 +117,7 @@ export default function ConceptS() {
 
           <FadeIn delay={0.85} style={{ display: "flex", gap: 14, alignItems: "center", justifyContent: "center", flexWrap: "wrap" }}>
             <Magnetic>
-              <Link href="/n/contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ background: GOLD, borderColor: GOLD, color: NAVY }}>{t.cta.partner}</Link>
+              <Link href="/s/contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ background: GOLD, borderColor: GOLD, color: NAVY }}>{t.cta.partner}</Link>
             </Magnetic>
             <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaGhostDark}`}>
               {x.aiNav} ↗
@@ -214,7 +214,7 @@ export default function ConceptS() {
             <MaskReveal inView delay={0.25}>{x.fnTitle2}</MaskReveal>
           </h2>
           <p data-reveal style={{ fontSize: "clamp(15px,1.35vw,17.5px)", lineHeight: 1.7, color: INK_MUTED, margin: "0 0 30px", maxWidth: 680 }}>{x.fnTeaser}</p>
-          <Link data-reveal href="/n/foreign-nationals" onPointerEnter={ctaFillFromCursor} className={styles.cta}>{x.fnTeaserCta} →</Link>
+          <Link data-reveal href="/s/foreign-nationals" onPointerEnter={ctaFillFromCursor} className={styles.cta}>{x.fnTeaserCta} →</Link>
         </div>
       </section>
 
@@ -258,7 +258,7 @@ export default function ConceptS() {
           <div data-reveal style={{ display: "flex", flexWrap: "wrap", gap: "clamp(20px,3.4vw,44px)", alignItems: "center", marginTop: "clamp(34px,4vw,52px)", paddingTop: 26, borderTop: "1px solid rgba(194,161,91,0.35)" }}>
             <Magnetic>
               <Link
-                href="/n/contact"
+                href="/s/contact"
                 onPointerEnter={ctaFillFromCursor}
                 className={styles.cta}
                 style={{ background: GOLD, borderColor: GOLD, color: NAVY }}

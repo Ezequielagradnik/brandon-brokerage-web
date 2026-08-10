@@ -27,7 +27,9 @@ export function NHeader({ lang, setLang, solid = false, home = "/n" }: { lang: L
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 40));
   const firm = solid || scrolled;
 
-  const links = deepNav("/n", lang);
+  // every link in the chrome hangs off `home`, so /s renders the same
+  // furniture without ever handing the visitor back to /n
+  const links = deepNav(home, lang);
 
   return (
     <header className={`${styles.header} ${firm ? styles.headerSolid : ""}`}>
@@ -45,7 +47,7 @@ export function NHeader({ lang, setLang, solid = false, home = "/n" }: { lang: L
 
       <nav className={styles.headerNav}>
         {links.map((l) => {
-          const on = l.href.startsWith("/n/") && pathname === l.href;
+          const on = l.href.startsWith(`${home}/`) && pathname === l.href;
           return (
             <Link key={l.href} href={l.href} className={`${styles.navItem} ${on ? styles.navItemOn : ""}`}>
               {on && !reduce && (
@@ -64,13 +66,13 @@ export function NHeader({ lang, setLang, solid = false, home = "/n" }: { lang: L
 
       <LangToggle lang={lang} setLang={setLang} color="rgba(20,34,74,0.5)" activeColor={NAVY} />
 
-      <Link href="/n/contact" onPointerEnter={ctaFillFromCursor} className={styles.headerCta}>{t.cta.partner}</Link>
+      <Link href={`${home}/contact`} onPointerEnter={ctaFillFromCursor} className={styles.headerCta}>{t.cta.partner}</Link>
 
       <span style={{ display: "flex" }}>
         <MobileMenu
           links={[...links, { href: NETWORK_URL, label: x.aiNav }]}
           ctaLabel={t.cta.partner}
-          ctaHref="/n/contact"
+          ctaHref={`${home}/contact`}
           panelBg={NAVY}
           textColor={BEIGE}
           accentColor={GOLD}
@@ -104,7 +106,7 @@ export function PageHero({ kicker, title, italic, body }: { kicker: string; titl
    Contact used to be an anchor on this band (/n#contact); it is a real page
    now, so the band keeps the number in reach and points at the full desk
    directory instead of standing in for it. */
-export function NFooter({ lang }: { lang: Lang }) {
+export function NFooter({ lang, home = "/n" }: { lang: Lang; home?: string }) {
   const t = COPY[lang];
   const x = EXTRA[lang];
   return (
@@ -121,8 +123,8 @@ export function NFooter({ lang }: { lang: Lang }) {
             <div style={{ fontFamily: "var(--font-bodoni), serif", fontSize: "clamp(15px,1.5vw,19px)", color: "rgba(245,241,232,0.9)" }}>75 Valencia Ave, Suite 200 · Coral Gables, FL 33134</div>
           </div>
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", flexWrap: "wrap", gap: "clamp(16px,2.4vw,28px)" }}>
-            <Link href="/n/contact" className={styles.backLink}>{x.nav.contact} →</Link>
-            <Link href="/n" className={styles.backLink}>← {x.back}</Link>
+            <Link href={`${home}/contact`} className={styles.backLink}>{x.nav.contact} →</Link>
+            <Link href={home} className={styles.backLink}>← {x.back}</Link>
           </div>
         </div>
         <div style={{ marginTop: "clamp(34px,4vw,56px)", paddingTop: 20, borderTop: "1px solid rgba(245,241,232,0.12)", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
