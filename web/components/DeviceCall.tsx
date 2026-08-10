@@ -313,7 +313,11 @@ export default function DeviceCall({
       <motion.div
         style={{
           height: "min(100%, 580px)",
-          aspectRatio: "9 / 19.5",
+          /* 10% shorter than a 9/19.5 handset: the lockup is compact, and the
+             full-height body left a dead panel under the call button. Paired
+             with the reduced bottom padding below, the whole reduction comes
+             off the bottom and the gap under the status bar stays put. */
+          aspectRatio: "9 / 17.6",
           position: "relative",
           /* deliberately NOT preserve-3d: it propagates the 3D context to every
              descendant, and then a child's bounding box stops agreeing with
@@ -414,12 +418,12 @@ export default function DeviceCall({
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                /* A 9/19.5 screen leaves ~70cqw of dead air above the lockup
-                   once the content is centred. The bottom padding shrinks the
-                   centring box, which lifts everything by half of it, closing
-                   the gap under the status bar without moving the content off
-                   centre-ish or touching the home indicator below. */
-                padding: "0 7cqw 28cqw",
+                /* The bottom padding shrinks the centring box, lifting the
+                   lockup by half of it so it sits under the status bar rather
+                   than in the middle of a tall screen. Tuned against the
+                   shorter aspect above: together they hold the top gap at
+                   ~54cqw while the body loses 10% of its height. */
+                padding: "0 7cqw 5cqw",
                 position: "relative",
                 zIndex: 10,
               }}
