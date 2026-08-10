@@ -13,15 +13,38 @@ import { CARRIERS, DEEP, OFFICE } from "@/lib/deep";
 import { NETWORK_URL } from "@/lib/contact";
 import styles from "./page.module.css";
 
-// Meridian , the magnar.ai language on Brandon's brand and Brandon's own words.
-// What is preserved from the reference: a full-bleed graded vista behind a
-// centered geometric-sans masthead with a pill badge and one floating light
-// card; warm bone canvas in two tones; huge left headlines paired with a right
-// paragraph; hairline-divided numbered blocks whose titles are serif; giant
-// tabular stat numbers; rounded photo/panel pairs; pill controls; a dark band
-// and a dark multi-column footer.
-// What is adapted: magnar's near-black becomes Brandon navy, its accent becomes
-// Brandon gold, and every word comes from brandonbrokerage.com.
+// Meridian , boutique block architecture. The hero runs full bleed, and
+// everything after it is a stack of rounded blocks inset on a bone canvas,
+// with cards nested inside them at concentric radii and a glyph-and-pill tag
+// opening every chapter. Navy carries the weight, gold the accent, and every
+// word is Brandon's own.
+
+const EASE = [0.32, 0.72, 0, 1] as const;
+
+/* Ultra-light line glyphs, one per chapter. Drawn here rather than pulled
+   from an icon set so the stroke weight matches the hairlines around them. */
+function Glyph({ name }: { name: "compass" | "globe" | "layers" | "shield" | "quote" }) {
+  const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  return (
+    <svg className={styles.tagGlyph} viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="9.2" {...common} opacity="0.45" />
+      {name === "compass" && <path d="M15.2 8.8l-2 4.4-4.4 2 2-4.4z" {...common} />}
+      {name === "globe" && <><path d="M2.8 12h18.4" {...common} /><path d="M12 2.8c2.4 2.5 3.7 5.8 3.7 9.2s-1.3 6.7-3.7 9.2c-2.4-2.5-3.7-5.8-3.7-9.2S9.6 5.3 12 2.8z" {...common} /></>}
+      {name === "layers" && <><path d="M12 6.6l5 2.9-5 2.9-5-2.9z" {...common} /><path d="M7 13.1l5 2.9 5-2.9" {...common} /></>}
+      {name === "shield" && <path d="M12 6.2l4 1.7v3.4c0 2.6-1.6 4.6-4 5.5-2.4-.9-4-2.9-4-5.5V7.9z" {...common} />}
+      {name === "quote" && <path d="M9.6 14.4c-1.2 0-2-.9-2-2.1 0-2 1.5-3.7 3.4-4.3M16 14.4c-1.2 0-2-.9-2-2.1 0-2 1.5-3.7 3.4-4.3" {...common} />}
+    </svg>
+  );
+}
+
+function Tag({ glyph, children, dark = false }: { glyph: "compass" | "globe" | "layers" | "shield" | "quote"; children: React.ReactNode; dark?: boolean }) {
+  return (
+    <div className={`${styles.tagRow} ${dark ? styles.tagDark : ""}`}>
+      <Glyph name={glyph} />
+      <span className={styles.tag}>{children}</span>
+    </div>
+  );
+}
 
 const NAV = {
   en: [
@@ -42,22 +65,22 @@ const T = {
   en: {
     heroCardKicker: "The case desk",
     heroCardLine: "Tell us about your case or your book of business. A brokerage director responds within one business day.",
-    heroLink: "See what we place",
-    carrierLabel: "Some of our carriers",
-    carrierCta: "30+ top-rated carriers",
-    offerKicker: "Why agents place through Brandon",
+    carrierLabel: "Chosen by the carriers agents ask for",
+    offerTag: "What we offer",
     offerTitle: "Carriers quote. Brandon places the case.",
     offerBody: "Agents who write complex business do not lose weeks learning a carrier's appetite or chasing paperwork between offices. One team in Coral Gables designs the case, packages the application, argues the underwriting and delivers the policy, across an open architecture of 30+ carriers.",
+    offerCta: "See how a case moves",
     statesLabel: "States licensed",
-    specialtyKicker: "Signature specialty",
+    specialtyTag: "Signature specialty",
     caseFlowLabel: "How a case moves",
     fnCta: "Start a foreign national case",
-    aiKicker: "Brandon Latam Network",
+    aiTag: "Brandon Latam Network",
     aiCta: "Open the platform",
-    productsKicker: "Products",
-    firmKicker: "Real adoption",
+    productsTag: "Five lines, one relationship",
+    firmTag: "The firm",
     firmTitle: "The firms that place difficult business place it here.",
     firmBody: "Our customers are other businesses looking to expand their book by offering life insurance alongside their core line: P&C agencies, law firms, banks, financial advisors, accountants and independent agents.",
+    quoteTag: "The Brandon standard",
     closingBody: "Tell us about your case or your book of business. A brokerage director responds within one business day.",
     footProduct: "Product",
     footFirm: "Firm",
@@ -67,22 +90,22 @@ const T = {
   es: {
     heroCardKicker: "La mesa de casos",
     heroCardLine: "Cuéntenos sobre su caso o su cartera. Un director de brokerage responde dentro de un día hábil.",
-    heroLink: "Vea lo que colocamos",
-    carrierLabel: "Algunas de nuestras aseguradoras",
-    carrierCta: "Más de 30 aseguradoras top",
-    offerKicker: "Por qué los agentes colocan con Brandon",
+    carrierLabel: "Elegidos por las aseguradoras que los agentes piden",
+    offerTag: "Qué ofrecemos",
     offerTitle: "Las aseguradoras cotizan. Brandon coloca el caso.",
     offerBody: "Los agentes que escriben negocio complejo no pierden semanas aprendiendo el apetito de cada aseguradora ni persiguiendo papeles entre oficinas. Un solo equipo en Coral Gables diseña el caso, arma la solicitud, discute el underwriting y entrega la póliza, sobre una arquitectura abierta de más de 30 aseguradoras.",
+    offerCta: "Cómo avanza un caso",
     statesLabel: "Estados con licencia",
-    specialtyKicker: "Especialidad distintiva",
+    specialtyTag: "Especialidad distintiva",
     caseFlowLabel: "Cómo avanza un caso",
     fnCta: "Iniciar un caso extranjero",
-    aiKicker: "Brandon Latam Network",
+    aiTag: "Brandon Latam Network",
     aiCta: "Abrir la plataforma",
-    productsKicker: "Productos",
-    firmKicker: "Adopción real",
+    productsTag: "Cinco líneas, una relación",
+    firmTag: "La firma",
     firmTitle: "Las firmas que colocan negocio difícil lo colocan acá.",
     firmBody: "Nuestros clientes son otras empresas que buscan ampliar su cartera ofreciendo seguros de vida junto a su línea principal: agencias de P&C, estudios jurídicos, bancos, asesores financieros, contadores y agentes independientes.",
+    quoteTag: "El estándar Brandon",
     closingBody: "Cuéntenos sobre su caso o su cartera. Un director de brokerage responde dentro de un día hábil.",
     footProduct: "Producto",
     footFirm: "Firma",
@@ -104,9 +127,16 @@ export default function ConceptM() {
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 40));
 
+  const STATS = [
+    { num: 60, suffix: "+", label: t.stats.years },
+    { num: 30, suffix: "+", label: t.stats.carriers },
+    { num: 5, suffix: "", label: t.stats.lines },
+    { num: 50, suffix: "", label: m.statesLabel },
+  ];
+
   return (
     <div ref={pageRef} className={styles.page}>
-      {/* ————— header: a white pill floating over the vista ————— */}
+      {/* ————— header: a white pill floating over the hero ————— */}
       <header className={`${styles.header} ${scrolled ? styles.headerSolid : ""}`}>
         <Link href="#top" className={styles.logoChip}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -125,18 +155,16 @@ export default function ConceptM() {
           </a>
           <span className={`${styles.navRule} ${styles.navHideSm}`} aria-hidden="true" />
           <LangToggle lang={lang} setLang={setLang} color="rgba(74,85,104,0.7)" activeColor="#14224a" />
-          <a href={OFFICE.phoneHref} className={`${styles.pill} ${styles.pillDark} ${styles.pillSm} ${styles.navHideSm}`}>
+          <a href={OFFICE.phoneHref} className={`${styles.pill} ${styles.pillDark} ${styles.pillSm} ${styles.pillPlain} ${styles.navHideSm}`}>
             {t.cta.partner}
           </a>
 
-          {/* under 780px the section links collapse into the shared panel, so
-              the page is still navigable on a phone */}
           <span className={styles.navBurger}>
             <MobileMenu
               links={[...NAV[lang], { href: NETWORK_URL, label: t.nav.assistant }]}
               ctaLabel={t.cta.partner}
               ctaHref={OFFICE.phoneHref}
-              panelBg="#0f1a38"
+              panelBg="#0d1730"
               textColor="#f5f1e8"
               accentColor="#c2a15b"
               toggleColor="#14224a"
@@ -145,151 +173,122 @@ export default function ConceptM() {
         </nav>
       </header>
 
-      {/* ————— hero ————— */}
+      {/* ————— hero: full bleed, edge to edge. The block architecture starts
+          below it, so the page opens on the vista and only then settles into
+          its stack of cards. ————— */}
       <section id="top" className={styles.hero}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/images/miami-aerial-day.jpg" alt="" className={styles.heroPhoto} fetchPriority="high" />
         <div className={styles.heroWash} aria-hidden="true" />
 
         <div className={styles.heroInner}>
-          <motion.span
-            className={styles.badge}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <motion.span className={styles.badge} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE }}>
             <span className={styles.badgeDot} aria-hidden="true" />
             {t.heroKicker}
           </motion.span>
 
-          <motion.h1
-            className={`${styles.display} ${styles.heroTitle}`}
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.85, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <motion.h1 className={`${styles.display} ${styles.heroTitle}`} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.1, ease: EASE }}>
             {d.heroLine1} {d.heroLine2}
           </motion.h1>
 
-          <motion.p
-            className={styles.heroSub}
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <motion.p className={styles.heroSub} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.85, delay: 0.22, ease: EASE }}>
             {t.heroSub}
           </motion.p>
 
-          {/* the floating card: magnar puts its product's first move here, so
-              this one carries Brandon's , the desk that answers the phone */}
-          <motion.div
-            className={styles.heroCard}
-            initial={{ opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.34, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className={styles.heroCardCopy}>
-              <span className={styles.kicker}>{m.heroCardKicker}</span>
-              <p className={styles.heroCardLine}>{m.heroCardLine}</p>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: "flex-start" }}>
-              <a href={OFFICE.phoneHref} className={styles.heroPhone}>{OFFICE.phone}</a>
-              <a href="#contact" className={`${styles.pill} ${styles.pillDark} ${styles.pillSm}`}>
-                {t.cta.partner} <span className={styles.pillArrow} aria-hidden="true">→</span>
-              </a>
+          {/* the desk, nested: a glass shell around a cream core */}
+          <motion.div className={styles.heroShell} initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.95, delay: 0.34, ease: EASE }}>
+            <div className={styles.heroCard}>
+              <div className={styles.heroCardCopy}>
+                <span className={styles.kicker}>{m.heroCardKicker}</span>
+                <p className={styles.heroCardLine}>{m.heroCardLine}</p>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: "flex-start" }}>
+                <a href={OFFICE.phoneHref} className={styles.heroPhone}>{OFFICE.phone}</a>
+                <a href="#contact" className={`${styles.pill} ${styles.pillDark} ${styles.pillSm}`}>
+                  {t.cta.partner} <span className={styles.pillDisc} aria-hidden="true">→</span>
+                </a>
+              </div>
             </div>
           </motion.div>
-
-          <motion.a
-            href="#offer"
-            className={styles.heroLink}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-          >
-            {m.heroLink}
-          </motion.a>
         </div>
       </section>
 
-      {/* ————— carrier bar ————— */}
-      <div className={styles.carrierBar}>
-        <div className={styles.carrierHead}>
-          <span className={styles.kicker}>{m.carrierLabel}</span>
-          <span className={styles.kicker} style={{ color: "var(--gold-deep)" }}>{m.carrierCta}</span>
-        </div>
-        <div style={{ overflow: "hidden", WebkitMaskImage: "linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)", maskImage: "linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)" }}>
-          <div className={styles.carrierTrack}>
-            {[0, 1].map((rep) => (
-              <div key={rep} style={{ display: "flex", alignItems: "center", gap: "clamp(30px,4vw,62px)", paddingRight: "clamp(30px,4vw,62px)" }} aria-hidden={rep === 1}>
-                {CARRIERS.map((c) => (
-                  <span key={c} className={styles.carrierName}>{c}</span>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ————— what we offer: the split headline, then the numbered pillars ————— */}
-      <section id="offer" className={`${styles.section} ${styles.sectionBone}`}>
-        <div className={styles.wrap}>
-          <div data-reveal className={styles.kicker} style={{ marginBottom: 22 }}>{m.offerKicker}</div>
-          <div className={styles.split}>
-            <h2 data-reveal className={`${styles.display} ${styles.splitTitle}`}>{m.offerTitle}</h2>
-            <p data-reveal className={styles.splitBody}>{m.offerBody}</p>
-          </div>
-
-          <div className={styles.pillars}>
-            {OFFERINGS.map((o) => (
-              <article key={o.n} data-reveal className={styles.pillar}>
-                <span className={styles.pillarNum}>{o.n}</span>
-                <h3 className={styles.pillarTitle}>{o.title}</h3>
-                <p className={styles.pillarBody}>{o.blurb}</p>
-              </article>
-            ))}
-          </div>
-
-          <div className={styles.stats} style={{ marginTop: "clamp(40px,5vw,72px)" }}>
-            {[
-              { num: 60, suffix: "+", label: t.stats.years },
-              { num: 30, suffix: "+", label: t.stats.carriers },
-              { num: 5, suffix: "", label: t.stats.lines },
-              { num: 50, suffix: "", label: m.statesLabel },
-            ].map((s) => (
-              <div key={s.label} data-reveal className={styles.stat}>
-                <div className={styles.statNum}>
-                  <CountUp to={s.num} suffix={s.suffix} />
+      {/* ————— everything below the hero lives in the block stack ————— */}
+      <div className={styles.stack}>
+        {/* carriers: their own navy block, textured */}
+        <div data-reveal className={`${styles.block} ${styles.blockNavy}`} style={{ padding: "clamp(28px,3.4vw,50px) 0" }}>
+          <div className={styles.topo} aria-hidden="true" />
+          <div className={styles.carrierLabel}>{m.carrierLabel}</div>
+          <div style={{ position: "relative", zIndex: 2, overflow: "hidden", WebkitMaskImage: "linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)", maskImage: "linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)" }}>
+            <div className={styles.carrierTrack}>
+              {[0, 1].map((rep) => (
+                <div key={rep} style={{ display: "flex", alignItems: "center", gap: "clamp(30px,4vw,62px)", paddingRight: "clamp(30px,4vw,62px)" }} aria-hidden={rep === 1}>
+                  {CARRIERS.map((c) => (
+                    <span key={c} className={styles.carrierName}>{c}</span>
+                  ))}
                 </div>
-                <div className={styles.statLabel}>{s.label}</div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      </section>
 
-      {/* ————— the specialty, as magnar's photo/panel pair ————— */}
-      <section id="specialty" className={`${styles.section} ${styles.sectionDeep}`}>
-        <div className={styles.wrap}>
-          <div className={styles.feature}>
-            <div data-reveal className={styles.featureMedia}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/miami-palms-sunset.jpg" alt="" className={styles.featureImg} loading="lazy" />
-            </div>
-
-            <div data-reveal className={styles.featurePanel}>
-              <div className={styles.featureHead}>
-                <span className={styles.kicker}>01</span>
-                <span className={styles.kicker}>{m.specialtyKicker}</span>
+        {/* what we offer: the statement beside the four pillars */}
+        <section id="offer" className={styles.bento}>
+          <article data-reveal className={`${styles.card} ${styles.cardNavy} ${styles.colHalf} ${styles.rowTwo}`}>
+            <div className={styles.topo} aria-hidden="true" />
+            <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", height: "100%" }}>
+              <Tag glyph="compass" dark>{m.offerTag}</Tag>
+              <h2 className={`${styles.display} ${styles.statementTitle}`}>{m.offerTitle}</h2>
+              <p className={styles.statementBody}>{m.offerBody}</p>
+              <div className={styles.cardFoot}>
+                <a href="#specialty" className={`${styles.pill} ${styles.pillGold}`}>
+                  {m.offerCta} <span className={styles.pillDisc} aria-hidden="true">→</span>
+                </a>
               </div>
+            </div>
+          </article>
 
-              <h2 className={`${styles.display} ${styles.featureTitle}`}>
-                {d.fnTitle1} {d.fnTitle2}
-              </h2>
-              <p className={styles.featureBody}>{d.fnTeaser}</p>
+          {OFFERINGS.map((o, i) => (
+            <article key={o.n} data-reveal className={`${styles.card} ${i % 3 === 0 ? styles.cardCream : styles.cardBone} ${styles.colQuarter}`}>
+              <div className={styles.pillarNum}>{o.n}</div>
+              <h3 className={`${styles.serifTitle} ${styles.pillarTitle}`}>{o.title}</h3>
+              <p className={styles.pillarBody}>{o.blurb}</p>
+            </article>
+          ))}
+        </section>
 
-              <div className={styles.steps}>
-                <div className={styles.kicker} style={{ paddingTop: 16, paddingBottom: 4 }}>{m.caseFlowLabel}</div>
+        {/* the numbers, one card each */}
+        <section className={styles.bento}>
+          {STATS.map((s, i) => (
+            <article key={s.label} data-reveal className={`${styles.card} ${i === 1 ? styles.cardNavy : styles.cardBone} ${styles.colQuarter}`}>
+              <div className={styles.statNum} style={{ color: i === 1 ? "#fff" : "var(--navy)" }}>
+                <CountUp to={s.num} suffix={s.suffix} />
+              </div>
+              <div className={styles.statRule} style={{ color: i === 1 ? "var(--gold-soft)" : "var(--navy)" }}>
+                <span className={styles.statDot} />
+              </div>
+              <div className={styles.statLabel}>{s.label}</div>
+            </article>
+          ))}
+        </section>
+
+        {/* the specialty: a photo card beside the argument */}
+        <section id="specialty" className={styles.bento}>
+          <article data-reveal className={`${styles.card} ${styles.cardPhoto} ${styles.colHalf}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/miami-palms-sunset.jpg" alt="" className={styles.cardImg} loading="lazy" />
+          </article>
+
+          <article data-reveal className={`${styles.card} ${styles.cardCream} ${styles.colHalf}`}>
+            <Tag glyph="globe">{m.specialtyTag}</Tag>
+            <h2 className={styles.display} style={{ fontSize: "clamp(27px,2.9vw,42px)", color: "var(--navy)", maxWidth: "14ch", marginBottom: 16 }}>
+              {d.fnTitle1} {d.fnTitle2}
+            </h2>
+            <p style={{ fontSize: "clamp(14.5px,1.15vw,16px)", lineHeight: 1.68, color: "var(--body)", margin: 0, maxWidth: "46ch" }}>{d.fnTeaser}</p>
+
+            <div className={styles.stepShell}>
+              <div className={styles.stepCore}>
+                <div className={styles.kicker} style={{ paddingBottom: 6 }}>{m.caseFlowLabel}</div>
                 {d.fnSteps.map((s) => (
                   <div key={s.n} className={styles.step}>
                     <span className={styles.stepNum}>{s.n}</span>
@@ -297,89 +296,94 @@ export default function ConceptM() {
                   </div>
                 ))}
               </div>
-
-              <a href="#contact" className={`${styles.pill} ${styles.pillDark}`} style={{ marginTop: "clamp(24px,3vw,34px)", alignSelf: "flex-start" }}>
-                {m.fnCta} <span className={styles.pillArrow} aria-hidden="true">→</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ————— dark band: the assistant hand-off and the product shelf ————— */}
-      <section id="products" className={styles.dark}>
-        <div className={styles.wrap}>
-          <div className={styles.split}>
-            <div>
-              <div data-reveal className={styles.kicker} style={{ color: "var(--gold)", marginBottom: 20 }}>{m.aiKicker}</div>
-              <h2 data-reveal className={`${styles.display} ${styles.darkTitle}`}>{d.aiTitle}</h2>
-              <p data-reveal className={styles.darkBody} style={{ margin: "20px 0 30px" }}>{d.aiBody}</p>
-              <a data-reveal href={NETWORK_URL} target="_blank" rel="noopener noreferrer" className={`${styles.pill} ${styles.pillLight}`}>
-                {m.aiCta} <span className={styles.pillArrow} aria-hidden="true">↗</span>
-              </a>
             </div>
 
-            <div data-reveal className={styles.darkPanel}>
-              <div className={styles.kicker} style={{ color: "rgba(245,241,232,0.5)", marginBottom: 16 }}>{m.productsKicker}</div>
+            <div className={styles.cardFoot}>
+              <a href="#contact" className={`${styles.pill} ${styles.pillDark}`}>
+                {m.fnCta} <span className={styles.pillDisc} aria-hidden="true">→</span>
+              </a>
+            </div>
+          </article>
+        </section>
+
+        {/* the assistant and the shelf */}
+        <section id="products" className={styles.bento}>
+          <article data-reveal className={`${styles.card} ${styles.cardNavy} ${styles.colHalf}`}>
+            <div className={styles.topo} aria-hidden="true" />
+            <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", height: "100%" }}>
+              <Tag glyph="layers" dark>{m.aiTag}</Tag>
+              <h2 className={styles.display} style={{ fontSize: "clamp(27px,2.9vw,42px)", color: "#fff", maxWidth: "14ch" }}>{d.aiTitle}</h2>
+              <p className={styles.statementBody}>{d.aiBody}</p>
+              <div className={styles.cardFoot}>
+                <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" className={`${styles.pill} ${styles.pillLight}`}>
+                  {m.aiCta} <span className={styles.pillDisc} aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <article data-reveal className={`${styles.card} ${styles.cardBone} ${styles.colHalf}`}>
+            <Tag glyph="shield">{m.productsTag}</Tag>
+            <div style={{ marginTop: "auto" }}>
               {t.products.map((p) => (
-                <div key={p.name} className={styles.darkRow}>
-                  <span className={styles.darkRowName}>{p.name}</span>
-                  <span className={styles.darkRowDesc}>{p.desc}</span>
+                <div key={p.name} className={styles.prodRow} style={{ borderColor: "var(--hair)" }}>
+                  <span className={styles.prodName} style={{ color: "var(--navy)" }}>{p.name}</span>
+                  <span className={styles.prodDesc} style={{ color: "var(--muted)" }}>{p.desc}</span>
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-      </section>
+          </article>
+        </section>
 
-      {/* ————— adoption and the pull quote ————— */}
-      <section id="firm" className={`${styles.section} ${styles.sectionBone}`}>
-        <div className={styles.wrap}>
-          <div className={styles.quoteGrid}>
-            <div>
-              <div data-reveal className={styles.kicker} style={{ marginBottom: 20 }}>{m.firmKicker}</div>
-              <h2 data-reveal className={`${styles.display}`} style={{ fontSize: "clamp(28px,3.4vw,46px)", color: "var(--navy)", maxWidth: "15ch" }}>
-                {m.firmTitle}
-              </h2>
-              <p data-reveal className={styles.splitBody} style={{ marginTop: 20 }}>{m.firmBody}</p>
-              <div data-reveal style={{ marginTop: "clamp(26px,3vw,38px)", paddingTop: 20, borderTop: "1px solid var(--hair)" }}>
-                <div className={styles.kicker} style={{ marginBottom: 10 }}>{t.carriersLabel}</div>
-                <p className={styles.splitBody} style={{ fontSize: 14.5 }}>{d.tellusBody}</p>
-              </div>
+        {/* the firm and the standard */}
+        <section id="firm" className={styles.bento}>
+          <article data-reveal className={`${styles.card} ${styles.cardCream} ${styles.colHalf}`}>
+            <Tag glyph="compass">{m.firmTag}</Tag>
+            <h2 className={styles.display} style={{ fontSize: "clamp(26px,2.7vw,40px)", color: "var(--navy)", maxWidth: "15ch", marginBottom: 18 }}>
+              {m.firmTitle}
+            </h2>
+            <p style={{ fontSize: "clamp(14.5px,1.15vw,16px)", lineHeight: 1.68, color: "var(--body)", margin: "0 0 22px", maxWidth: "48ch" }}>{m.firmBody}</p>
+            <div style={{ marginTop: "auto", paddingTop: 20, borderTop: "1px solid var(--hair)" }}>
+              <div className={styles.kicker} style={{ marginBottom: 10 }}>{t.carriersLabel}</div>
+              <p style={{ fontSize: 14, lineHeight: 1.65, color: "var(--body)", margin: 0 }}>{d.tellusBody}</p>
             </div>
+          </article>
 
-            <div data-reveal className={styles.quoteRule}>
+          <article data-reveal className={`${styles.card} ${styles.cardNavy} ${styles.colHalf}`}>
+            <div className={styles.topo} aria-hidden="true" />
+            {/* the quote is short, so it sits centred rather than stranded at
+                the top of a card sized by its neighbour */}
+            <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", height: "100%", justifyContent: "center" }}>
+              <Tag glyph="quote" dark>{m.quoteTag}</Tag>
+              <span className={styles.quoteMark} aria-hidden="true">&ldquo;</span>
               <p className={styles.quoteText}>{d.statement}</p>
-              <div className={styles.kicker} style={{ marginTop: "clamp(24px,3vw,34px)" }}>{t.quoteAttrib}</div>
+            </div>
+          </article>
+        </section>
+
+        {/* closing block */}
+        <section id="contact" className={`${styles.block} ${styles.closing}`}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/miami-sunset.jpg" alt="" className={styles.heroPhoto} loading="lazy" />
+          <div className={styles.heroWash} aria-hidden="true" />
+          <div style={{ position: "relative", zIndex: 2 }}>
+            <h2 data-reveal className={`${styles.display} ${styles.closingTitle}`}>{t.contactTitle}</h2>
+            <p data-reveal className={styles.closingBody}>{m.closingBody}</p>
+            <div data-reveal style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+              <a href={OFFICE.phoneHref} className={`${styles.pill} ${styles.pillLight}`}>
+                {OFFICE.phone} <span className={styles.pillDisc} aria-hidden="true">→</span>
+              </a>
+              {/* the second control is the toll-free desk: both numbers here
+                  are the firm's real ones, no invented inbox */}
+              <a href={OFFICE.tollFreeHref} className={`${styles.pill} ${styles.pillGhost} ${styles.pillPlain}`}>
+                {OFFICE.tollFree}
+              </a>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ————— closing CTA over the vista, the way magnar closes ————— */}
-      <section id="contact" className={styles.closing}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/miami-sunset.jpg" alt="" className={styles.heroPhoto} loading="lazy" />
-        <div className={styles.heroWash} aria-hidden="true" />
-        <div style={{ position: "relative", zIndex: 2 }}>
-          <h2 data-reveal className={`${styles.display} ${styles.closingTitle}`}>{t.contactTitle}</h2>
-          <p data-reveal className={styles.closingBody}>{m.closingBody}</p>
-          <div data-reveal style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href={OFFICE.phoneHref} className={`${styles.pill} ${styles.pillLight}`}>
-              {OFFICE.phone} <span className={styles.pillArrow} aria-hidden="true">→</span>
-            </a>
-            {/* the second control is the toll-free desk: both numbers here are
-                the firm's real ones, no invented inbox */}
-            <a href={OFFICE.tollFreeHref} className={`${styles.pill} ${styles.pillGhost}`}>
-              {OFFICE.tollFree}
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* ————— footer ————— */}
-      <footer className={styles.footer}>
-        <div className={styles.wrap}>
+        {/* footer block */}
+        <footer className={`${styles.block} ${styles.footer}`}>
           <div className={styles.footGrid}>
             <div>
               <div style={{ background: "rgba(245,241,232,0.94)", borderRadius: 999, padding: "8px 16px", display: "inline-flex", marginBottom: 18 }}>
@@ -398,7 +402,7 @@ export default function ConceptM() {
 
             <div>
               <div className={styles.footHead}>{m.footFirm}</div>
-              <a href="#offer" className={styles.footLink}>{t.offerKicker}</a>
+              <a href="#offer" className={styles.footLink}>{m.offerTag}</a>
               <a href="#specialty" className={styles.footLink}>{d.nav.foreign}</a>
               <a href="#firm" className={styles.footLink}>{d.nav.firm}</a>
               <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" className={styles.footLink}>{t.nav.assistant} ↗</a>
@@ -417,8 +421,8 @@ export default function ConceptM() {
             <span>{t.rights}</span>
             <span>{t.licensed}</span>
           </div>
-        </div>
-      </footer>
+        </footer>
+      </div>
     </div>
   );
 }
