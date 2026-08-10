@@ -70,72 +70,37 @@
   letter-spacing: -0.01em;
 }
 
-/* ————— announce bar ————— */
-.announce {
-  position: relative;
-  z-index: 70;
-  background: var(--navy-deep);
-  color: rgba(245, 241, 232, 0.82);
-  font-size: 13px;
-  padding: 10px clamp(18px, 4vw, 44px);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-.announceLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  color: #f5f1e8 !important;
-  font-weight: 600;
-  white-space: nowrap;
-}
-.announceLink span {
-  transition: transform 0.25s var(--ease);
-}
-.announceLink:hover span {
-  transform: translateX(3px);
-}
-@media (max-width: 700px) {
-  .announceNote {
-    display: none;
-  }
-  .announce {
-    justify-content: center;
-  }
-}
-
-/* ————— header ————— */
+/* ————— header: one white pill, floating over the vista and then over the
+   page. It never becomes a full-width bar: the shape is the identity, and
+   it only tightens and deepens its shadow once you leave the hero. ————— */
 .header {
-  position: sticky;
-  top: 0;
+  position: fixed;
+  top: clamp(12px, 2vh, 20px);
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 60;
+  width: min(1320px, calc(100% - clamp(20px, 5vw, 56px)));
   display: flex;
   align-items: center;
-  gap: clamp(12px, 2vw, 28px);
-  padding: 16px clamp(18px, 4vw, 44px);
-  transition: background 0.35s ease, border-color 0.35s ease, padding 0.35s ease;
-  border-bottom: 1px solid transparent;
+  gap: clamp(12px, 2vw, 26px);
+  padding: 11px 11px 11px 20px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  border: 1px solid rgba(20, 34, 74, 0.07);
+  box-shadow: 0 10px 34px rgba(10, 20, 45, 0.16);
+  transition: background 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
 }
 .headerSolid {
-  padding: 11px clamp(18px, 4vw, 44px);
-  background: rgba(245, 241, 232, 0.92);
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  border-bottom-color: var(--hair);
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 12px 40px rgba(10, 20, 45, 0.13);
+  border-color: rgba(20, 34, 74, 0.1);
 }
 .logoChip {
   display: inline-flex;
   align-items: center;
-  padding: 7px 14px;
-  border-radius: 999px;
-  background: rgba(245, 241, 232, 0.94);
-  transition: background 0.35s ease, padding 0.35s ease;
-}
-.headerSolid .logoChip {
-  background: none;
-  padding: 0;
+  flex-shrink: 0;
 }
 .nav {
   display: flex;
@@ -146,17 +111,11 @@
 .navLink {
   font-size: 14px;
   font-weight: 500;
-  color: rgba(245, 241, 232, 0.86);
+  color: var(--body);
   white-space: nowrap;
   transition: color 0.25s ease;
 }
 .navLink:hover {
-  color: #fff;
-}
-.headerSolid .navLink {
-  color: var(--body);
-}
-.headerSolid .navLink:hover {
   color: var(--navy);
 }
 /* the assistant entry keeps its gold dot, the way it does across the site */
@@ -180,13 +139,12 @@
 .navRule {
   width: 1px;
   height: 18px;
-  background: rgba(245, 241, 232, 0.28);
-}
-.headerSolid .navRule {
   background: var(--hair);
 }
+/* scoped to .header on purpose: .pill sets its own display later in this
+   sheet, and a bare .navHideSm would lose the tie on source order */
 @media (max-width: 1080px) {
-  .navHideMd {
+  .header .navHideMd {
     display: none;
   }
 }
@@ -194,7 +152,7 @@
   .nav {
     gap: 10px;
   }
-  .navHideSm {
+  .header .navHideSm {
     display: none;
   }
 }
@@ -271,15 +229,15 @@
 }
 
 /* ————— hero ————— */
+/* the pill floats over this, so the hero owns the full first screen and only
+   reserves head room for it */
 .hero {
   position: relative;
-  min-height: calc(100svh - 96px);
+  min-height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(56px, 9vh, 110px) clamp(18px, 4vw, 44px) clamp(48px, 8vh, 90px);
-  margin-top: -73px;
-  padding-top: clamp(120px, 17vh, 190px);
+  padding: clamp(118px, 16vh, 178px) clamp(18px, 4vw, 44px) clamp(48px, 8vh, 90px);
   overflow: hidden;
   background: var(--navy-deep);
 }

@@ -40,8 +40,6 @@ const NAV = {
 
 const T = {
   en: {
-    announce: "A leading Tellus / Crump firm, serving producers and advisors since the 1960s.",
-    announceCta: "Talk to a director",
     heroCardKicker: "The case desk",
     heroCardLine: "Tell us about your case or your book of business. A brokerage director responds within one business day.",
     heroLink: "See what we place",
@@ -67,8 +65,6 @@ const T = {
     footAbout: "Advanced sales support, full case management and 30+ top-rated carriers, from one Coral Gables office.",
   },
   es: {
-    announce: "Firma líder de Tellus / Crump, al servicio de productores y asesores desde los años 60.",
-    announceCta: "Hablar con un director",
     heroCardKicker: "La mesa de casos",
     heroCardLine: "Cuéntenos sobre su caso o su cartera. Un director de brokerage responde dentro de un día hábil.",
     heroLink: "Vea lo que colocamos",
@@ -110,16 +106,7 @@ export default function ConceptM() {
 
   return (
     <div ref={pageRef} className={styles.page}>
-      {/* ————— announce bar: the Tellus/Crump affiliation leads, the way
-          magnar leads with its product news ————— */}
-      <div className={styles.announce}>
-        <span className={styles.announceNote}>{m.announce}</span>
-        <a href={OFFICE.phoneHref} className={styles.announceLink}>
-          {m.announceCta} <span aria-hidden="true">→</span>
-        </a>
-      </div>
-
-      {/* ————— header ————— */}
+      {/* ————— header: a white pill floating over the vista ————— */}
       <header className={`${styles.header} ${scrolled ? styles.headerSolid : ""}`}>
         <Link href="#top" className={styles.logoChip}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -137,8 +124,8 @@ export default function ConceptM() {
             {t.nav.assistant}
           </a>
           <span className={`${styles.navRule} ${styles.navHideSm}`} aria-hidden="true" />
-          <LangToggle lang={lang} setLang={setLang} color={scrolled ? "rgba(74,85,104,0.7)" : "rgba(245,241,232,0.6)"} activeColor={scrolled ? "#14224a" : "#f5f1e8"} />
-          <a href={OFFICE.phoneHref} className={`${styles.pill} ${scrolled ? styles.pillDark : styles.pillLight} ${styles.pillSm} ${styles.navHideSm}`}>
+          <LangToggle lang={lang} setLang={setLang} color="rgba(74,85,104,0.7)" activeColor="#14224a" />
+          <a href={OFFICE.phoneHref} className={`${styles.pill} ${styles.pillDark} ${styles.pillSm} ${styles.navHideSm}`}>
             {t.cta.partner}
           </a>
 
@@ -152,7 +139,7 @@ export default function ConceptM() {
               panelBg="#0f1a38"
               textColor="#f5f1e8"
               accentColor="#c2a15b"
-              toggleColor={scrolled ? "#14224a" : "#f5f1e8"}
+              toggleColor="#14224a"
             />
           </span>
         </nav>
