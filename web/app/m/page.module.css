@@ -26,6 +26,8 @@
   --r-inner: clamp(10px, 1.1vw, 15px);
   --gutter: clamp(10px, 1.4vw, 20px);
   --edge: clamp(10px, 1.6vw, 26px);
+  /* measured, not guessed: the pill is 62px tall, 56px once the CTA hides */
+  --header-h: 62px;
 
   width: 100%;
   overflow-x: clip;
@@ -209,6 +211,10 @@
   }
   .header .navHideSm {
     display: none;
+  }
+  /* the pill loses the CTA here, so it loses height with it */
+  .page {
+    --header-h: 56px;
   }
 }
 
@@ -807,10 +813,14 @@
   }
 }
 
-/* ————— inner-page masthead block ————— */
+/* ————— inner-page masthead block —————
+   The landing's hero is full bleed, so the header floating over it is the
+   design. Here the first block is a card, and a header sitting on it read
+   as part of it — so the block starts below the pill, on the bone canvas,
+   and its padding goes back to being padding instead of header clearance. */
 .pageHeroBlock {
-  margin-top: 0;
-  padding: clamp(120px, 15vh, 168px) clamp(24px, 4.4vw, 64px) clamp(40px, 5vw, 64px);
+  margin-top: calc(var(--edge) + var(--header-h));
+  padding: clamp(38px, 5.2vw, 76px) clamp(24px, 4.4vw, 64px) clamp(40px, 5.2vw, 72px);
 }
 
 /* ————— products: an accordion inside one wide card, sub-items as chips ————— */
