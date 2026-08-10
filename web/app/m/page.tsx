@@ -335,7 +335,22 @@ export default function ConceptM() {
           </article>
         </section>
 
-        {/* the firm and the standard */}
+        {/* ————— the breath. The one chapter with no card around it: the
+            statement sits on the bare canvas with air on every side, so the
+            blocks before and after read as a decision rather than a template.
+            ————— */}
+        <section className={styles.breath}>
+          <div data-reveal className={styles.breathInner}>
+            <span className={styles.breathMark} aria-hidden="true">&ldquo;</span>
+            <p className={styles.breathText}>{d.statement}</p>
+            <div className={styles.breathAttrib}>
+              <span className={styles.breathRule} aria-hidden="true" />
+              {m.quoteTag}
+            </div>
+          </div>
+        </section>
+
+        {/* the firm */}
         <section id="firm" className={styles.bento}>
           <article data-reveal className={`${styles.card} ${styles.cardCream} ${styles.colHalf}`}>
             <Tag glyph="compass">{m.firmTag}</Tag>
@@ -349,15 +364,9 @@ export default function ConceptM() {
             </div>
           </article>
 
-          <article data-reveal className={`${styles.card} ${styles.cardNavy} ${styles.colHalf}`}>
-            <div className={styles.topo} aria-hidden="true" />
-            {/* the quote is short, so it sits centred rather than stranded at
-                the top of a card sized by its neighbour */}
-            <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", height: "100%", justifyContent: "center" }}>
-              <Tag glyph="quote" dark>{m.quoteTag}</Tag>
-              <span className={styles.quoteMark} aria-hidden="true">&ldquo;</span>
-              <p className={styles.quoteText}>{d.statement}</p>
-            </div>
+          <article data-reveal className={`${styles.card} ${styles.cardPhoto} ${styles.colHalf}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/handshake-office.jpg" alt="" className={styles.cardImg} loading="lazy" />
           </article>
         </section>
 
