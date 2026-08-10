@@ -414,7 +414,12 @@ export default function DeviceCall({
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                padding: "0 7cqw",
+                /* A 9/19.5 screen leaves ~70cqw of dead air above the lockup
+                   once the content is centred. The bottom padding shrinks the
+                   centring box, which lifts everything by half of it, closing
+                   the gap under the status bar without moving the content off
+                   centre-ish or touching the home indicator below. */
+                padding: "0 7cqw 28cqw",
                 position: "relative",
                 zIndex: 10,
               }}
