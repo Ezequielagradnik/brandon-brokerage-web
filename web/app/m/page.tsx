@@ -202,12 +202,12 @@ export default function ConceptM() {
 
           <article data-reveal className={`${styles.card} ${styles.cardPhoto} ${styles.colQuarter}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/bb-family-mountain.jpg" alt="" className={styles.cardImg} loading="lazy" />
+            <img src="/images/family-beach-sunset.jpg" alt="" className={styles.cardImg} loading="lazy" />
           </article>
 
           <article data-reveal className={`${styles.card} ${styles.cardPhoto} ${styles.colQuarter}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/bb-family-hands.jpg" alt="" className={styles.cardImg} loading="lazy" />
+            <img src="/images/family-landing-photo.png" alt="" className={styles.cardImg} loading="lazy" />
           </article>
 
           <article data-reveal className={`${styles.card} ${styles.cardBone} ${styles.colQuarter}`} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
