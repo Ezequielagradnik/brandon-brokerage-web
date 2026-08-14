@@ -186,13 +186,39 @@ export default function ConceptM() {
             </div>
           </article>
 
-          {OFFERINGS.map((o, i) => (
-            <article key={o.n} data-reveal className={`${styles.card} ${i % 3 === 0 ? styles.cardCream : styles.cardBone} ${styles.colQuarter}`}>
-              <div className={styles.pillarNum}>{o.n}</div>
-              <h3 className={`${styles.serifTitle} ${styles.pillarTitle}`}>{o.title}</h3>
-              <p className={styles.pillarBody}>{o.blurb}</p>
-            </article>
-          ))}
+          {/* four pillars, two of them read , two of them seen: a checkerboard
+              beats four identical text quarters, and it's the one place on
+              the landing bblatam's own photo rhythm gets to show up twice
+              in one glance */}
+          <article data-reveal className={`${styles.card} ${styles.cardCream} ${styles.colQuarter}`} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            {OFFERINGS.slice(0, 2).map((o) => (
+              <div key={o.n}>
+                <div className={styles.pillarNum} style={{ marginBottom: 8 }}>{o.n}</div>
+                <h3 className={styles.serifTitle} style={{ fontSize: "clamp(14.5px,1.25vw,16.5px)", color: "var(--navy)", marginBottom: 6 }}>{o.title}</h3>
+                <p style={{ fontSize: 12.5, lineHeight: 1.55, color: "var(--body)", margin: 0 }}>{o.blurb}</p>
+              </div>
+            ))}
+          </article>
+
+          <article data-reveal className={`${styles.card} ${styles.cardPhoto} ${styles.colQuarter}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/bb-family-mountain.jpg" alt="" className={styles.cardImg} loading="lazy" />
+          </article>
+
+          <article data-reveal className={`${styles.card} ${styles.cardPhoto} ${styles.colQuarter}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/bb-family-hands.jpg" alt="" className={styles.cardImg} loading="lazy" />
+          </article>
+
+          <article data-reveal className={`${styles.card} ${styles.cardBone} ${styles.colQuarter}`} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            {OFFERINGS.slice(2, 4).map((o) => (
+              <div key={o.n}>
+                <div className={styles.pillarNum} style={{ marginBottom: 8 }}>{o.n}</div>
+                <h3 className={styles.serifTitle} style={{ fontSize: "clamp(14.5px,1.25vw,16.5px)", color: "var(--navy)", marginBottom: 6 }}>{o.title}</h3>
+                <p style={{ fontSize: 12.5, lineHeight: 1.55, color: "var(--body)", margin: 0 }}>{o.blurb}</p>
+              </div>
+            ))}
+          </article>
         </section>
 
         {/* the numbers, one card each. The reference's own stat row runs
