@@ -34,31 +34,31 @@ export default function ForeignNationalsPage() {
           <p style={{ fontSize: "clamp(15px,1.3vw,17.5px)", lineHeight: 1.72, color: "var(--body)", margin: 0, maxWidth: "68ch" }}>{d.fnBody2}</p>
         </section>
 
-        <section data-reveal className={`${styles.card} ${styles.cardBone} ${styles.blockPad}`} style={{ marginTop: "var(--gutter)" }}>
-          <div className={styles.kicker} style={{ marginBottom: "clamp(18px,2vw,26px)" }}>{d.fnFlowTitle}</div>
-          <div className={styles.stepShell}>
-            <div className={styles.stepCore}>
-              {d.fnSteps.map((s, i) => (
-                <div
-                  key={s.n}
-                  style={{ display: "flex", gap: 18, alignItems: "flex-start", padding: "18px 0", borderBottom: i === d.fnSteps.length - 1 ? "none" : "1px solid var(--hair)" }}
-                >
-                  <span className={styles.stepNum} style={{ paddingTop: 4 }}>{s.n}</span>
-                  <div>
-                    <div className={styles.stepName} style={{ marginBottom: 6 }}>{s.title}</div>
-                    <p style={{ fontSize: 14, lineHeight: 1.62, color: "var(--body)", margin: 0, maxWidth: "58ch" }}>{s.body}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+        <div data-reveal style={{ marginTop: "var(--gutter)" }}>
+          <div className={styles.kicker} style={{ marginBottom: "clamp(18px,2.2vw,28px)" }}>{d.fnFlowTitle}</div>
+          <div className={styles.bento} style={{ marginTop: 0 }}>
+            {d.fnSteps.map((s, i) => (
+              <article key={s.n} data-reveal className={`${styles.card} ${i % 2 === 0 ? styles.cardCream : styles.cardBone} ${styles.colThird}`}>
+                <div className={styles.pillarNum}>{s.n}</div>
+                <h3 className={`${styles.serifTitle} ${styles.pillarTitle}`}>{s.title}</h3>
+                <p className={styles.pillarBody}>{s.body}</p>
+              </article>
+            ))}
           </div>
-          <div className={styles.kicker} style={{ color: "var(--gold-deep)", marginTop: "clamp(20px,2.4vw,30px)" }}>{d.fnNote}</div>
+          <div className={styles.kicker} style={{ color: "var(--gold-deep)", marginTop: "clamp(26px,3.2vw,38px)" }}>{d.fnNote}</div>
 
-          <div className={styles.cardFoot}>
+          <div style={{ marginTop: "clamp(26px,3.2vw,38px)" }}>
             <a href={OFFICE.phoneHref} className={`${styles.pill} ${styles.pillDark}`}>
               {t.cta.partner} <span className={styles.pillDisc} aria-hidden="true">→</span>
             </a>
           </div>
+        </div>
+
+        <section className={styles.bento}>
+          <article data-reveal className={`${styles.card} ${styles.cardPhoto} ${styles.colFull}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/miami-night.jpg" alt="" className={styles.cardImg} loading="lazy" />
+          </article>
         </section>
 
         <MClosing lang={lang} />

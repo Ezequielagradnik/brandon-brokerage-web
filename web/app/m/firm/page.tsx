@@ -27,7 +27,15 @@ export default function FirmPage() {
       <MHeader lang={lang} setLang={setLang} scrolled={scrolled} />
 
       <div className={styles.stack}>
-        <MPageHero glyph="compass" kicker={t.missionKicker} title={t.missionText.trim()} clause={`${t.missionHighlight}.`} />
+        <MPageHero
+          glyph="compass"
+          kicker={t.missionKicker}
+          title={t.missionText.trim()}
+          clause={`${t.missionHighlight}.`}
+          image="/images/bb-family-dune.jpg"
+          imageAlt="A family together outdoors"
+          imagePosition="50% 38%"
+        />
 
         {/* approach + who we serve */}
         <section className={styles.bento}>
@@ -88,6 +96,13 @@ export default function FirmPage() {
             <div className={styles.kicker} style={{ marginBottom: 14 }}>Joint venture</div>
             <h3 className={styles.serifTitle} style={{ fontSize: "clamp(19px,1.7vw,23px)", color: "var(--navy)", marginBottom: 12 }}>{d.icsTitle}</h3>
             <p style={{ fontSize: 14.5, lineHeight: 1.68, color: "var(--body)", margin: 0 }}>{d.icsBody}</p>
+          </article>
+        </section>
+
+        <section className={styles.bento}>
+          <article data-reveal className={`${styles.card} ${styles.cardPhoto} ${styles.colFull}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/bb-family-hands.jpg" alt="" className={styles.cardImg} loading="lazy" />
           </article>
         </section>
 

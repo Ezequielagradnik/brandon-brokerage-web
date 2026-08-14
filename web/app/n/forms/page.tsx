@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { useScrollReveal } from "@/hooks/useReveals";
-import { Magnetic, ScrollProgress, ctaFillFromCursor } from "@/components/motion";
+import { Magnetic, ParallaxImg, ScrollProgress, ctaFillFromCursor } from "@/components/motion";
 import { NFooter, NHeader, PageHero, useLang } from "../chrome";
 import { GOLD, GOLD_DEEP } from "../copy";
 import { EXTRA } from "../copy";
@@ -43,6 +43,18 @@ export default function FormsPage() {
                 ))}
               </div>
             ))}
+          </div>
+
+          <div data-reveal className={styles.photo} style={{ height: "clamp(220px,28vw,340px)", marginTop: "clamp(40px,5vw,60px)" }}>
+            <ParallaxImg
+              src="/images/wwo-papers.jpg"
+              alt="Forms and paperwork on a desk"
+              range={20}
+              photoSlot="forms"
+              style={{ height: "100%" }}
+              imgClassName={styles.photoImg}
+            />
+            <span className={styles.photoEdge} aria-hidden="true" />
           </div>
         </div>
       </section>

@@ -98,19 +98,34 @@ export function MHeader({ lang, setLang, scrolled }: { lang: Lang; setLang: (l: 
 
 /* Masthead for an inner page: the same tag+glyph every chapter opens with,
    set inside its own navy block instead of a full-bleed photo. Only the
-   landing earns full bleed; this is page furniture, not a second hero. */
-export function MPageHero({ glyph, kicker, title, clause, body }: { glyph: GlyphName; kicker: string; title: string; clause?: string; body?: string }) {
+   landing earns full bleed; this is page furniture, not a second hero ,
+   unless a chapter passes its own image, in which case the block splits the
+   way the landing's photo cards do, text beside the picture, not behind it. */
+export function MPageHero({ glyph, kicker, title, clause, body, image, imageAlt, imagePosition }: { glyph: GlyphName; kicker: string; title: string; clause?: string; body?: string; image?: string; imageAlt?: string; imagePosition?: string }) {
+  const text = (
+    <div>
+      <Tag glyph={glyph} dark>{kicker}</Tag>
+      <h1 className={styles.display} style={{ fontSize: image ? "clamp(28px,3.6vw,52px)" : "clamp(32px,4.6vw,64px)", color: "#fff", maxWidth: image ? undefined : "16ch", margin: 0 }}>
+        {title}
+        {clause && <> <span style={{ color: "var(--gold-soft)" }}>{clause}</span></>}
+      </h1>
+      {body && <p className={styles.statementBody} style={{ marginTop: "clamp(18px,2.2vw,28px)", maxWidth: "56ch" }}>{body}</p>}
+    </div>
+  );
   return (
     <section className={`${styles.block} ${styles.blockNavy} ${styles.pageHeroBlock}`}>
       <div className={styles.topo} aria-hidden="true" />
-      <div style={{ position: "relative", zIndex: 2 }}>
-        <Tag glyph={glyph} dark>{kicker}</Tag>
-        <h1 className={styles.display} style={{ fontSize: "clamp(32px,4.6vw,64px)", color: "#fff", maxWidth: "16ch", margin: 0 }}>
-          {title}
-          {clause && <> <span style={{ color: "var(--gold-soft)" }}>{clause}</span></>}
-        </h1>
-        {body && <p className={styles.statementBody} style={{ marginTop: "clamp(18px,2.2vw,28px)", maxWidth: "56ch" }}>{body}</p>}
-      </div>
+      {image ? (
+        <div style={{ position: "relative", zIndex: 2, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: "clamp(32px,5vw,64px)", alignItems: "center" }}>
+          {text}
+          <div style={{ position: "relative", borderRadius: "var(--r-block)", overflow: "hidden", height: "clamp(240px,26vw,360px)" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={image} alt={imageAlt ?? ""} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: imagePosition ?? "50% 50%" }} loading="eager" />
+          </div>
+        </div>
+      ) : (
+        <div style={{ position: "relative", zIndex: 2 }}>{text}</div>
+      )}
     </section>
   );
 }

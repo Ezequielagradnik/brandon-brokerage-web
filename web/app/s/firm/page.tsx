@@ -103,22 +103,36 @@ export default function SFirmPage() {
             </div>
           </div>
 
-          {/* the networks behind the desk */}
-          <div className={styles.netGrid}>
-            <Tilt max={2.4} style={{ display: "block" }}>
-              <div data-reveal className={styles.netCard}>
-                <div className={styles.kicker} style={{ color: GOLD_DEEP, marginBottom: 14, fontSize: 10 }}>Tellus · Crump</div>
-                <h3 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(19px,2vw,26px)", lineHeight: 1.2, margin: "0 0 14px", color: NAVY }}>{x.tellusTitle}</h3>
-                <p style={{ fontSize: 14, lineHeight: 1.7, color: INK_MUTED, margin: 0 }}>{x.tellusBody}</p>
-              </div>
-            </Tilt>
-            <Tilt max={2.4} style={{ display: "block" }}>
-              <div data-reveal className={styles.netCard}>
-                <div className={styles.kicker} style={{ color: GOLD_DEEP, marginBottom: 14, fontSize: 10 }}>Joint venture</div>
-                <h3 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(19px,2vw,26px)", lineHeight: 1.2, margin: "0 0 14px", color: NAVY }}>{x.icsTitle}</h3>
-                <p style={{ fontSize: 14, lineHeight: 1.7, color: INK_MUTED, margin: 0 }}>{x.icsBody}</p>
-              </div>
-            </Tilt>
+          {/* the networks behind the desk, beside the photo that argues for
+              them , the two cards restack in the left column at this width */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(36px,5vw,70px)", alignItems: "center", marginTop: "clamp(40px,5vw,64px)" }}>
+            <div className={styles.netGrid}>
+              <Tilt max={2.4} style={{ display: "block" }}>
+                <div data-reveal className={styles.netCard}>
+                  <div className={styles.kicker} style={{ color: GOLD_DEEP, marginBottom: 14, fontSize: 10 }}>Tellus · Crump</div>
+                  <h3 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(19px,2vw,26px)", lineHeight: 1.2, margin: "0 0 14px", color: NAVY }}>{x.tellusTitle}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: INK_MUTED, margin: 0 }}>{x.tellusBody}</p>
+                </div>
+              </Tilt>
+              <Tilt max={2.4} style={{ display: "block" }}>
+                <div data-reveal className={styles.netCard}>
+                  <div className={styles.kicker} style={{ color: GOLD_DEEP, marginBottom: 14, fontSize: 10 }}>Joint venture</div>
+                  <h3 style={{ fontFamily: "var(--font-bodoni), serif", fontWeight: 500, fontSize: "clamp(19px,2vw,26px)", lineHeight: 1.2, margin: "0 0 14px", color: NAVY }}>{x.icsTitle}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: INK_MUTED, margin: 0 }}>{x.icsBody}</p>
+                </div>
+              </Tilt>
+            </div>
+            <div data-reveal className={styles.photo} style={{ height: "clamp(300px,30vw,420px)" }}>
+              <ParallaxImg
+                src="/images/bb-family-hands.jpg"
+                alt="A family holding hands in a circle"
+                range={22}
+                photoSlot="networks"
+                style={{ height: "100%" }}
+                imgClassName={styles.photoImg}
+              />
+              <span className={styles.photoEdge} aria-hidden="true" />
+            </div>
           </div>
         </div>
       </section>

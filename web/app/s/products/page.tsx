@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useReveals";
 import { COPY } from "@/lib/copy";
-import { ScrollProgress } from "@/components/motion";
+import { ParallaxImg, ScrollProgress } from "@/components/motion";
 import { NFooter, NHeader, PageHero, useLang } from "../../n/chrome";
 import { EASE, GOLD, GOLD_DEEP, NAVY, PRODUCT_DETAIL, EXTRA } from "../../n/copy";
 import styles from "../page.module.css";

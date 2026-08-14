@@ -74,6 +74,13 @@ export default function ContactPage() {
           </article>
         </section>
 
+        <section className={styles.bento}>
+          <article data-reveal className={`${styles.card} ${styles.cardPhoto} ${styles.colFull}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/handshake-clean.jpg" alt="" className={styles.cardImg} loading="lazy" />
+          </article>
+        </section>
+
         {/* the number, set giant; the phone beside it is decoration wrapped
             around a number that is also there as text and a tel: link */}
         <section data-reveal className={`${styles.block} ${styles.blockBone} ${styles.blockPad}`}>

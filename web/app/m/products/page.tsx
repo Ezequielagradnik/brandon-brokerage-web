@@ -77,6 +77,13 @@ export default function ProductsPage() {
           </div>
         </section>
 
+        <section className={styles.bento}>
+          <article data-reveal className={`${styles.card} ${styles.cardPhoto} ${styles.colFull}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/bb-family-mountain.jpg" alt="" className={styles.cardImg} loading="lazy" />
+          </article>
+        </section>
+
         <MClosing lang={lang} />
         <MFooter lang={lang} />
       </div>

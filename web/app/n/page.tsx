@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion, useAnimationFrame, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform, useVelocity, wrap, type MotionValue } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useReveals";
 import { COPY, OFFERINGS_I18N } from "@/lib/copy";
-import { CountUp, GrowLine, MaskReveal, FadeIn, Magnetic, ScrollProgress, ctaFillFromCursor } from "@/components/motion";
+import { CountUp, GrowLine, MaskReveal, FadeIn, Magnetic, ParallaxImg, ScrollProgress, ctaFillFromCursor } from "@/components/motion";
 import { NETWORK_URL } from "@/lib/contact";
 import { NHeader, SectionMark, useLang } from "./chrome";
 import { CARRIERS, CONTACT, EASE, GOLD, GOLD_SOFT, GOLD_DEEP, HAIR, INK_MUTED, NAVY, EXTRA } from "./copy";
@@ -203,15 +203,30 @@ export default function ConceptN() {
         <SectionMark n="02" />
         <div className={styles.wrap} style={{ position: "relative", zIndex: 2 }}>
           <GrowLine color={HAIR} />
-          <div className={styles.kicker} style={{ color: GOLD_DEEP, marginTop: "clamp(26px,3vw,40px)", marginBottom: 18, fontSize: 10.5 }}>{x.fnKicker}</div>
-          {/* the italic-gold second line lives in the hero only; here the two
-              lines hold the same ink and the kicker carries the color */}
-          <h2 className={styles.display} style={{ fontSize: "clamp(30px,4.2vw,64px)", margin: "0 0 24px", maxWidth: 820 }}>
-            <MaskReveal inView delay={0.1}>{x.fnTitle1}</MaskReveal>
-            <MaskReveal inView delay={0.25}>{x.fnTitle2}</MaskReveal>
-          </h2>
-          <p data-reveal style={{ fontSize: "clamp(15px,1.35vw,17.5px)", lineHeight: 1.7, color: INK_MUTED, margin: "0 0 30px", maxWidth: 680 }}>{x.fnTeaser}</p>
-          <Link data-reveal href="/n/foreign-nationals" onPointerEnter={ctaFillFromCursor} className={styles.cta}>{x.fnTeaserCta} →</Link>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(36px,5vw,70px)", alignItems: "center", marginTop: "clamp(26px,3vw,40px)" }}>
+            <div>
+              <div className={styles.kicker} style={{ color: GOLD_DEEP, marginBottom: 18, fontSize: 10.5 }}>{x.fnKicker}</div>
+              {/* the italic-gold second line lives in the hero only; here the
+                  two lines hold the same ink and the kicker carries the color */}
+              <h2 className={styles.display} style={{ fontSize: "clamp(30px,4.2vw,64px)", margin: "0 0 24px", maxWidth: 820 }}>
+                <MaskReveal inView delay={0.1}>{x.fnTitle1}</MaskReveal>
+                <MaskReveal inView delay={0.25}>{x.fnTitle2}</MaskReveal>
+              </h2>
+              <p data-reveal style={{ fontSize: "clamp(15px,1.35vw,17.5px)", lineHeight: 1.7, color: INK_MUTED, margin: "0 0 30px", maxWidth: 680 }}>{x.fnTeaser}</p>
+              <Link data-reveal href="/n/foreign-nationals" onPointerEnter={ctaFillFromCursor} className={styles.cta}>{x.fnTeaserCta} →</Link>
+            </div>
+            <div data-reveal className={styles.photo} style={{ height: "clamp(300px,34vw,420px)" }}>
+              <ParallaxImg
+                src="/images/miami-palms-sunset.jpg"
+                alt="Biscayne Bay at sunset, the bridge from Latin America to Coral Gables"
+                range={26}
+                photoSlot="specialty"
+                style={{ height: "100%" }}
+                imgClassName={styles.photoImg}
+              />
+              <span className={styles.photoEdge} aria-hidden="true" />
+            </div>
+          </div>
         </div>
       </section>
 

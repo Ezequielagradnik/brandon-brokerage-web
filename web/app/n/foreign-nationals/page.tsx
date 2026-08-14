@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useReveals";
-import { ScrollProgress } from "@/components/motion";
+import { ParallaxImg, ScrollProgress } from "@/components/motion";
 import { NFooter, NHeader, PageHero, useLang } from "../chrome";
 import { GOLD, GOLD_DEEP, HAIR, INK_MUTED, NAVY, EXTRA } from "../copy";
 import styles from "../page.module.css";
@@ -27,9 +27,22 @@ export default function ForeignNationalsPage() {
 
       <section style={{ padding: "clamp(20px,3vw,40px) 0 clamp(50px,6vw,90px)" }}>
         <div className={styles.wrap}>
-          <div className={styles.fnIntro}>
-            <p data-reveal style={{ fontSize: "clamp(15px,1.35vw,17.5px)", lineHeight: 1.7, color: INK_MUTED, margin: 0 }}>{x.fnBody1}</p>
-            <p data-reveal style={{ fontSize: "clamp(15px,1.35vw,17.5px)", lineHeight: 1.7, color: INK_MUTED, margin: 0 }}>{x.fnBody2}</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "clamp(36px,5vw,70px)", alignItems: "center" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+              <p data-reveal style={{ fontSize: "clamp(15px,1.35vw,17.5px)", lineHeight: 1.7, color: INK_MUTED, margin: 0 }}>{x.fnBody1}</p>
+              <p data-reveal style={{ fontSize: "clamp(15px,1.35vw,17.5px)", lineHeight: 1.7, color: INK_MUTED, margin: 0 }}>{x.fnBody2}</p>
+            </div>
+            <div data-reveal className={styles.photo} style={{ height: "clamp(300px,34vw,420px)" }}>
+              <ParallaxImg
+                src="/images/miami-night.jpg"
+                alt="The Miami skyline at night"
+                range={24}
+                photoSlot="fn-intro"
+                style={{ height: "100%" }}
+                imgClassName={styles.photoImg}
+              />
+              <span className={styles.photoEdge} aria-hidden="true" />
+            </div>
           </div>
 
           <div className={styles.fnFlowHead}>
@@ -40,6 +53,18 @@ export default function ForeignNationalsPage() {
           <CaseFlow steps={x.fnSteps} reduce={reduce} />
 
           <p data-reveal className={styles.kicker} style={{ color: INK_MUTED, fontSize: 10.5, marginTop: "clamp(28px,3vw,42px)", lineHeight: 1.9 }}>{x.fnNote}</p>
+
+          <div data-reveal className={styles.photo} style={{ height: "clamp(240px,30vw,380px)", marginTop: "clamp(40px,5vw,64px)" }}>
+            <ParallaxImg
+              src="/images/bb-family-mountain.jpg"
+              alt="A family looking out over a valley"
+              range={22}
+              photoSlot="fn-closing"
+              style={{ height: "100%" }}
+              imgClassName={styles.photoImg}
+            />
+            <span className={styles.photoEdge} aria-hidden="true" />
+          </div>
         </div>
       </section>
 

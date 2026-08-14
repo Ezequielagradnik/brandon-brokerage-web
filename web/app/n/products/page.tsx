@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useReveals";
 import { COPY } from "@/lib/copy";
-import { ScrollProgress } from "@/components/motion";
+import { ParallaxImg, ScrollProgress } from "@/components/motion";
 import { NFooter, NHeader, PageHero, useLang } from "../chrome";
 import { EASE, GOLD, GOLD_DEEP, NAVY, PRODUCT_DETAIL, EXTRA } from "../copy";
 import styles from "../page.module.css";
@@ -74,6 +74,18 @@ export default function ProductsPage() {
                 </div>
               );
             })}
+          </div>
+
+          <div data-reveal className={styles.photo} style={{ height: "clamp(260px,32vw,420px)", marginTop: "clamp(44px,5vw,68px)" }}>
+            <ParallaxImg
+              src="/images/bb-family-mountain.jpg"
+              alt="A family looking out over a valley"
+              range={24}
+              photoSlot="products"
+              style={{ height: "100%" }}
+              imgClassName={styles.photoImg}
+            />
+            <span className={styles.photoEdge} aria-hidden="true" />
           </div>
         </div>
       </section>

@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { useScrollReveal } from "@/hooks/useReveals";
-import { Magnetic, ScrollProgress, ctaFillFromCursor } from "@/components/motion";
+import { Magnetic, ParallaxImg, ScrollProgress, ctaFillFromCursor } from "@/components/motion";
 import { NFooter, NHeader, PageHero, useLang } from "../../n/chrome";
 import { GOLD, GOLD_DEEP } from "../../n/copy";
 import { EXTRA } from "../../n/copy";
