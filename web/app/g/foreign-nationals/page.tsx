@@ -71,7 +71,7 @@ export default function ForeignNationalsPage() {
 
           <div className={styles.photoPair}>
             <Plate src="/images/wwo-papers.jpg" alt="Application paperwork on a desk" caption="Requirements & records" />
-            <Plate src="/images/handshake-moody.jpg" alt="Two people shaking hands" caption="Policy delivery" />
+            <Plate src="/images/handshake-clean.jpg" alt="Two people shaking hands" caption="Policy delivery" />
           </div>
         </div>
       </div>

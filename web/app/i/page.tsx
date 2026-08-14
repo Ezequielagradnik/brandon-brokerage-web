@@ -117,7 +117,7 @@ export default function ConceptI() {
       {/* HERO IMAGE , b&w full width with caption */}
       <div data-reveal className={styles.wrap}>
         <ParallaxImg
-          src="/images/handshake-moody.jpg"
+          src="/images/handshake-clean.jpg"
           alt={lang === "es" ? "Un apretón de manos" : "A handshake"}
           range={44}
           photoSlot="firm"
