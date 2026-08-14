@@ -6,7 +6,7 @@ import { motion, useReducedMotion, useScroll, useSpring, useTransform, type Moti
 import { useScrollReveal } from "@/hooks/useReveals";
 import { ScrollProgress, ctaFillFromCursor } from "@/components/motion";
 import CaseJourney from "@/components/CaseJourney";
-import { GFooter, GHeader, PageHero, SectionHead, useLang } from "../chrome";
+import { GFooter, GHeader, PageHero, Plate, SectionHead, useLang } from "../chrome";
 import { EXTRA, G, GOLD, GOLD_DEEP, GRAY, HAIR_LINE, NAVY, mono, monoEyebrow, sans, serif } from "../copy";
 import styles from "../page.module.css";
 
@@ -27,7 +27,14 @@ export default function ForeignNationalsPage() {
       <ScrollProgress color={GOLD} />
       <GHeader lang={lang} setLang={setLang} />
 
-      <PageHero kicker={x.fnKicker} title={x.fnTitle1} italic={x.fnTitle2} />
+      <PageHero
+        kicker={x.fnKicker}
+        title={x.fnTitle1}
+        italic={x.fnTitle2}
+        image="/images/miami-palms-sunset.jpg"
+        imageAlt="Biscayne Bay at sunset, seen through the palms"
+        imageCaption="LatAm → Coral Gables"
+      />
 
       <div style={{ padding: "clamp(20px,3vw,40px) clamp(20px,5vw,60px) clamp(60px,8vw,110px)", background: "#fff" }}>
         <div className={styles.wrap}>
@@ -35,6 +42,13 @@ export default function ForeignNationalsPage() {
             <p data-reveal style={{ fontSize: "clamp(15.5px,1.35vw,18px)", lineHeight: 1.7, color: GRAY, margin: 0 }}>{x.fnBody1}</p>
             <p data-reveal style={{ fontSize: "clamp(15.5px,1.35vw,18px)", lineHeight: 1.7, color: GRAY, margin: 0 }}>{x.fnBody2}</p>
           </div>
+
+          <Plate
+            src="/images/miami-palms-day.jpg"
+            alt="Palm trees against the Miami skyline"
+            caption="Coral Gables · the Miami skyline"
+            className={styles.photoBand}
+          />
         </div>
       </div>
 
@@ -54,6 +68,11 @@ export default function ForeignNationalsPage() {
           <SectionHead num="02" label={x.fnFlowTitle} />
           <CaseFlow steps={x.fnSteps} reduce={reduce} />
           <p data-reveal style={{ ...monoEyebrow(), color: GRAY, marginTop: "clamp(30px,4vw,48px)", lineHeight: 1.9 }}>{x.fnNote}</p>
+
+          <div className={styles.photoPair}>
+            <Plate src="/images/wwo-papers.jpg" alt="Application paperwork on a desk" caption="Requirements & records" />
+            <Plate src="/images/handshake-moody.jpg" alt="Two people shaking hands" caption="Policy delivery" />
+          </div>
         </div>
       </div>
 

@@ -1309,3 +1309,150 @@
     transform: none;
   }
 }
+
+/* ————— photography, added across the inner pages —————
+   bblatam.com carries an image in nearly every section, so /g does too, and in
+   full colour the way bblatam runs its own. All of it goes through .photoFrame,
+   which supplies the shared furniture rather than a grade: a hairline, a gold
+   rule that draws itself along the top edge, and the caption strip. */
+.photoFrame {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(20, 34, 74, 0.12);
+  background: #f4f1e9;
+}
+.photoFrame::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #c2a15b;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 2;
+}
+.photoFrame[data-in="1"]::before {
+  transform: scaleX(1);
+}
+/* absolute on purpose: in flow, a portrait photo would impose its own natural
+   height on the frame, which is what made the forms masthead plate run twice
+   the height of the type beside it. Out of flow, the frame's height comes from
+   its own rule or from the grid row, never from the file. */
+.photoFrame img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* full colour: the grade is only enough to keep a stock photo from looking
+     flat beside the concept's navy and gold, never enough to drain it */
+  filter: saturate(1.04) contrast(1.04);
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .photoFrame:hover img {
+    transform: scale(1.03);
+  }
+}
+/* a caption strip, the way an editorial page credits its plate */
+.photoCap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 14px 18px;
+  background: linear-gradient(to top, rgba(20, 34, 74, 0.86), rgba(20, 34, 74, 0));
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
+  z-index: 2;
+}
+
+/* The page masthead, when it carries a plate beside the type. The plate takes
+   its height from the type column rather than a clamp of its own, so it starts
+   and ends with the text instead of overshooting it. */
+.heroSplit {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(28px, 4.5vw, 72px);
+  align-items: stretch;
+}
+.heroSplit .pageTitle,
+.heroSplit .lede {
+  max-width: none;
+}
+.heroPlate {
+  height: auto;
+  min-height: clamp(210px, 24vw, 300px);
+}
+/* contact asked for a smaller plate: it keeps its own height and centres
+   against the type instead of running the full column */
+.heroPlateSm {
+  height: clamp(180px, 19vw, 250px);
+  align-self: center;
+}
+@media (max-width: 900px) {
+  .heroSplit {
+    grid-template-columns: 1fr;
+  }
+  .heroPlate,
+  .heroPlateSm {
+    height: clamp(200px, 46vw, 300px);
+    min-height: 0;
+    max-height: none;
+  }
+}
+
+/* a section that runs its argument beside a single plate, rather than closing
+   on a pair underneath it */
+.sectionSplit {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(28px, 4.5vw, 72px);
+  align-items: center;
+}
+.sectionSplitPlate {
+  height: clamp(280px, 32vw, 460px);
+}
+@media (max-width: 900px) {
+  .sectionSplit {
+    grid-template-columns: 1fr;
+  }
+  .sectionSplitPlate {
+    height: clamp(230px, 52vw, 340px);
+  }
+}
+
+/* a full-width band: one plate the width of the measure, with its caption */
+.photoBand {
+  height: clamp(240px, 32vw, 460px);
+  margin-top: clamp(36px, 4.5vw, 68px);
+}
+
+/* two plates side by side, for a section that needs a pair */
+.photoPair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 28px);
+  margin-top: clamp(32px, 4vw, 56px);
+}
+.photoPair > * {
+  height: clamp(200px, 24vw, 330px);
+}
+@media (max-width: 700px) {
+  .photoPair {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* the insight cards gain a thumbnail, like bblatam's insights index */
+.insThumb {
+  height: clamp(150px, 15vw, 190px);
+  margin-bottom: 18px;
+}

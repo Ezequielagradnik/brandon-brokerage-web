@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import MobileMenu from "@/components/MobileMenu";
@@ -100,17 +101,105 @@ export function SectionHead({ num, label, dark }: { num: string; label: string; 
 
 // Masthead for an inner page: mono eyebrow, hairline, Lora display title with
 // an optional italic gold second line, standfirst.
-export function PageHero({ kicker, title, italic, body }: { kicker: string; title: string; italic?: string; body?: string }) {
+/* A photographic plate. One treatment for every image on the concept: the
+   grayscale grade at rest, colour under the cursor, and a gold rule that draws
+   itself along the top edge the first time the plate crosses the viewport, so
+   an image arrives the way GrowLine makes a hairline arrive. */
+export function Plate({
+  src,
+  alt,
+  caption,
+  className,
+  priority = false,
+  focal = "50% 50%",
+}: {
+  src: string;
+  alt: string;
+  caption?: string;
+  className?: string;
+  priority?: boolean;
+  /* object-position for the crop. A portrait source forced into a short,
+     wide band centres by default on the subject's midsection; pass a focal
+     point (e.g. "50% 20%") to keep faces in frame instead. */
+  focal?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setInView(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setInView(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.2 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} data-in={inView ? "1" : "0"} className={`${styles.photoFrame} ${className ?? ""}`}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt={alt} loading={priority ? "eager" : "lazy"} decoding="async" fetchPriority={priority ? "high" : "auto"} style={{ objectPosition: focal }} />
+      {caption && <span className={styles.photoCap}>{caption}</span>}
+    </div>
+  );
+}
+
+/* The inner-page masthead. With `image` it splits: type left, plate right, the
+   way bblatam opens its Soluciones page. Without one it stays the full-measure
+   masthead it has always been. */
+export function PageHero({
+  kicker,
+  title,
+  italic,
+  body,
+  image,
+  imageAlt,
+  imageCaption,
+  plateClass,
+}: {
+  kicker: string;
+  title: string;
+  italic?: string;
+  body?: string;
+  image?: string;
+  imageAlt?: string;
+  imageCaption?: string;
+  plateClass?: string;
+}) {
+  const copy = (
+    <div>
+      <div data-reveal style={{ ...monoEyebrow(), marginBottom: 16 }}>{kicker}</div>
+      <GrowLine color="rgba(154,123,50,0.45)" />
+      <h1 className={styles.pageTitle}>
+        <MaskReveal delay={0.05}>{title}</MaskReveal>
+        {italic && <MaskReveal delay={0.18}><span className={styles.titleItalic}>{italic}</span></MaskReveal>}
+      </h1>
+      {body && <p data-reveal className={styles.lede}>{body}</p>}
+    </div>
+  );
+
   return (
     <section className={styles.pageHero}>
       <div className={styles.wrap}>
-        <div data-reveal style={{ ...monoEyebrow(), marginBottom: 16 }}>{kicker}</div>
-        <GrowLine color="rgba(154,123,50,0.45)" />
-        <h1 className={styles.pageTitle}>
-          <MaskReveal delay={0.05}>{title}</MaskReveal>
-          {italic && <MaskReveal delay={0.18}><span className={styles.titleItalic}>{italic}</span></MaskReveal>}
-        </h1>
-        {body && <p data-reveal className={styles.lede}>{body}</p>}
+        {image ? (
+          <div className={styles.heroSplit}>
+            {copy}
+            <Plate src={image} alt={imageAlt ?? ""} caption={imageCaption} className={plateClass ?? styles.heroPlate} priority />
+          </div>
+        ) : (
+          copy
+        )}
       </div>
     </section>
   );

@@ -89,7 +89,16 @@ export default function ContactPage() {
       <ScrollProgress color={GOLD} />
       <GHeader lang={lang} setLang={setLang} />
 
-      <PageHero kicker={c.kicker} title={titleHead} italic={titleTail} body={c.lede} />
+      <PageHero
+        kicker={c.kicker}
+        title={titleHead}
+        italic={titleTail}
+        body={c.lede}
+        image="/images/handshake-office.jpg"
+        imageAlt="A handshake across a desk in the Coral Gables office"
+        imageCaption="75 Valencia Avenue"
+        plateClass={styles.heroPlateSm}
+      />
 
       {/* 01 , THE OFFICE: the ledger on the left, Coral Gables on the right */}
       <div style={{ padding: "clamp(34px,5vw,70px) clamp(20px,5vw,60px) clamp(64px,9vw,120px)", background: "#fff" }}>

@@ -5,13 +5,21 @@ import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } f
 import { useScrollReveal } from "@/hooks/useReveals";
 import { COPY } from "@/lib/copy";
 import { ParallaxImg, ScrollProgress } from "@/components/motion";
-import { GFooter, GHeader, PageHero, SectionHead, useLang } from "../chrome";
+import { GFooter, GHeader, PageHero, Plate, SectionHead, useLang } from "../chrome";
 import { EASE, EXTRA, G, GOLD, GOLD_DEEP, GOLD_LIGHT, GRAY, HAIR, NAVY, OFFWHITE, mono, monoEyebrow, sans, serif } from "../copy";
 import styles from "../page.module.css";
 
 // Our Firm: the mission inked in on scroll, who we serve, what the desk does,
 // the two networks behind it and the people who answer. The org chart is the
 // reason this page exists.
+
+// One thumbnail per insight, in the order g.insights lists them.
+const INSIGHT_THUMBS = [
+  "/images/bb-family-hands.jpg",
+  "/images/wwo-growth.jpg",
+  "/images/handshake-clean.jpg",
+  "/images/wwo-papers.jpg",
+];
 
 // ----- Mission: progressive ink highlight, word by word on scroll -----
 function MissionWord({ progress, range, word }: { progress: MotionValue<number>; range: [number, number]; word: string }) {
@@ -50,7 +58,15 @@ export default function FirmPage() {
       <ScrollProgress color={GOLD} />
       <GHeader lang={lang} setLang={setLang} />
 
-      <PageHero kicker={x.nav.firm} title={g.firmTitleA} italic={g.firmTitleB} body={t.approachText} />
+      <PageHero
+        kicker={x.nav.firm}
+        title={g.firmTitleA}
+        italic={g.firmTitleB}
+        body={t.approachText}
+        image="/images/bb-meeting-advisors.jpg"
+        imageAlt="Advisors working a case around a table"
+        imageCaption="Coral Gables · the desk"
+      />
 
       {/* 01 , MISSION: the sentence inks in, then vision and experience */}
       <div style={{ padding: "clamp(50px,7vw,110px) clamp(20px,5vw,60px) clamp(70px,9vw,130px)", background: "#fff" }}>
@@ -65,6 +81,14 @@ export default function FirmPage() {
               </div>
             ))}
           </div>
+
+          <Plate
+            src="/images/bb-family-dune.jpg"
+            alt="A family together on a beach path"
+            caption="Why the case matters"
+            className={styles.photoBand}
+            focal="50% 38%"
+          />
         </div>
       </div>
 
@@ -148,6 +172,13 @@ export default function FirmPage() {
               <p style={{ fontSize: 14, lineHeight: 1.7, color: GRAY, margin: 0 }}>{x.icsBody}</p>
             </div>
           </div>
+
+          <Plate
+            src="/images/globe-gold.jpg"
+            alt="A globe turned to the Americas"
+            caption="Tellus · Crump · ICS Advisors"
+            className={styles.photoBand}
+          />
         </div>
       </div>
 
@@ -191,6 +222,7 @@ export default function FirmPage() {
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.9, delay: i * 0.08, ease: EASE }}
               >
+                <Plate src={INSIGHT_THUMBS[i]} alt="" className={styles.insThumb} />
                 <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: GOLD_DEEP, marginBottom: 14 }}>{a.date}</div>
                 <h3 style={{ fontFamily: serif, fontWeight: 500, fontSize: 20, lineHeight: 1.3, margin: "0 0 12px", color: NAVY }}>{a.title}</h3>
                 <p style={{ fontSize: 13.5, lineHeight: 1.65, color: GRAY, margin: "0 0 16px" }}>{a.excerpt}</p>

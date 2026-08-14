@@ -5,7 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useScrollReveal } from "@/hooks/useReveals";
 import { COPY } from "@/lib/copy";
 import { ScrollProgress } from "@/components/motion";
-import { GFooter, GHeader, PageHero, SectionHead, useLang } from "../chrome";
+import { GFooter, GHeader, PageHero, Plate, SectionHead, useLang } from "../chrome";
 import { EASE, EXTRA, GOLD, GOLD_DEEP, NAVY, PRODUCT_DETAIL, mono, sans } from "../copy";
 import styles from "../page.module.css";
 
@@ -28,7 +28,14 @@ export default function ProductsPage() {
       <ScrollProgress color={GOLD} />
       <GHeader lang={lang} setLang={setLang} />
 
-      <PageHero kicker={x.nav.products} title={t.productsTitle} body={t.approachText} />
+      <PageHero
+        kicker={x.nav.products}
+        title={t.productsTitle}
+        body={t.approachText}
+        image="/images/bb-family-mountain.jpg"
+        imageAlt="A family looking out over a valley"
+        imageCaption="Five lines, one relationship"
+      />
 
       <div style={{ padding: "clamp(30px,4vw,60px) clamp(20px,5vw,60px) clamp(60px,8vw,110px)", background: "#fff" }}>
         <div className={styles.wrap}>
@@ -76,6 +83,11 @@ export default function ProductsPage() {
                 </div>
               );
             })}
+          </div>
+
+          <div className={styles.photoPair}>
+            <Plate src="/images/bb-family-hands.jpg" alt="A family holding hands in a circle" caption="Protection & legacy" />
+            <Plate src="/images/wwo-growth.jpg" alt="A rising line on a chart" caption="Accumulation & income" />
           </div>
         </div>
       </div>

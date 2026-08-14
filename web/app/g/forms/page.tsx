@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { useScrollReveal } from "@/hooks/useReveals";
 import { Magnetic, ScrollProgress, ctaFillFromCursor } from "@/components/motion";
-import { GFooter, GHeader, PageHero, SectionHead, useLang } from "../chrome";
+import { GFooter, GHeader, PageHero, Plate, SectionHead, useLang } from "../chrome";
 import { EXTRA, GOLD, monoEyebrow, sans } from "../copy";
 import styles from "../page.module.css";
 
@@ -22,7 +22,14 @@ export default function FormsPage() {
       <ScrollProgress color={GOLD} />
       <GHeader lang={lang} setLang={setLang} />
 
-      <PageHero kicker={x.resKicker} title={x.resTitle} body={x.resBody} />
+      <PageHero
+        kicker={x.resKicker}
+        title={x.resTitle}
+        body={x.resBody}
+        image="/images/wwo-papers.jpg"
+        imageAlt="Forms and paperwork laid out on a desk"
+        imageCaption="New business desk"
+      />
 
       <div style={{ padding: "clamp(20px,3vw,40px) clamp(20px,5vw,60px) clamp(60px,8vw,110px)", background: "#fff" }}>
         <div className={styles.wrap}>
@@ -47,6 +54,13 @@ export default function FormsPage() {
               </div>
             ))}
           </div>
+
+          <Plate
+            src="/images/bb-meeting-advisors.jpg"
+            alt="Advisors reviewing a case around a table"
+            caption="Call and a team member confirms the current version"
+            className={styles.photoBand}
+          />
         </div>
       </div>
 

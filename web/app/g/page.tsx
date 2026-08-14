@@ -7,7 +7,7 @@ import { useScrollReveal } from "@/hooks/useReveals";
 import { ScrollProgress, MaskReveal, FadeIn, CountUp, GrowLine, Magnetic, ctaFillFromCursor } from "@/components/motion";
 import { COPY } from "@/lib/copy";
 import { NETWORK_URL } from "@/lib/contact";
-import { GHeader, SectionHead, useLang } from "./chrome";
+import { GHeader, Plate, SectionHead, useLang } from "./chrome";
 import { CARRIERS, CONTACT, EASE, EXTRA, G, GOLD, GRAY, HAIR, MASTHEAD, NAVY, OFFWHITE, deepNav, mono, monoEyebrow, sans, serif } from "./copy";
 import styles from "./page.module.css";
 import WaterPhoto from "./WaterPhoto";
@@ -276,15 +276,27 @@ export default function ConceptG() {
       <div id="foreign" style={{ padding: "clamp(70px,10vw,140px) clamp(20px,5vw,60px)", background: OFFWHITE, borderTop: HAIR, borderBottom: HAIR }}>
         <div className={styles.wrap}>
           <SectionHead num="02" label={g.heads.specialty} />
-          <h2 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(30px,4.2vw,62px)", lineHeight: 1.04, letterSpacing: "-0.02em", color: NAVY, margin: "0 0 26px", maxWidth: 900 }}>
-            <MaskReveal inView delay={0.08}>{x.fnTitle1}</MaskReveal>
-            <MaskReveal inView delay={0.22}><span className={styles.titleItalic}>{x.fnTitle2}</span></MaskReveal>
-          </h2>
-          <p data-reveal style={{ fontSize: "clamp(15.5px,1.35vw,18px)", lineHeight: 1.68, color: GRAY, margin: "0 0 clamp(30px,3.4vw,44px)", maxWidth: 720 }}>{x.fnTeaser}</p>
-          <div data-reveal>
-            <Magnetic>
-              <Link href="/g/foreign-nationals" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaDark}`} style={{ display: "inline-block", padding: "15px 34px", fontSize: 12.5, letterSpacing: "0.12em", textTransform: "uppercase" }}>{x.fnTeaserCta} →</Link>
-            </Magnetic>
+          {/* one plate beside the argument, not a pair stacked under it */}
+          <div className={styles.sectionSplit}>
+            <div>
+              <h2 style={{ fontFamily: serif, fontWeight: 500, fontSize: "clamp(30px,4.2vw,62px)", lineHeight: 1.04, letterSpacing: "-0.02em", color: NAVY, margin: "0 0 26px" }}>
+                <MaskReveal inView delay={0.08}>{x.fnTitle1}</MaskReveal>
+                <MaskReveal inView delay={0.22}><span className={styles.titleItalic}>{x.fnTitle2}</span></MaskReveal>
+              </h2>
+              <p data-reveal style={{ fontSize: "clamp(15.5px,1.35vw,18px)", lineHeight: 1.68, color: GRAY, margin: "0 0 clamp(30px,3.4vw,44px)" }}>{x.fnTeaser}</p>
+              <div data-reveal>
+                <Magnetic>
+                  <Link href="/g/foreign-nationals" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaDark}`} style={{ display: "inline-block", padding: "15px 34px", fontSize: 12.5, letterSpacing: "0.12em", textTransform: "uppercase" }}>{x.fnTeaserCta} →</Link>
+                </Magnetic>
+              </div>
+            </div>
+
+            <Plate
+              src="/images/bb-family-mountain.jpg"
+              alt="A family looking out over a valley"
+              caption="Wealth that outlives the client"
+              className={styles.sectionSplitPlate}
+            />
           </div>
         </div>
       </div>
