@@ -44,7 +44,7 @@ export default function ForeignNationalsPage() {
           <div className={styles.kicker} style={{ marginBottom: "clamp(18px,2.2vw,28px)" }}>{d.fnFlowTitle}</div>
           <div className={styles.bento} style={{ marginTop: 0 }}>
             {d.fnSteps.map((s, i) => (
-              <article key={s.n} data-reveal className={`${styles.card} ${i % 2 === 0 ? styles.cardCream : styles.cardBone} ${styles.colThird}`}>
+              <article key={s.n} data-reveal className={`${styles.card} ${i % 2 === 0 ? styles.cardCream : styles.cardBone} ${i < 3 ? styles.colThird : styles.colHalf}`}>
                 <div className={styles.pillarNum}>{s.n}</div>
                 <h3 className={`${styles.serifTitle} ${styles.pillarTitle}`}>{s.title}</h3>
                 <p className={styles.pillarBody}>{s.body}</p>
