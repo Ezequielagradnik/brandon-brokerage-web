@@ -85,22 +85,22 @@ export default function FirmPage() {
           </article>
         </section>
 
-        {/* the two networks behind the desk */}
+        {/* the two networks behind the desk, stacked beside the photo that
+            argues for them , the same pairing /n and /s use for this photo */}
         <section className={styles.bento}>
-          <article data-reveal className={`${styles.card} ${styles.cardBone} ${styles.colHalf}`}>
-            <div className={styles.kicker} style={{ marginBottom: 14 }}>Tellus · Crump</div>
-            <h3 className={styles.serifTitle} style={{ fontSize: "clamp(19px,1.7vw,23px)", color: "var(--navy)", marginBottom: 12 }}>{d.tellusTitle}</h3>
-            <p style={{ fontSize: 14.5, lineHeight: 1.68, color: "var(--body)", margin: 0 }}>{d.tellusBody}</p>
-          </article>
-          <article data-reveal className={`${styles.card} ${styles.cardBone} ${styles.colHalf}`}>
-            <div className={styles.kicker} style={{ marginBottom: 14 }}>Joint venture</div>
-            <h3 className={styles.serifTitle} style={{ fontSize: "clamp(19px,1.7vw,23px)", color: "var(--navy)", marginBottom: 12 }}>{d.icsTitle}</h3>
-            <p style={{ fontSize: 14.5, lineHeight: 1.68, color: "var(--body)", margin: 0 }}>{d.icsBody}</p>
-          </article>
-        </section>
-
-        <section className={styles.bento}>
-          <article data-reveal className={`${styles.card} ${styles.cardPhoto} ${styles.colFull}`}>
+          <div className={styles.colHalf} style={{ display: "flex", flexDirection: "column", gap: "var(--gutter)" }}>
+            <article data-reveal className={`${styles.card} ${styles.cardBone}`}>
+              <div className={styles.kicker} style={{ marginBottom: 14 }}>Tellus · Crump</div>
+              <h3 className={styles.serifTitle} style={{ fontSize: "clamp(19px,1.7vw,23px)", color: "var(--navy)", marginBottom: 12 }}>{d.tellusTitle}</h3>
+              <p style={{ fontSize: 14.5, lineHeight: 1.68, color: "var(--body)", margin: 0 }}>{d.tellusBody}</p>
+            </article>
+            <article data-reveal className={`${styles.card} ${styles.cardBone}`}>
+              <div className={styles.kicker} style={{ marginBottom: 14 }}>Joint venture</div>
+              <h3 className={styles.serifTitle} style={{ fontSize: "clamp(19px,1.7vw,23px)", color: "var(--navy)", marginBottom: 12 }}>{d.icsTitle}</h3>
+              <p style={{ fontSize: 14.5, lineHeight: 1.68, color: "var(--body)", margin: 0 }}>{d.icsBody}</p>
+            </article>
+          </div>
+          <article data-reveal className={`${styles.card} ${styles.cardPhoto} ${styles.colHalf}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/images/bb-family-hands.jpg" alt="" className={styles.cardImg} loading="lazy" />
           </article>

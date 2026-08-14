@@ -29,9 +29,15 @@ export default function ForeignNationalsPage() {
       <div className={styles.stack}>
         <MPageHero glyph="globe" kicker={d.fnKicker} title={d.fnTitle1} clause={d.fnTitle2} />
 
-        <section data-reveal className={`${styles.card} ${styles.cardCream} ${styles.blockPad}`} style={{ marginTop: "var(--gutter)", display: "flex", flexDirection: "column", gap: 16 }}>
-          <p style={{ fontSize: "clamp(15px,1.3vw,17.5px)", lineHeight: 1.72, color: "var(--body)", margin: 0, maxWidth: "68ch" }}>{d.fnBody1}</p>
-          <p style={{ fontSize: "clamp(15px,1.3vw,17.5px)", lineHeight: 1.72, color: "var(--body)", margin: 0, maxWidth: "68ch" }}>{d.fnBody2}</p>
+        <section data-reveal className={`${styles.card} ${styles.cardNavy} ${styles.blockPad}`} style={{ marginTop: "var(--gutter)", position: "relative", overflow: "hidden", textAlign: "center" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/miami-palms-day.jpg" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} loading="lazy" />
+          <div className={styles.heroWash} aria-hidden="true" />
+          <div className={styles.topo} aria-hidden="true" />
+          <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: 16, maxWidth: "62ch", margin: "0 auto" }}>
+            <p className={styles.statementBody} style={{ fontSize: "clamp(15px,1.3vw,17.5px)", lineHeight: 1.75, maxWidth: "none" }}>{d.fnBody1}</p>
+            <p className={styles.statementBody} style={{ fontSize: "clamp(15px,1.3vw,17.5px)", lineHeight: 1.75, maxWidth: "none", margin: 0 }}>{d.fnBody2}</p>
+          </div>
         </section>
 
         <div data-reveal style={{ marginTop: "var(--gutter)" }}>
