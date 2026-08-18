@@ -43,7 +43,7 @@
 /* on scroll it firms up to beige glass, never navy or white: the pill is the
    page tone at full strength, held by the gold hairline and its shadow */
 .headerSolid {
-  background: rgba(245, 241, 232, 0.92);
+  background: rgba(245, 241, 232, 1);
   border-color: rgba(194, 161, 91, 0.42);
   box-shadow: 0 14px 44px rgba(20, 34, 74, 0.12);
 }
@@ -338,6 +338,11 @@
   background: none;
   color: #14224a;
   border-color: rgba(20, 34, 74, 0.35);
+}
+.ctaGhostOnPhoto {
+  background: none;
+  color: #f5f1e8;
+  border-color: rgba(245, 241, 232, 0.4);
 }
 
 

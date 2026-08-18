@@ -15,8 +15,10 @@ export { useLang };
 import { BEIGE, EXTRA, GOLD, GOLD_DEEP, HAIR, INK_MUTED, NAVY, deepNav } from "./copy";
 import styles from "./page.module.css";
 
-/* The floating pill. On the landing it starts translucent over the hero and
-   firms up on scroll; on the inner pages there is no hero, so it starts solid. */
+/* The floating pill. On the landing the hero now carries a photo, so the
+   header starts solid over it for legibility and loosens to translucent once
+   scrolled onto the beige body; on the inner pages there is no hero, so it
+   stays solid throughout. */
 export function NHeader({ lang, setLang, solid = false, home = "/n" }: { lang: Lang; setLang: (l: Lang) => void; solid?: boolean; home?: string }) {
   const t = COPY[lang];
   const x = EXTRA[lang];
@@ -25,7 +27,7 @@ export function NHeader({ lang, setLang, solid = false, home = "/n" }: { lang: L
   const [scrolled, setScrolled] = useState(false);
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 40));
-  const firm = solid || scrolled;
+  const firm = solid || !scrolled;
 
   // every link in the chrome hangs off `home`, so /s renders the same
   // furniture without ever handing the visitor back to /n

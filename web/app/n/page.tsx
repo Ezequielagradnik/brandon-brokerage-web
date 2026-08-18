@@ -90,33 +90,59 @@ export default function ConceptN() {
       <ScrollProgress color={GOLD} />
       <NHeader lang={lang} setLang={setLang} />
 
-      {/* ----- hero ----- Type-only on the beige, set as a centered masthead:
-          with no object beside it, symmetry makes the whitespace the
-          composition instead of a leftover half. */}
+      {/* ----- hero ----- The lighthouse sits behind the masthead instead of
+          as its own band: bblatam's own mood photo, full-bleed under the
+          type, with a navy wash standing in for the beige so the same
+          centered symmetry still reads. */}
       <section id="top" ref={heroRef} className={styles.hero}>
+        <div className={styles.photo} style={{ position: "absolute", inset: 0, zIndex: 0 }}>
+          <ParallaxImg
+            src="/images/lighthouse-sunset.jpg"
+            alt="A lighthouse in silhouette against a sunset sky"
+            range={30}
+            photoSlot="hero"
+            style={{ height: "100%" }}
+            imgClassName={styles.photoImg}
+          />
+        </div>
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 1,
+            background: "linear-gradient(180deg, rgba(20,34,74,0.58) 0%, rgba(20,34,74,0.68) 55%, rgba(20,34,74,0.86) 100%)",
+          }}
+        />
         <motion.div className={styles.heroGlow} style={{ y: reduce ? 0 : glowY }} aria-hidden="true" />
         <motion.div className={styles.heroGlow2} style={{ y: reduce ? 0 : glowY2 }} aria-hidden="true" />
         <motion.div className={styles.wrap} style={{ position: "relative", zIndex: 2, width: "100%", textAlign: "center", opacity: reduce ? 1 : heroFade }}>
           <FadeIn delay={0.1} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginBottom: 30 }}>
             <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.3, ease: EASE }} style={{ width: 40, height: 1, background: GOLD, transformOrigin: "0 50%" }} />
-            <span className={styles.kicker}>{t.heroKicker}</span>
+            <span className={styles.kicker} style={{ color: GOLD_SOFT }}>{t.heroKicker}</span>
           </FadeIn>
 
           {/* the two lines drift apart on scroll , cheap depth, no extra paint */}
-          <h1 className={styles.display} style={{ margin: "0 auto 32px", maxWidth: 940 }}>
+          <h1 className={styles.display} style={{ margin: "0 auto 32px", maxWidth: 940, color: "#f5f1e8" }}>
             <motion.span style={{ display: "block", y: reduce ? 0 : lineY1 }}><MaskReveal delay={0.2}>{x.heroLine1}</MaskReveal></motion.span>
             <motion.span style={{ display: "block", y: reduce ? 0 : lineY2 }}><MaskReveal delay={0.35}><span className={styles.displayItalic}>{x.heroLine2}</span></MaskReveal></motion.span>
           </h1>
 
           <FadeIn delay={0.7}>
-            <p style={{ fontSize: "clamp(16px,1.25vw,18.5px)", lineHeight: 1.7, color: INK_MUTED, maxWidth: 560, margin: "0 auto 38px" }}>{x.heroSub}</p>
+            <p style={{ fontSize: "clamp(16px,1.25vw,18.5px)", lineHeight: 1.7, color: "rgba(245,241,232,0.82)", maxWidth: 560, margin: "0 auto 38px" }}>{x.heroSub}</p>
           </FadeIn>
 
           <FadeIn delay={0.85} style={{ display: "flex", gap: 14, alignItems: "center", justifyContent: "center", flexWrap: "wrap" }}>
             <Magnetic>
-              <Link href="/n/contact" onPointerEnter={ctaFillFromCursor} className={styles.cta}>{t.cta.partner}</Link>
+              <Link href="/n/contact" onPointerEnter={ctaFillFromCursor} className={styles.cta} style={{ background: GOLD, borderColor: GOLD, color: NAVY }}>{t.cta.partner}</Link>
             </Magnetic>
-            <a href={NETWORK_URL} target="_blank" rel="noopener noreferrer" onPointerEnter={ctaFillFromCursor} className={`${styles.cta} ${styles.ctaGhost}`}>
+            <a
+              href={NETWORK_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onPointerEnter={ctaFillFromCursor}
+              className={`${styles.cta} ${styles.ctaGhostOnPhoto}`}
+            >
               {x.aiNav} ↗
             </a>
           </FadeIn>
